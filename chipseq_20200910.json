@@ -1,0 +1,82 @@
+{
+    "object_id": "dc308d7c-7949-446a-9c39-511b8ab40caf",
+    "spec_version": "https://w3id.org/ieee/ieee-2791-schema/",
+    "etag": "W/c8062d1e325c39a7263af22669757e33f2d7f8b9274930e62c930a35b345131b",
+    "provenance_domain": {
+        "name": "nf-core/chipseq: ChIP-seq peak-calling, QC and differential analysis pipeline",
+        "version": "1.2.1-124f0f8d69d9dfbfcea852493605e617",
+        "created": "2020-07-29T17:33:46+01:00",
+        "modified": "2020-09-10T13:11:58+01:00",
+        "contributors": [
+            {"contribution": ["authoredBy"], "name": "Harshil Patel" },
+            {"contribution": ["authoredBy"], "name": "Chuan Wang" },
+            {"contribution": ["authoredBy"], "name": "Phil Ewels" },
+            {"contribution": ["authoredBy"], "name": "Alexander Peltzer" },
+            {"contribution": ["authoredBy"], "name": "Tiago Chedraoui Silva" },
+            {"contribution": ["authoredBy"], "name": "Drew Behrens" },
+            {"contribution": ["authoredBy"], "name": "Maxime Garcia" },
+            {"contribution": ["authoredBy"], "name": "mashehu" },
+            {"contribution": ["authoredBy"], "name": "Rotholandus" },
+            {"contribution": ["authoredBy"], "name": "Sofia Haglund" },
+            {"contribution": ["authoredBy"], "name": "Winni Kretzschmar" },                                     
+            { "contribution": ["createdBy"],
+              "name": "Stian Soiland-Reyes",
+              "orcid": "https://orcid.org/0000-0001-9842-9718",
+            }   
+        ],
+        "license": "https://github.com/nf-core/chipseq/blob/1.2.1/LICENSE"
+    },
+    "usability_domain": [
+        "nfcore/chipseq is a bioinformatics analysis pipeline used for Chromatin ImmunopreciPitation sequencing (ChIP-seq) data.",
+        "For use with multiple replicates, the group identifier should be identical when you have multiple replicates from the same experimental group, just increment the replicate identifier appropriately. The first replicate value for any given experimental group must be 1.",
+        "Both the group and replicate identifiers should be the same when you have re-sequenced the same sample more than once e.g. to increase sequencing depth. The pipeline will perform the alignments in parallel, and subsequently merge them before further analysis. "
+    ],
+    "description_domain": {
+        "keywords": [
+            "chipseq",
+            "QC"            
+        ],
+        "pipeline_steps": [
+            {"step_number": 1, "name": "CHECK_DESIGN", "description": "", "input_list": [], "output_list": []},
+            {"step_number": 2, "name": "output_documentation", "description": "", "input_list": [], "output_list": []},
+            {"step_number": 3, "name": "MAKE_GENE_BED", "description": "", "input_list": [], "output_list": []},
+            {"step_number": 5, "name": "get_software_versions", "description": "", "input_list": [], "output_list": []},
+            {"step_number": 6, "name": "BWA_INDEX", "description": "", "input_list": [], "output_list": []},
+            {"step_number": 7, "name": "MAKE_GENOME_FILTER", "description": "", "input_list": [], "output_list": []},
+            {"step_number": 8, "name": "FASTQC", "description": "", "input_list": [], "output_list": []},
+            {"step_number": 9, "name": "TRIMGALORE", "description": "", "input_list": [], "output_list": []},
+            {"step_number": 10, "name": "BWA_MEM", "description": "", "input_list": [], "output_list": []},
+            {"step_number": 11, "name": "SORT_BAM", "description": "", "input_list": [], "output_list": []},
+            {"step_number": 12, "name": "MERGED_BAM", "description": "", "input_list": [], "output_list": []},
+            {"step_number": 13, "name": "PRESEQ", "description": "", "input_list": [], "output_list": []},
+            {"step_number": 14, "name": "MERGED_BAM_FILTER", "description": "", "input_list": [], "output_list": []},
+            {"step_number": 15, "name": "MERGED_BAM_REMOVE_ORPHAN", "description": "", "input_list": [], "output_list": []},
+            {"step_number": 16, "name": "PHANTOMPEAKQUALTOOLS", "description": "", "input_list": [], "output_list": []},
+            {"step_number": 17, "name": "BIGWIG", "description": "", "input_list": [], "output_list": []},
+            {"step_number": 18, "name": "PICARD_METRICS", "description": "", "input_list": [], "output_list": []},
+            {"step_number": 19, "name": "PLOTFINGERPRINT", "description": "", "input_list": [], "output_list": []},
+            {"step_number": 20, "name": "MACS2", "description": "", "input_list": [], "output_list": []},
+            {"step_number": 21, "name": "PLOTPROFILE", "description": "", "input_list": [], "output_list": []},
+            {"step_number": 22, "name": "MACS2_ANNOTATE", "description": "", "input_list": [], "output_list": []},
+            {"step_number": 23, "name": "CONSENSUS_PEAKS", "description": "", "input_list": [], "output_list": []},
+            {"step_number": 24, "name": "CONSENSUS_PEAKS_COUNTS", "description": "", "input_list": [], "output_list": []},
+            {"step_number": 25, "name": "CONSENSUS_PEAKS_ANNOTATE", "description": "", "input_list": [], "output_list": []},
+            {"step_number": 26, "name": "MACS2_QC", "description": "", "input_list": [], "output_list": []},
+            {"step_number": 27, "name": "CONSENSUS_PEAKS_DESEQ2", "description": "", "input_list": [], "output_list": []},
+            {"step_number": 28, "name": "MULTIQC", "description": "", "input_list": [], "output_list": []},
+            {"step_number": 29, "name": "IGV", "description": "", "input_list": [], "output_list": []},
+            {"step_number": 30, "name": "but", "description": "", "input_list": [], "output_list": []},
+            {"step_number": 31, "name": "errored", "description": "", "input_list": [], "output_list": []},
+            {"step_number": 32, "name": "ran", "description": "", "input_list": [], "output_list": []}            ,
+        ]
+    },
+    "execution_domain": {},
+    "io_domain": {}
+}
+
+https://doi.org/10.5281/zenodo.3966161
+
+
+
+
+
