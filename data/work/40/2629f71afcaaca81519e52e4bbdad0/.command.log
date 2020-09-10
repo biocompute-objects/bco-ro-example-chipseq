@@ -1,0 +1,110 @@
+
+	Using Custom Genome
+	Peak file = SPT5_T0_R1_peaks.broadPeak
+	Genome = genome.fa
+	Organism = unknown
+	Using gene_ids for GTF file
+	Custom annotation GTF file: genes.gtf (using transcript_id)
+	Will use up to 2 CPUs in parts that can use them
+	Peak/BED file conversion summary:
+		BED/Header formatted lines: 909
+		peakfile formatted lines: 0
+		Duplicated Peak IDs: 0
+
+	Peak File Statistics:
+		Total Peaks: 909
+		Redundant Peak IDs: 0
+		Peaks lacking information: 0 (need at least 5 columns per peak)
+		Peaks with misformatted coordinates: 0 (should be integer)
+		Peaks with misformatted strand: 0 (should be either +/- or 0/1)
+
+	Peak file looks good!
+
+	Reading Positions...
+	-----------------------
+	Finding Closest TSS...
+	Processing custom annotation file...
+	Features that will be considered:
+		exon
+
+	7553 lines contained useful feature information
+	Parsing GTF to make an annotation table from attributes...
+	Features that will be considered:
+		exon
+
+	7553 lines contained useful feature information
+	Prioritizing Annotations: .................
+	Annotating:.................
+		Annotation	Number of peaks	Total size (bp)	Log2 Ratio (obs/exp)	LogP enrichment (+values depleted)
+		TTS	5354.0	2959075	-0.016	1.734
+		Exon	2482.0	3272298	-1.270	1677.422
+		Intron	35.0	9579	0.998	-8.794
+		Intergenic	0.0	138738	-8.010	255.296
+		Promoter	14361.0	5771564	0.444	-1318.671
+	Annotating:.................
+		Annotation	Number of peaks	Total size (bp)	Log2 Ratio (obs/exp)	LogP enrichment (+values depleted)
+		TTS	30.0	2959075	-2.883	158.348
+		Exon	19.0	3272298	-3.687	214.198
+		Intron	0.0	9579	-0.780	0.717
+		Intergenic	12.0	138738	0.209	-1.060
+		Promoter	848.0	5771564	0.974	-449.808
+	Features that will be considered:
+		exon
+
+	7553 lines contained useful feature information
+	Prioritizing Annotations: .................
+	Annotating:.................
+		Annotation	Number of peaks	Total size (bp)	Log2 Ratio (obs/exp)	LogP enrichment (+values depleted)
+		rRNA-TTS	6.0	3240	0.017	-0.611
+		pseudogene-TTS	20.0	11290	-0.047	0.691
+		protein_coding-promoter	13679.0	5559876	0.427	-1117.333
+		tRNA-promoter	433.0	136582	0.793	-58.784
+		ncRNA-exon	0.0	55	-0.138	0.101
+		protein_coding-intron	35.0	9579	0.998	-8.794
+		tRNA-TTS	126.0	79074	-0.199	2.775
+		snRNA-TTS	1.0	1012	-0.889	0.804
+		Intergenic	0.0	138738	-8.010	255.296
+		rRNA-promoter	61.0	13878	1.264	-20.340
+		pseudogene-promoter	36.0	14617	0.429	-2.993
+		snoRNA-TTS	30.0	13325	0.299	-1.898
+		snoRNA-exon	1.0	72	2.924	-2.092
+		ncRNA-promoter	51.0	15673	0.831	-9.161
+		pseudogene-exon	9.0	12556	-1.352	7.111
+		snoRNA-promoter	88.0	26285	0.872	-15.696
+		rRNA-exon	4.0	5525	-1.338	3.603
+		ncRNA-TTS	14.0	6194	0.305	-1.385
+		protein_coding-TTS	5157.0	2844940	-0.013	1.489
+		protein_coding-exon	2468.0	3254090	-1.270	1665.809
+		snRNA-promoter	13.0	4653	0.611	-2.390
+	NOTE: If this part takes more than 2 minutes, there is a good chance
+		your machine ran out of memory: consider hitting ctrl+C and rerunning
+		the command with "-noann"
+	To capture annotation stats in a file, use "-annStats <filename>" next time
+	Annotating:.................
+		Annotation	Number of peaks	Total size (bp)	Log2 Ratio (obs/exp)	LogP enrichment (+values depleted)
+		rRNA-TTS	1.0	3240	2.045	-1.536
+		pseudogene-TTS	1.0	11290	0.244	-0.561
+		protein_coding-promoter	825.0	5559876	0.988	-419.367
+		tRNA-promoter	18.0	136582	0.817	-4.092
+		ncRNA-exon	0.0	55	-0.006	0.004
+		protein_coding-intron	0.0	9579	-0.780	0.717
+		tRNA-TTS	5.0	79074	-0.243	0.779
+		snRNA-TTS	0.0	1012	-0.105	0.076
+		Intergenic	12.0	138738	0.209	-1.060
+		rRNA-promoter	0.0	13878	-1.028	1.039
+		pseudogene-promoter	1.0	14617	-0.129	0.355
+		snoRNA-TTS	0.0	13325	-0.998	0.997
+		snoRNA-exon	0.0	72	-0.008	0.005
+		ncRNA-promoter	1.0	15673	-0.230	0.397
+		pseudogene-exon	1.0	12556	0.090	-0.495
+		snoRNA-promoter	2.0	26285	0.025	-0.536
+		rRNA-exon	0.0	5525	-0.499	0.413
+		ncRNA-TTS	0.0	6194	-0.550	0.463
+		protein_coding-TTS	23.0	2844940	-3.210	164.840
+		protein_coding-exon	18.0	3254090	-3.757	215.326
+		snRNA-promoter	1.0	4653	1.523	-1.224
+	Counting Tags in Peaks from each directory...
+	Organism: unknown
+	Outputing Annotation File...
+	Done annotating peaks file
+

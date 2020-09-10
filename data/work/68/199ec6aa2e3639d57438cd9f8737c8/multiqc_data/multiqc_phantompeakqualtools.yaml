@@ -1,0 +1,24 @@
+SPT5_INPUT_R1:
+  Estimated_Fragment_Length_bp: 150
+  NSC: 1.148937
+  RSC: 8.02834
+SPT5_INPUT_R2:
+  Estimated_Fragment_Length_bp: 155
+  NSC: 1.137726
+  RSC: 7.825372
+SPT5_T0_R1:
+  Estimated_Fragment_Length_bp: 95
+  NSC: 1.465785
+  RSC: 0.9126109
+SPT5_T0_R2:
+  Estimated_Fragment_Length_bp: 95
+  NSC: 1.555037
+  RSC: 0.9193525
+SPT5_T15_R1:
+  Estimated_Fragment_Length_bp: 105
+  NSC: 1.36137
+  RSC: 0.9332524
+SPT5_T15_R2:
+  Estimated_Fragment_Length_bp: 95
+  NSC: 1.346095
+  RSC: 0.8935111

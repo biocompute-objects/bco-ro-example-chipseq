@@ -1,0 +1,30 @@
+INFO	2020-09-10 13:04:09	CollectMultipleMetrics	
+
+********** NOTE: Picard's command line syntax is changing.
+**********
+********** For more information, please see:
+********** https://github.com/broadinstitute/picard/wiki/Command-Line-Syntax-Transition-For-Users-(Pre-Transition)
+**********
+********** The command line looks like this in the new syntax:
+**********
+**********    CollectMultipleMetrics -INPUT SPT5_T15_R1.mLb.clN.sorted.bam -OUTPUT SPT5_T15_R1.mLb.clN.CollectMultipleMetrics -REFERENCE_SEQUENCE genome.fa -VALIDATION_STRINGENCY LENIENT -TMP_DIR tmp
+**********
+
+
+13:04:10.555 INFO  NativeLibraryLoader - Loading libgkl_compression.so from jar:file:/home/stain/src/92/work/conda/nf-core-chipseq-1.2.1-124f0f8d69d9dfbfcea852493605e617/share/picard-2.23.1-0/picard.jar!/com/intel/gkl/native/libgkl_compression.so
+[Thu Sep 10 13:04:10 BST 2020] CollectMultipleMetrics INPUT=SPT5_T15_R1.mLb.clN.sorted.bam OUTPUT=SPT5_T15_R1.mLb.clN.CollectMultipleMetrics TMP_DIR=[tmp] VALIDATION_STRINGENCY=LENIENT REFERENCE_SEQUENCE=genome.fa    ASSUME_SORTED=true STOP_AFTER=0 METRIC_ACCUMULATION_LEVEL=[ALL_READS] PROGRAM=[CollectAlignmentSummaryMetrics, CollectBaseDistributionByCycle, CollectInsertSizeMetrics, MeanQualityByCycle, QualityScoreDistribution] INCLUDE_UNPAIRED=false VERBOSITY=INFO QUIET=false COMPRESSION_LEVEL=5 MAX_RECORDS_IN_RAM=500000 CREATE_INDEX=false CREATE_MD5_FILE=false GA4GH_CLIENT_SECRETS=client_secrets.json USE_JDK_DEFLATER=false USE_JDK_INFLATER=false
+[Thu Sep 10 13:04:10 BST 2020] Executing as stain@biggie.ds.s11.no on Linux 5.4.0-47-generic amd64; OpenJDK 64-Bit Server VM 11.0.8-internal+0-adhoc..src; Deflater: Intel; Inflater: Intel; Provider GCS is not available; Picard version: 2.23.1
+INFO	2020-09-10 13:04:15	RExecutor	Executing R script via command: Rscript /home/stain/src/92/work/ae/351ea96910eebf145df42ff510752e/tmp/script16756048358652459110.R /home/stain/src/92/work/ae/351ea96910eebf145df42ff510752e/SPT5_T15_R1.mLb.clN.CollectMultipleMetrics.base_distribution_by_cycle_metrics /home/stain/src/92/work/ae/351ea96910eebf145df42ff510752e/SPT5_T15_R1.mLb.clN.CollectMultipleMetrics.base_distribution_by_cycle.pdf SPT5_T15_R1.mLb.clN.sorted.bam SPT5_T15_R1_T1
+INFO	2020-09-10 13:04:16	ProcessExecutor	null device 
+INFO	2020-09-10 13:04:16	ProcessExecutor	          1 
+INFO	2020-09-10 13:04:16	RExecutor	Executing R script via command: Rscript /home/stain/src/92/work/ae/351ea96910eebf145df42ff510752e/tmp/script12504911945062474417.R /home/stain/src/92/work/ae/351ea96910eebf145df42ff510752e/SPT5_T15_R1.mLb.clN.CollectMultipleMetrics.insert_size_metrics /home/stain/src/92/work/ae/351ea96910eebf145df42ff510752e/SPT5_T15_R1.mLb.clN.CollectMultipleMetrics.insert_size_histogram.pdf SPT5_T15_R1.mLb.clN.sorted.bam
+INFO	2020-09-10 13:04:16	ProcessExecutor	null device 
+INFO	2020-09-10 13:04:16	ProcessExecutor	          1 
+INFO	2020-09-10 13:04:16	RExecutor	Executing R script via command: Rscript /home/stain/src/92/work/ae/351ea96910eebf145df42ff510752e/tmp/script12357536359643915059.R /home/stain/src/92/work/ae/351ea96910eebf145df42ff510752e/SPT5_T15_R1.mLb.clN.CollectMultipleMetrics.quality_by_cycle_metrics /home/stain/src/92/work/ae/351ea96910eebf145df42ff510752e/SPT5_T15_R1.mLb.clN.CollectMultipleMetrics.quality_by_cycle.pdf SPT5_T15_R1.mLb.clN.sorted.bam SPT5_T15_R1_T1
+INFO	2020-09-10 13:04:17	ProcessExecutor	null device 
+INFO	2020-09-10 13:04:17	ProcessExecutor	          1 
+INFO	2020-09-10 13:04:17	RExecutor	Executing R script via command: Rscript /home/stain/src/92/work/ae/351ea96910eebf145df42ff510752e/tmp/script622552030593159835.R /home/stain/src/92/work/ae/351ea96910eebf145df42ff510752e/SPT5_T15_R1.mLb.clN.CollectMultipleMetrics.quality_distribution_metrics /home/stain/src/92/work/ae/351ea96910eebf145df42ff510752e/SPT5_T15_R1.mLb.clN.CollectMultipleMetrics.quality_distribution.pdf SPT5_T15_R1.mLb.clN.sorted.bam SPT5_T15_R1_T1
+INFO	2020-09-10 13:04:17	ProcessExecutor	null device 
+INFO	2020-09-10 13:04:17	ProcessExecutor	          1 
+[Thu Sep 10 13:04:17 BST 2020] picard.analysis.CollectMultipleMetrics done. Elapsed time: 0.12 minutes.
+Runtime.totalMemory()=262144000

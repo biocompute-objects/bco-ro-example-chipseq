@@ -1,0 +1,1 @@
+bwa/mergedLibrary/macs/broadPeak/consensus/SPT5/deseq2/SPT5_T0vsSPT5_T15/SPT5_T0vsSPT5_T15.deseq2.FDR0.05.results.bed	255,0,0

@@ -1,0 +1,63 @@
+----------------------------------------------------
+                                        ,--./,-.
+        ___     __   __   __   ___     /,-._.--~\
+  |\ | |__  __ /  ` /  \ |__) |__         }  {
+  | \| |       \__, \__/ |  \ |___     \`-._,-`-,
+                                        `._,._,'
+  nf-core/chipseq v1.2.1
+----------------------------------------------------
+
+Run Name: pensive_dubinsky
+
+## nf-core/chipseq execution completed successfully! ##
+
+
+The workflow was completed at 2020-09-10T13:26:59.190458+01:00 (duration: 33m 52s)
+
+The command used to launch the workflow was as follows:
+
+  nextflow run nf-core/chipseq -profile test,conda
+
+
+
+Pipeline Configuration:
+-----------------------
+ - Run Name: pensive_dubinsky
+ - Data Type: Paired-End
+ - Design File: https://raw.githubusercontent.com/nf-core/test-datasets/chipseq/design.csv
+ - Genome: Not supplied
+ - Fasta File: https://raw.githubusercontent.com/nf-core/test-datasets/atacseq/reference/genome.fa
+ - GTF File: https://raw.githubusercontent.com/nf-core/test-datasets/atacseq/reference/genes.gtf
+ - MACS2 Genome Size: 1.2E+7
+ - Min Consensus Reps: 1
+ - MACS2 Narrow Peaks: No
+ - MACS2 Broad Cutoff: 0.1
+ - Trim R1: 0 bp
+ - Trim R2: 0 bp
+ - Trim 3' R1: 0 bp
+ - Trim 3' R2: 0 bp
+ - NextSeq Trim: 0 bp
+ - Fingerprint Bins: 100
+ - Save Genome Index: No
+ - Max Resources: 6 GB memory, 2 cpus, 12h time per job
+ - Output Dir: ./results
+ - Launch Dir: /home/stain/src/92
+ - Working Dir: /home/stain/src/92/work
+ - Script Dir: /home/stain/.nextflow/assets/nf-core/chipseq
+ - User: stain
+ - Config Profile: test,conda
+ - Config Description: Minimal test dataset to check pipeline function
+ - Date Started: 2020-09-10T12:53:07.133639+01:00
+ - Date Completed: 2020-09-10T13:26:59.190458+01:00
+ - Pipeline script file path: /home/stain/.nextflow/assets/nf-core/chipseq/main.nf
+ - Pipeline script hash ID: 39c073c68caf34f6f725e82907fff2bd
+ - Pipeline repository Git URL: https://github.com/nf-core/chipseq.git
+ - Pipeline repository Git Commit: 0f487ed76dc947793ab48527d8d3025f5f3060a5
+ - Pipeline Git branch/tag: master
+ - Nextflow Version: 19.10.0
+ - Nextflow Build: 5170
+ - Nextflow Compile Timestamp: 21-10-2019 15:07 UTC
+
+--
+nf-core/chipseq
+https://github.com/nf-core/chipseq

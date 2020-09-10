@@ -1,0 +1,1 @@
+bwa/mergedLibrary/macs/broadPeak/consensus/SPT5/SPT5.consensus_peaks.bed	0,0,0

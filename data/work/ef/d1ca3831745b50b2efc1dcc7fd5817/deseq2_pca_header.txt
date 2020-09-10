@@ -1,0 +1,1 @@
+/home/stain/.nextflow/assets/nf-core/chipseq/assets/multiqc/deseq2_pca_header.txt

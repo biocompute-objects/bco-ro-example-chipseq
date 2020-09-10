@@ -1,0 +1,35 @@
+################
+ChIP data: SPT5_INPUT_R2.mLb.clN.sorted.bam 
+Control data: NA 
+strandshift(min): -500 
+strandshift(step): 5 
+strandshift(max) 1500 
+user-defined peak shift NA 
+exclusion(min): 10 
+exclusion(max): NaN 
+num parallel nodes: 2 
+FDR threshold: 0.01 
+NumPeaks Threshold: NA 
+Output Directory: . 
+narrowPeak output file name: NA 
+regionPeak output file name: NA 
+Rdata filename: SPT5_INPUT_R2.spp.Rdata 
+plot pdf filename: SPT5_INPUT_R2.spp.pdf 
+result filename: SPT5_INPUT_R2.spp.out 
+Overwrite files?: FALSE
+
+Reading ChIP tagAlign/BAM file SPT5_INPUT_R2.mLb.clN.sorted.bam 
+opened /tmp/Rtmp1RBuRR/SPT5_INPUT_R2.mLb.clN.sorted.tagAlign65c2374943d34
+done. read 171456 fragments
+ChIP data read length 50 
+Calculating peak characteristics
+Minimum cross-correlation value 0.3588673 
+Minimum cross-correlation shift 1500 
+Top 3 cross-correlation values 0.408292622215605 
+Top 3 estimates for fragment length 155 
+Window half size 215 
+Phantom peak location 40 
+Phantom peak Correlation 0.3651833 
+Normalized Strand cross-correlation coefficient (NSC) 1.137726 
+Relative Strand cross-correlation Coefficient (RSC) 7.825372 
+Phantom Peak Quality Tag 2 

@@ -1,0 +1,6 @@
+Warning message:
+package ‘caTools’ was built under R version 3.6.3 
+Loading required package: Rcpp
+Warning messages:
+1: package ‘Rcpp’ was built under R version 3.6.3 
+2: package ‘snow’ was built under R version 3.6.3 

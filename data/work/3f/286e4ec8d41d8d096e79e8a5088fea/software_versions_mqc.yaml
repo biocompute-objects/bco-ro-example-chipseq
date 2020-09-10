@@ -1,0 +1,26 @@
+
+id: 'software_versions'
+section_name: 'nf-core/chipseq Software Versions'
+section_href: 'https://github.com/nf-core/chipseq'
+plot_type: 'html'
+description: 'are collected at run time from the software output.'
+data: |
+    <dl class="dl-horizontal">
+
+        <dt>nf-core/chipseq</dt><dd><samp>v1.2.1</samp></dd>
+        <dt>Nextflow</dt><dd><samp>v19.10.0</samp></dd>
+        <dt>FastQC</dt><dd><samp>v0.11.9</samp></dd>
+        <dt>Trim Galore!</dt><dd><samp>v0.6.4_dev</samp></dd>
+        <dt>BWA</dt><dd><samp>v0.7.17-r1188</samp></dd>
+        <dt>Samtools</dt><dd><samp>v1.10</samp></dd>
+        <dt>BEDTools</dt><dd><samp>v2.29.2</samp></dd>
+        <dt>BamTools</dt><dd><samp>v2.5.1</samp></dd>
+        <dt>deepTools</dt><dd><samp>v3.4.3</samp></dd>
+        <dt>Picard</dt><dd><samp><span style="color:#999999;">N/A</span></samp></dd>
+        <dt>R</dt><dd><samp>v3.6.2</samp></dd>
+        <dt>Pysam</dt><dd><samp>v0.15.3</samp></dd>
+        <dt>MACS2</dt><dd><samp>v2.2.7.1</samp></dd>
+        <dt>featureCounts</dt><dd><samp>v2.0.1</samp></dd>
+        <dt>Preseq</dt><dd><samp>v2.0.3</samp></dd>
+        <dt>MultiQC</dt><dd><samp>v1.9</samp></dd>
+    </dl>

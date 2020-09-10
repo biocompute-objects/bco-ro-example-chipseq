@@ -1,0 +1,18 @@
+
+##############################
+FILES/DIRECTORIES
+##############################
+
+Input File: SPT5_T15_R1.mLb.flT.bam
+Output File: SPT5_T15_R1.mLb.clN.bam
+
+##############################
+OVERALL COUNTS
+##############################
+
+Total Input Reads = 121457
+Total Output Pairs = 60324
+Total Singletons Excluded = 685
+Total Improper Pairs Excluded = 62
+
+##############################

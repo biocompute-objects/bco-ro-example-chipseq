@@ -1,0 +1,40 @@
+INFO  @ Thu, 10 Sep 2020 13:02:29: 
+# Command line: callpeak -t SPT5_T0_R1.mLb.clN.sorted.bam -c SPT5_INPUT_R1.mLb.clN.sorted.bam --broad --broad-cutoff 0.1 -f BAMPE -g 1.2E+7 -n SPT5_T0_R1 --keep-dup all
+# ARGUMENTS LIST:
+# name = SPT5_T0_R1
+# format = BAMPE
+# ChIP-seq file = ['SPT5_T0_R1.mLb.clN.sorted.bam']
+# control file = ['SPT5_INPUT_R1.mLb.clN.sorted.bam']
+# effective genome size = 1.20e+07
+# band width = 300
+# model fold = [5, 50]
+# qvalue cutoff for narrow/strong regions = 5.00e-02
+# qvalue cutoff for broad/weak regions = 1.00e-01
+# The maximum gap between significant sites is assigned as the read length/tag size.
+# The minimum length of peaks is assigned as the predicted fragment length "d".
+# Larger dataset will be scaled towards smaller dataset.
+# Range for calculating regional lambda is: 1000 bps and 10000 bps
+# Broad region calling is on
+# Paired-End mode is on
+ 
+INFO  @ Thu, 10 Sep 2020 13:02:29: #1 read fragment files... 
+INFO  @ Thu, 10 Sep 2020 13:02:29: #1 read treatment fragments... 
+INFO  @ Thu, 10 Sep 2020 13:02:29: 50963 fragments have been read. 
+INFO  @ Thu, 10 Sep 2020 13:02:29: #1.2 read input fragments... 
+INFO  @ Thu, 10 Sep 2020 13:02:30: 82865 fragments have been read. 
+INFO  @ Thu, 10 Sep 2020 13:02:30: #1 mean fragment size is determined as 164.4 bp from treatment 
+INFO  @ Thu, 10 Sep 2020 13:02:30: #1 note: mean fragment size in control is 157.9 bp -- value ignored 
+INFO  @ Thu, 10 Sep 2020 13:02:30: #1 fragment size = 164.4 
+INFO  @ Thu, 10 Sep 2020 13:02:30: #1  total fragments in treatment: 50963 
+INFO  @ Thu, 10 Sep 2020 13:02:30: #1  total fragments in control: 82865 
+INFO  @ Thu, 10 Sep 2020 13:02:30: #1 finished! 
+INFO  @ Thu, 10 Sep 2020 13:02:30: #2 Build Peak Model... 
+INFO  @ Thu, 10 Sep 2020 13:02:30: #2 Skipped... 
+INFO  @ Thu, 10 Sep 2020 13:02:30: #3 Call peaks... 
+INFO  @ Thu, 10 Sep 2020 13:02:30: #3 Call broad peaks with given level1 -log10qvalue cutoff and level2: 1.301030, 1.000000... 
+INFO  @ Thu, 10 Sep 2020 13:02:30: #3 Pre-compute pvalue-qvalue table... 
+INFO  @ Thu, 10 Sep 2020 13:02:31: #3 Call peaks for each chromosome... 
+INFO  @ Thu, 10 Sep 2020 13:02:32: #4 Write output xls file... SPT5_T0_R1_peaks.xls 
+INFO  @ Thu, 10 Sep 2020 13:02:32: #4 Write broad peak in broadPeak format file... SPT5_T0_R1_peaks.broadPeak 
+INFO  @ Thu, 10 Sep 2020 13:02:32: #4 Write broad peak in bed12/gappedPeak format file... SPT5_T0_R1_peaks.gappedPeak 
+INFO  @ Thu, 10 Sep 2020 13:02:32: Done! 

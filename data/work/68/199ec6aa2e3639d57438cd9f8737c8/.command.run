@@ -1,0 +1,691 @@
+#!/bin/bash
+# NEXTFLOW TASK: MULTIQC (1)
+set -e
+set -u
+NXF_DEBUG=${NXF_DEBUG:=0}; [[ $NXF_DEBUG > 1 ]] && set -x
+NXF_ENTRY=${1:-nxf_main}
+
+nxf_tree() {
+    local pid=$1
+
+    declare -a ALL_CHILDREN
+    while read P PP;do
+        ALL_CHILDREN[$PP]+=" $P"
+    done < <(ps -e -o pid= -o ppid=)
+
+    pstat() {
+        local x_pid=$1
+        local STATUS=$(2> /dev/null < /proc/$1/status egrep 'Vm|ctxt')
+
+        if [ $? = 0 ]; then
+        local  x_vsz=$(echo "$STATUS" | grep VmSize | awk '{print $2}' || echo -n '0')
+        local  x_rss=$(echo "$STATUS" | grep VmRSS | awk '{print $2}' || echo -n '0')
+        local x_peak=$(echo "$STATUS" | egrep 'VmPeak|VmHWM' | sed 's/^.*:\s*//' | sed 's/[\sa-zA-Z]*$//' | tr '\n' ' ' || echo -n '0 0')
+        local x_pmem=$(awk -v rss=$x_rss -v mem_tot=$mem_tot 'BEGIN {printf "%.0f", rss/mem_tot*100*10}' || echo -n '0')
+        local vol_ctxt=$(echo "$STATUS" | grep '\bvoluntary_ctxt_switches' | awk '{print $2}' || echo -n '0')
+        local inv_ctxt=$(echo "$STATUS" | grep '\bnonvoluntary_ctxt_switches' | awk '{print $2}' || echo -n '0')
+        cpu_stat[x_pid]="$x_pid $x_pmem $x_vsz $x_rss $x_peak $vol_ctxt $inv_ctxt"
+        fi
+    }
+
+    pwalk() {
+        pstat $1
+        for i in ${ALL_CHILDREN[$1]:=}; do pwalk $i; done
+    }
+
+    pwalk $1
+}
+
+nxf_stat() {
+    cpu_stat=()
+    nxf_tree $1
+
+    declare -a sum=(0 0 0 0 0 0 0 0)
+    local pid
+    local i
+    for pid in "${!cpu_stat[@]}"; do
+        local row=(${cpu_stat[pid]})
+        [ $NXF_DEBUG = 1 ] && echo "++ stat mem=${row[*]}"
+        for i in "${!row[@]}"; do
+        if [ $i != 0 ]; then
+            sum[i]=$((sum[i]+row[i]))
+        fi
+        done
+    done
+
+    [ $NXF_DEBUG = 1 ] && echo -e "++ stat SUM=${sum[*]}"
+
+    for i in {1..7}; do
+        if [ ${sum[i]} -lt ${cpu_peak[i]} ]; then
+            sum[i]=${cpu_peak[i]}
+        else
+            cpu_peak[i]=${sum[i]}
+        fi
+    done
+
+    [ $NXF_DEBUG = 1 ] && echo -e "++ stat PEAK=${sum[*]}\n"
+    nxf_stat_ret=(${sum[*]})
+}
+
+nxf_sleep() {
+  sleep $1 2>/dev/null || sleep 1;
+}
+
+nxf_mem_watch() {
+    set -o pipefail
+    local pid=$1
+    local trace_file=.command.trace
+    local count=0;
+    declare -a cpu_stat=(0 0 0 0 0 0 0 0)
+    declare -a cpu_peak=(0 0 0 0 0 0 0 0)
+    local mem_tot=$(< /proc/meminfo grep MemTotal | awk '{print $2}')
+    local timeout
+    local DONE
+    local STOP=''
+
+    [ $NXF_DEBUG = 1 ] && nxf_sleep 0.2 && ps fx
+
+    while true; do
+        nxf_stat $pid
+        if [ $count -lt 10 ]; then timeout=1;
+        elif [ $count -lt 120 ]; then timeout=5;
+        else timeout=30;
+        fi
+        read -t $timeout -r DONE || true
+        [[ $DONE ]] && break
+        if [ ! -e /proc/$pid ]; then
+            [ ! $STOP ] && STOP=$(nxf_date)
+            [ $(($(nxf_date)-STOP)) -gt 10000 ] && break
+        fi
+        count=$((count+1))
+    done
+
+    echo "%mem=${nxf_stat_ret[1]}"      >> $trace_file
+    echo "vmem=${nxf_stat_ret[2]}"      >> $trace_file
+    echo "rss=${nxf_stat_ret[3]}"       >> $trace_file
+    echo "peak_vmem=${nxf_stat_ret[4]}" >> $trace_file
+    echo "peak_rss=${nxf_stat_ret[5]}"  >> $trace_file
+    echo "vol_ctxt=${nxf_stat_ret[6]}"  >> $trace_file
+    echo "inv_ctxt=${nxf_stat_ret[7]}"  >> $trace_file
+}
+
+nxf_write_trace() {
+    echo "nextflow.trace/v2"           > $trace_file
+    echo "realtime=$wall_time"         >> $trace_file
+    echo "%cpu=$ucpu"                  >> $trace_file
+    echo "rchar=${io_stat1[0]}"        >> $trace_file
+    echo "wchar=${io_stat1[1]}"        >> $trace_file
+    echo "syscr=${io_stat1[2]}"        >> $trace_file
+    echo "syscw=${io_stat1[3]}"        >> $trace_file
+    echo "read_bytes=${io_stat1[4]}"   >> $trace_file
+    echo "write_bytes=${io_stat1[5]}"  >> $trace_file
+}
+
+nxf_trace_mac() {
+    local start_millis=$(nxf_date)
+
+    /bin/bash -euo pipefail /home/stain/src/92/work/68/199ec6aa2e3639d57438cd9f8737c8/.command.sh
+
+    local end_millis=$(nxf_date)
+    local wall_time=$((end_millis-start_millis))
+    local ucpu=''
+    local io_stat1=('' '' '' '' '' '')
+    nxf_write_trace
+}
+
+nxf_trace_linux() {
+    local pid=$$
+    command -v ps &>/dev/null || { >&2 echo "Command 'ps' required by nextflow to collect task metrics cannot be found"; exit 1; }
+    local num_cpus=$(< /proc/cpuinfo grep '^processor' -c)
+    local tot_time0=$(grep '^cpu ' /proc/stat | awk '{sum=$2+$3+$4+$5+$6+$7+$8+$9; printf "%.0f",sum}')
+    local cpu_time0=$(2> /dev/null < /proc/$pid/stat awk '{printf "%.0f", ($16+$17)*10 }' || echo -n 'X')
+    local io_stat0=($(2> /dev/null < /proc/$pid/io sed 's/^.*:\s*//' | head -n 6 | tr '\n' ' ' || echo -n '0 0 0 0 0 0'))
+    local start_millis=$(nxf_date)
+
+    /bin/bash -euo pipefail /home/stain/src/92/work/68/199ec6aa2e3639d57438cd9f8737c8/.command.sh &
+    local task=$!
+
+    exec 10> >(nxf_mem_watch $task)
+    local mem_proc=$!
+
+    wait $task
+
+    local end_millis=$(nxf_date)
+    local tot_time1=$(grep '^cpu ' /proc/stat | awk '{sum=$2+$3+$4+$5+$6+$7+$8+$9; printf "%.0f",sum}')
+    local cpu_time1=$(2> /dev/null < /proc/$pid/stat awk '{printf "%.0f", ($16+$17)*10 }' || echo -n 'X')
+    local ucpu=$(awk -v p1=$cpu_time1 -v p0=$cpu_time0 -v t1=$tot_time1 -v t0=$tot_time0 -v n=$num_cpus 'BEGIN { pct=(p1-p0)/(t1-t0)*100*n; printf("%.0f", pct>0 ? pct : 0) }' )
+
+    local io_stat1=($(2> /dev/null < /proc/$pid/io sed 's/^.*:\s*//' | head -n 6 | tr '\n' ' ' || echo -n '0 0 0 0 0 0'))
+    local i
+    for i in {0..5}; do
+        io_stat1[i]=$((io_stat1[i]-io_stat0[i]))
+    done
+
+    local wall_time=$((end_millis-start_millis))
+    [ $NXF_DEBUG = 1 ] && echo "+++ STATS %CPU=$ucpu TIME=$wall_time I/O=${io_stat1[*]}"
+
+    echo "nextflow.trace/v2"           > $trace_file
+    echo "realtime=$wall_time"         >> $trace_file
+    echo "%cpu=$ucpu"                  >> $trace_file
+    echo "rchar=${io_stat1[0]}"        >> $trace_file
+    echo "wchar=${io_stat1[1]}"        >> $trace_file
+    echo "syscr=${io_stat1[2]}"        >> $trace_file
+    echo "syscw=${io_stat1[3]}"        >> $trace_file
+    echo "read_bytes=${io_stat1[4]}"   >> $trace_file
+    echo "write_bytes=${io_stat1[5]}"  >> $trace_file
+
+    echo 'DONE' >&10
+    wait $mem_proc 2>/dev/null || true
+    while [ -e /proc/$mem_proc ]; do nxf_sleep 0.1; done
+}
+
+nxf_trace() {
+    local trace_file=.command.trace
+    touch $trace_file
+    if [[ $(uname) = Darwin ]]; then
+        nxf_trace_mac
+    else
+        nxf_trace_linux
+    fi
+}
+
+nxf_date() {
+    local ts=$(date +%s%3N); [[ $ts == *3N ]] && date +%s000 || echo $ts
+}
+
+nxf_env() {
+    echo '============= task environment ============='
+    env | sort | sed "s/\(.*\)AWS\(.*\)=\(.\{6\}\).*/\1AWS\2=\3xxxxxxxxxxxxx/"
+    echo '============= task output =================='
+}
+
+nxf_kill() {
+    declare -a children
+    while read P PP;do
+        children[$PP]+=" $P"
+    done < <(ps -e -o pid= -o ppid=)
+
+    kill_all() {
+        [[ $1 != $$ ]] && kill $1 2>/dev/null || true
+        for i in ${children[$1]:=}; do kill_all $i; done
+    }
+
+    kill_all $1
+}
+
+nxf_mktemp() {
+    local base=${1:-/tmp}
+    if [[ $(uname) = Darwin ]]; then mktemp -d $base/nxf.XXXXXXXXXX
+    else TMPDIR="$base" mktemp -d -t nxf.XXXXXXXXXX
+    fi
+}
+
+on_exit() {
+    exit_status=${nxf_main_ret:=$?}
+    printf $exit_status > /home/stain/src/92/work/68/199ec6aa2e3639d57438cd9f8737c8/.exitcode
+    set +u
+    [[ "$tee1" ]] && kill $tee1 2>/dev/null
+    [[ "$tee2" ]] && kill $tee2 2>/dev/null
+    [[ "$ctmp" ]] && rm -rf $ctmp || true
+    exit $exit_status
+}
+
+on_term() {
+    set +e
+    [[ "$pid" ]] && nxf_kill $pid
+}
+
+nxf_launch() {
+    /bin/bash /home/stain/src/92/work/68/199ec6aa2e3639d57438cd9f8737c8/.command.run nxf_trace
+}
+
+nxf_stage() {
+    true
+    # stage input files
+    rm -f multiqc_config.yaml
+    rm -f software_versions/software_versions_mqc.yaml
+    rm -f workflow_summary_mqc.yaml
+    rm -f fastqc/SPT5_INPUT_R1_T1_1_fastqc.html
+    rm -f fastqc/SPT5_INPUT_R1_T1_1_fastqc.zip
+    rm -f fastqc/SPT5_INPUT_R1_T1_2_fastqc.html
+    rm -f fastqc/SPT5_INPUT_R1_T1_2_fastqc.zip
+    rm -f fastqc/SPT5_T0_R1_T1_1_fastqc.html
+    rm -f fastqc/SPT5_T0_R1_T1_1_fastqc.zip
+    rm -f fastqc/SPT5_T0_R1_T1_2_fastqc.html
+    rm -f fastqc/SPT5_T0_R1_T1_2_fastqc.zip
+    rm -f fastqc/SPT5_INPUT_R2_T1_1_fastqc.html
+    rm -f fastqc/SPT5_INPUT_R2_T1_1_fastqc.zip
+    rm -f fastqc/SPT5_INPUT_R2_T1_2_fastqc.html
+    rm -f fastqc/SPT5_INPUT_R2_T1_2_fastqc.zip
+    rm -f fastqc/SPT5_T0_R2_T1_1_fastqc.html
+    rm -f fastqc/SPT5_T0_R2_T1_1_fastqc.zip
+    rm -f fastqc/SPT5_T0_R2_T1_2_fastqc.html
+    rm -f fastqc/SPT5_T0_R2_T1_2_fastqc.zip
+    rm -f fastqc/SPT5_T15_R2_T1_1_fastqc.html
+    rm -f fastqc/SPT5_T15_R2_T1_1_fastqc.zip
+    rm -f fastqc/SPT5_T15_R2_T1_2_fastqc.html
+    rm -f fastqc/SPT5_T15_R2_T1_2_fastqc.zip
+    rm -f fastqc/SPT5_T15_R1_T1_1_fastqc.html
+    rm -f fastqc/SPT5_T15_R1_T1_1_fastqc.zip
+    rm -f fastqc/SPT5_T15_R1_T1_2_fastqc.html
+    rm -f fastqc/SPT5_T15_R1_T1_2_fastqc.zip
+    rm -f trimgalore/SPT5_INPUT_R1_T1_1.fastq.gz_trimming_report.txt
+    rm -f trimgalore/SPT5_INPUT_R1_T1_2.fastq.gz_trimming_report.txt
+    rm -f trimgalore/SPT5_T0_R1_T1_1.fastq.gz_trimming_report.txt
+    rm -f trimgalore/SPT5_T0_R1_T1_2.fastq.gz_trimming_report.txt
+    rm -f trimgalore/SPT5_INPUT_R2_T1_1.fastq.gz_trimming_report.txt
+    rm -f trimgalore/SPT5_INPUT_R2_T1_2.fastq.gz_trimming_report.txt
+    rm -f trimgalore/SPT5_T0_R2_T1_1.fastq.gz_trimming_report.txt
+    rm -f trimgalore/SPT5_T0_R2_T1_2.fastq.gz_trimming_report.txt
+    rm -f trimgalore/SPT5_T15_R2_T1_1.fastq.gz_trimming_report.txt
+    rm -f trimgalore/SPT5_T15_R2_T1_2.fastq.gz_trimming_report.txt
+    rm -f trimgalore/SPT5_T15_R1_T1_1.fastq.gz_trimming_report.txt
+    rm -f trimgalore/SPT5_T15_R1_T1_2.fastq.gz_trimming_report.txt
+    rm -f trimgalore/fastqc/SPT5_INPUT_R1_T1_1_val_1_fastqc.html
+    rm -f trimgalore/fastqc/SPT5_INPUT_R1_T1_1_val_1_fastqc.zip
+    rm -f trimgalore/fastqc/SPT5_INPUT_R1_T1_2_val_2_fastqc.html
+    rm -f trimgalore/fastqc/SPT5_INPUT_R1_T1_2_val_2_fastqc.zip
+    rm -f trimgalore/fastqc/SPT5_T0_R1_T1_1_val_1_fastqc.html
+    rm -f trimgalore/fastqc/SPT5_T0_R1_T1_1_val_1_fastqc.zip
+    rm -f trimgalore/fastqc/SPT5_T0_R1_T1_2_val_2_fastqc.html
+    rm -f trimgalore/fastqc/SPT5_T0_R1_T1_2_val_2_fastqc.zip
+    rm -f trimgalore/fastqc/SPT5_INPUT_R2_T1_1_val_1_fastqc.html
+    rm -f trimgalore/fastqc/SPT5_INPUT_R2_T1_1_val_1_fastqc.zip
+    rm -f trimgalore/fastqc/SPT5_INPUT_R2_T1_2_val_2_fastqc.html
+    rm -f trimgalore/fastqc/SPT5_INPUT_R2_T1_2_val_2_fastqc.zip
+    rm -f trimgalore/fastqc/SPT5_T0_R2_T1_1_val_1_fastqc.html
+    rm -f trimgalore/fastqc/SPT5_T0_R2_T1_1_val_1_fastqc.zip
+    rm -f trimgalore/fastqc/SPT5_T0_R2_T1_2_val_2_fastqc.html
+    rm -f trimgalore/fastqc/SPT5_T0_R2_T1_2_val_2_fastqc.zip
+    rm -f trimgalore/fastqc/SPT5_T15_R2_T1_1_val_1_fastqc.html
+    rm -f trimgalore/fastqc/SPT5_T15_R2_T1_1_val_1_fastqc.zip
+    rm -f trimgalore/fastqc/SPT5_T15_R2_T1_2_val_2_fastqc.html
+    rm -f trimgalore/fastqc/SPT5_T15_R2_T1_2_val_2_fastqc.zip
+    rm -f trimgalore/fastqc/SPT5_T15_R1_T1_1_val_1_fastqc.html
+    rm -f trimgalore/fastqc/SPT5_T15_R1_T1_1_val_1_fastqc.zip
+    rm -f trimgalore/fastqc/SPT5_T15_R1_T1_2_val_2_fastqc.html
+    rm -f trimgalore/fastqc/SPT5_T15_R1_T1_2_val_2_fastqc.zip
+    rm -f alignment/library/SPT5_INPUT_R1_T1.Lb.sorted.bam.flagstat
+    rm -f alignment/library/SPT5_INPUT_R1_T1.Lb.sorted.bam.idxstats
+    rm -f alignment/library/SPT5_INPUT_R1_T1.Lb.sorted.bam.stats
+    rm -f alignment/library/SPT5_T0_R1_T1.Lb.sorted.bam.flagstat
+    rm -f alignment/library/SPT5_T0_R1_T1.Lb.sorted.bam.idxstats
+    rm -f alignment/library/SPT5_T0_R1_T1.Lb.sorted.bam.stats
+    rm -f alignment/library/SPT5_INPUT_R2_T1.Lb.sorted.bam.flagstat
+    rm -f alignment/library/SPT5_INPUT_R2_T1.Lb.sorted.bam.idxstats
+    rm -f alignment/library/SPT5_INPUT_R2_T1.Lb.sorted.bam.stats
+    rm -f alignment/library/SPT5_T0_R2_T1.Lb.sorted.bam.flagstat
+    rm -f alignment/library/SPT5_T0_R2_T1.Lb.sorted.bam.idxstats
+    rm -f alignment/library/SPT5_T0_R2_T1.Lb.sorted.bam.stats
+    rm -f alignment/library/SPT5_T15_R2_T1.Lb.sorted.bam.flagstat
+    rm -f alignment/library/SPT5_T15_R2_T1.Lb.sorted.bam.idxstats
+    rm -f alignment/library/SPT5_T15_R2_T1.Lb.sorted.bam.stats
+    rm -f alignment/library/SPT5_T15_R1_T1.Lb.sorted.bam.flagstat
+    rm -f alignment/library/SPT5_T15_R1_T1.Lb.sorted.bam.idxstats
+    rm -f alignment/library/SPT5_T15_R1_T1.Lb.sorted.bam.stats
+    rm -f alignment/mergedLibrary/SPT5_T0_R1.mLb.mkD.sorted.bam.flagstat
+    rm -f alignment/mergedLibrary/SPT5_T0_R1.mLb.mkD.sorted.bam.idxstats
+    rm -f alignment/mergedLibrary/SPT5_T0_R1.mLb.mkD.sorted.bam.stats
+    rm -f alignment/mergedLibrary/SPT5_INPUT_R1.mLb.mkD.sorted.bam.flagstat
+    rm -f alignment/mergedLibrary/SPT5_INPUT_R1.mLb.mkD.sorted.bam.idxstats
+    rm -f alignment/mergedLibrary/SPT5_INPUT_R1.mLb.mkD.sorted.bam.stats
+    rm -f alignment/mergedLibrary/SPT5_T0_R2.mLb.mkD.sorted.bam.flagstat
+    rm -f alignment/mergedLibrary/SPT5_T0_R2.mLb.mkD.sorted.bam.idxstats
+    rm -f alignment/mergedLibrary/SPT5_T0_R2.mLb.mkD.sorted.bam.stats
+    rm -f alignment/mergedLibrary/SPT5_INPUT_R2.mLb.mkD.sorted.bam.flagstat
+    rm -f alignment/mergedLibrary/SPT5_INPUT_R2.mLb.mkD.sorted.bam.idxstats
+    rm -f alignment/mergedLibrary/SPT5_INPUT_R2.mLb.mkD.sorted.bam.stats
+    rm -f alignment/mergedLibrary/SPT5_T15_R1.mLb.mkD.sorted.bam.flagstat
+    rm -f alignment/mergedLibrary/SPT5_T15_R1.mLb.mkD.sorted.bam.idxstats
+    rm -f alignment/mergedLibrary/SPT5_T15_R1.mLb.mkD.sorted.bam.stats
+    rm -f alignment/mergedLibrary/SPT5_T15_R2.mLb.mkD.sorted.bam.flagstat
+    rm -f alignment/mergedLibrary/SPT5_T15_R2.mLb.mkD.sorted.bam.idxstats
+    rm -f alignment/mergedLibrary/SPT5_T15_R2.mLb.mkD.sorted.bam.stats
+    rm -f alignment/mergedLibrary/SPT5_T0_R1.mLb.clN.sorted.bam.flagstat
+    rm -f alignment/mergedLibrary/SPT5_INPUT_R1.mLb.clN.sorted.bam.flagstat
+    rm -f alignment/mergedLibrary/SPT5_T0_R2.mLb.clN.sorted.bam.flagstat
+    rm -f alignment/mergedLibrary/SPT5_INPUT_R2.mLb.clN.sorted.bam.flagstat
+    rm -f alignment/mergedLibrary/SPT5_T15_R1.mLb.clN.sorted.bam.flagstat
+    rm -f alignment/mergedLibrary/SPT5_T15_R2.mLb.clN.sorted.bam.flagstat
+    rm -f alignment/mergedLibrary/SPT5_T0_R1.mLb.clN.sorted.bam.idxstats
+    rm -f alignment/mergedLibrary/SPT5_T0_R1.mLb.clN.sorted.bam.stats
+    rm -f alignment/mergedLibrary/SPT5_INPUT_R1.mLb.clN.sorted.bam.idxstats
+    rm -f alignment/mergedLibrary/SPT5_INPUT_R1.mLb.clN.sorted.bam.stats
+    rm -f alignment/mergedLibrary/SPT5_T0_R2.mLb.clN.sorted.bam.idxstats
+    rm -f alignment/mergedLibrary/SPT5_T0_R2.mLb.clN.sorted.bam.stats
+    rm -f alignment/mergedLibrary/SPT5_INPUT_R2.mLb.clN.sorted.bam.idxstats
+    rm -f alignment/mergedLibrary/SPT5_INPUT_R2.mLb.clN.sorted.bam.stats
+    rm -f alignment/mergedLibrary/SPT5_T15_R1.mLb.clN.sorted.bam.idxstats
+    rm -f alignment/mergedLibrary/SPT5_T15_R1.mLb.clN.sorted.bam.stats
+    rm -f alignment/mergedLibrary/SPT5_T15_R2.mLb.clN.sorted.bam.idxstats
+    rm -f alignment/mergedLibrary/SPT5_T15_R2.mLb.clN.sorted.bam.stats
+    rm -f alignment/mergedLibrary/picard_metrics/SPT5_T0_R1.mLb.mkD.MarkDuplicates.metrics.txt
+    rm -f alignment/mergedLibrary/picard_metrics/SPT5_INPUT_R1.mLb.mkD.MarkDuplicates.metrics.txt
+    rm -f alignment/mergedLibrary/picard_metrics/SPT5_T0_R2.mLb.mkD.MarkDuplicates.metrics.txt
+    rm -f alignment/mergedLibrary/picard_metrics/SPT5_INPUT_R2.mLb.mkD.MarkDuplicates.metrics.txt
+    rm -f alignment/mergedLibrary/picard_metrics/SPT5_T15_R1.mLb.mkD.MarkDuplicates.metrics.txt
+    rm -f alignment/mergedLibrary/picard_metrics/SPT5_T15_R2.mLb.mkD.MarkDuplicates.metrics.txt
+    rm -f alignment/mergedLibrary/picard_metrics/SPT5_T0_R1.mLb.clN.CollectMultipleMetrics.alignment_summary_metrics
+    rm -f alignment/mergedLibrary/picard_metrics/SPT5_T0_R1.mLb.clN.CollectMultipleMetrics.base_distribution_by_cycle_metrics
+    rm -f alignment/mergedLibrary/picard_metrics/SPT5_T0_R1.mLb.clN.CollectMultipleMetrics.insert_size_metrics
+    rm -f alignment/mergedLibrary/picard_metrics/SPT5_T0_R1.mLb.clN.CollectMultipleMetrics.quality_by_cycle_metrics
+    rm -f alignment/mergedLibrary/picard_metrics/SPT5_T0_R1.mLb.clN.CollectMultipleMetrics.quality_distribution_metrics
+    rm -f alignment/mergedLibrary/picard_metrics/SPT5_INPUT_R1.mLb.clN.CollectMultipleMetrics.alignment_summary_metrics
+    rm -f alignment/mergedLibrary/picard_metrics/SPT5_INPUT_R1.mLb.clN.CollectMultipleMetrics.base_distribution_by_cycle_metrics
+    rm -f alignment/mergedLibrary/picard_metrics/SPT5_INPUT_R1.mLb.clN.CollectMultipleMetrics.insert_size_metrics
+    rm -f alignment/mergedLibrary/picard_metrics/SPT5_INPUT_R1.mLb.clN.CollectMultipleMetrics.quality_by_cycle_metrics
+    rm -f alignment/mergedLibrary/picard_metrics/SPT5_INPUT_R1.mLb.clN.CollectMultipleMetrics.quality_distribution_metrics
+    rm -f alignment/mergedLibrary/picard_metrics/SPT5_T0_R2.mLb.clN.CollectMultipleMetrics.alignment_summary_metrics
+    rm -f alignment/mergedLibrary/picard_metrics/SPT5_T0_R2.mLb.clN.CollectMultipleMetrics.base_distribution_by_cycle_metrics
+    rm -f alignment/mergedLibrary/picard_metrics/SPT5_T0_R2.mLb.clN.CollectMultipleMetrics.insert_size_metrics
+    rm -f alignment/mergedLibrary/picard_metrics/SPT5_T0_R2.mLb.clN.CollectMultipleMetrics.quality_by_cycle_metrics
+    rm -f alignment/mergedLibrary/picard_metrics/SPT5_T0_R2.mLb.clN.CollectMultipleMetrics.quality_distribution_metrics
+    rm -f alignment/mergedLibrary/picard_metrics/SPT5_INPUT_R2.mLb.clN.CollectMultipleMetrics.alignment_summary_metrics
+    rm -f alignment/mergedLibrary/picard_metrics/SPT5_INPUT_R2.mLb.clN.CollectMultipleMetrics.base_distribution_by_cycle_metrics
+    rm -f alignment/mergedLibrary/picard_metrics/SPT5_INPUT_R2.mLb.clN.CollectMultipleMetrics.insert_size_metrics
+    rm -f alignment/mergedLibrary/picard_metrics/SPT5_INPUT_R2.mLb.clN.CollectMultipleMetrics.quality_by_cycle_metrics
+    rm -f alignment/mergedLibrary/picard_metrics/SPT5_INPUT_R2.mLb.clN.CollectMultipleMetrics.quality_distribution_metrics
+    rm -f alignment/mergedLibrary/picard_metrics/SPT5_T15_R1.mLb.clN.CollectMultipleMetrics.alignment_summary_metrics
+    rm -f alignment/mergedLibrary/picard_metrics/SPT5_T15_R1.mLb.clN.CollectMultipleMetrics.base_distribution_by_cycle_metrics
+    rm -f alignment/mergedLibrary/picard_metrics/SPT5_T15_R1.mLb.clN.CollectMultipleMetrics.insert_size_metrics
+    rm -f alignment/mergedLibrary/picard_metrics/SPT5_T15_R1.mLb.clN.CollectMultipleMetrics.quality_by_cycle_metrics
+    rm -f alignment/mergedLibrary/picard_metrics/SPT5_T15_R1.mLb.clN.CollectMultipleMetrics.quality_distribution_metrics
+    rm -f alignment/mergedLibrary/picard_metrics/SPT5_T15_R2.mLb.clN.CollectMultipleMetrics.alignment_summary_metrics
+    rm -f alignment/mergedLibrary/picard_metrics/SPT5_T15_R2.mLb.clN.CollectMultipleMetrics.base_distribution_by_cycle_metrics
+    rm -f alignment/mergedLibrary/picard_metrics/SPT5_T15_R2.mLb.clN.CollectMultipleMetrics.insert_size_metrics
+    rm -f alignment/mergedLibrary/picard_metrics/SPT5_T15_R2.mLb.clN.CollectMultipleMetrics.quality_by_cycle_metrics
+    rm -f alignment/mergedLibrary/picard_metrics/SPT5_T15_R2.mLb.clN.CollectMultipleMetrics.quality_distribution_metrics
+    rm -f macs/SPT5_T0_R1_peaks.FRiP_mqc.tsv
+    rm -f macs/SPT5_T0_R1_peaks.count_mqc.tsv
+    rm -f macs/SPT5_T0_R2_peaks.FRiP_mqc.tsv
+    rm -f macs/SPT5_T0_R2_peaks.count_mqc.tsv
+    rm -f macs/SPT5_T15_R1_peaks.FRiP_mqc.tsv
+    rm -f macs/SPT5_T15_R1_peaks.count_mqc.tsv
+    rm -f macs/SPT5_T15_R2_peaks.FRiP_mqc.tsv
+    rm -f macs/SPT5_T15_R2_peaks.count_mqc.tsv
+    rm -f macs/macs_annotatePeaks.summary_mqc.tsv
+    rm -f macs/consensus/SPT5.consensus_peaks.featureCounts.txt.summary
+    rm -f macs/consensus/SPT5.consensus_peaks.pca.vals_mqc.tsv
+    rm -f macs/consensus/SPT5.consensus_peaks.sample.dists_mqc.tsv
+    rm -f preseq/SPT5_T0_R1.ccurve.txt
+    rm -f preseq/SPT5_T0_R2.ccurve.txt
+    rm -f preseq/SPT5_T15_R1.ccurve.txt
+    rm -f preseq/SPT5_T15_R2.ccurve.txt
+    rm -f deeptools/SPT5_T0_R1.plotFingerprint.raw.txt
+    rm -f deeptools/SPT5_T0_R2.plotFingerprint.raw.txt
+    rm -f deeptools/SPT5_T15_R1.plotFingerprint.raw.txt
+    rm -f deeptools/SPT5_T15_R2.plotFingerprint.raw.txt
+    rm -f deeptools/SPT5_T0_R1.plotProfile.tab
+    rm -f deeptools/SPT5_INPUT_R1.plotProfile.tab
+    rm -f deeptools/SPT5_T0_R2.plotProfile.tab
+    rm -f deeptools/SPT5_INPUT_R2.plotProfile.tab
+    rm -f deeptools/SPT5_T15_R1.plotProfile.tab
+    rm -f deeptools/SPT5_T15_R2.plotProfile.tab
+    rm -f phantompeakqualtools/SPT5_T0_R1.spp.out
+    rm -f phantompeakqualtools/SPT5_INPUT_R1.spp.out
+    rm -f phantompeakqualtools/SPT5_T0_R2.spp.out
+    rm -f phantompeakqualtools/SPT5_INPUT_R2.spp.out
+    rm -f phantompeakqualtools/SPT5_T15_R1.spp.out
+    rm -f phantompeakqualtools/SPT5_T15_R2.spp.out
+    rm -f phantompeakqualtools/SPT5_T0_R1_spp_correlation_mqc.tsv
+    rm -f phantompeakqualtools/SPT5_T0_R1_spp_nsc_mqc.tsv
+    rm -f phantompeakqualtools/SPT5_T0_R1_spp_rsc_mqc.tsv
+    rm -f phantompeakqualtools/SPT5_INPUT_R1_spp_correlation_mqc.tsv
+    rm -f phantompeakqualtools/SPT5_INPUT_R1_spp_nsc_mqc.tsv
+    rm -f phantompeakqualtools/SPT5_INPUT_R1_spp_rsc_mqc.tsv
+    rm -f phantompeakqualtools/SPT5_T0_R2_spp_correlation_mqc.tsv
+    rm -f phantompeakqualtools/SPT5_T0_R2_spp_nsc_mqc.tsv
+    rm -f phantompeakqualtools/SPT5_T0_R2_spp_rsc_mqc.tsv
+    rm -f phantompeakqualtools/SPT5_INPUT_R2_spp_correlation_mqc.tsv
+    rm -f phantompeakqualtools/SPT5_INPUT_R2_spp_nsc_mqc.tsv
+    rm -f phantompeakqualtools/SPT5_INPUT_R2_spp_rsc_mqc.tsv
+    rm -f phantompeakqualtools/SPT5_T15_R1_spp_correlation_mqc.tsv
+    rm -f phantompeakqualtools/SPT5_T15_R1_spp_nsc_mqc.tsv
+    rm -f phantompeakqualtools/SPT5_T15_R1_spp_rsc_mqc.tsv
+    rm -f phantompeakqualtools/SPT5_T15_R2_spp_correlation_mqc.tsv
+    rm -f phantompeakqualtools/SPT5_T15_R2_spp_nsc_mqc.tsv
+    rm -f phantompeakqualtools/SPT5_T15_R2_spp_rsc_mqc.tsv
+    ln -s /home/stain/.nextflow/assets/nf-core/chipseq/assets/multiqc_config.yaml multiqc_config.yaml
+    mkdir -p software_versions && ln -s /home/stain/src/92/work/3f/286e4ec8d41d8d096e79e8a5088fea/software_versions_mqc.yaml software_versions/software_versions_mqc.yaml
+    ln -s /home/stain/src/92/work/tmp/b6/850fdd21ef493331d9c34bca241bb0/workflow_summary_mqc.yaml workflow_summary_mqc.yaml
+    mkdir -p fastqc && ln -s /home/stain/src/92/work/e1/a217d0b79e692f46f48bbe341f2f15/SPT5_INPUT_R1_T1_1_fastqc.html fastqc/SPT5_INPUT_R1_T1_1_fastqc.html
+    mkdir -p fastqc && ln -s /home/stain/src/92/work/e1/a217d0b79e692f46f48bbe341f2f15/SPT5_INPUT_R1_T1_1_fastqc.zip fastqc/SPT5_INPUT_R1_T1_1_fastqc.zip
+    mkdir -p fastqc && ln -s /home/stain/src/92/work/e1/a217d0b79e692f46f48bbe341f2f15/SPT5_INPUT_R1_T1_2_fastqc.html fastqc/SPT5_INPUT_R1_T1_2_fastqc.html
+    mkdir -p fastqc && ln -s /home/stain/src/92/work/e1/a217d0b79e692f46f48bbe341f2f15/SPT5_INPUT_R1_T1_2_fastqc.zip fastqc/SPT5_INPUT_R1_T1_2_fastqc.zip
+    mkdir -p fastqc && ln -s /home/stain/src/92/work/bf/715e9ef6507e9ca3b0e0de4ab2ed2f/SPT5_T0_R1_T1_1_fastqc.html fastqc/SPT5_T0_R1_T1_1_fastqc.html
+    mkdir -p fastqc && ln -s /home/stain/src/92/work/bf/715e9ef6507e9ca3b0e0de4ab2ed2f/SPT5_T0_R1_T1_1_fastqc.zip fastqc/SPT5_T0_R1_T1_1_fastqc.zip
+    mkdir -p fastqc && ln -s /home/stain/src/92/work/bf/715e9ef6507e9ca3b0e0de4ab2ed2f/SPT5_T0_R1_T1_2_fastqc.html fastqc/SPT5_T0_R1_T1_2_fastqc.html
+    mkdir -p fastqc && ln -s /home/stain/src/92/work/bf/715e9ef6507e9ca3b0e0de4ab2ed2f/SPT5_T0_R1_T1_2_fastqc.zip fastqc/SPT5_T0_R1_T1_2_fastqc.zip
+    mkdir -p fastqc && ln -s /home/stain/src/92/work/f0/0c96b3f7a1953416b9e78a6fcbbf93/SPT5_INPUT_R2_T1_1_fastqc.html fastqc/SPT5_INPUT_R2_T1_1_fastqc.html
+    mkdir -p fastqc && ln -s /home/stain/src/92/work/f0/0c96b3f7a1953416b9e78a6fcbbf93/SPT5_INPUT_R2_T1_1_fastqc.zip fastqc/SPT5_INPUT_R2_T1_1_fastqc.zip
+    mkdir -p fastqc && ln -s /home/stain/src/92/work/f0/0c96b3f7a1953416b9e78a6fcbbf93/SPT5_INPUT_R2_T1_2_fastqc.html fastqc/SPT5_INPUT_R2_T1_2_fastqc.html
+    mkdir -p fastqc && ln -s /home/stain/src/92/work/f0/0c96b3f7a1953416b9e78a6fcbbf93/SPT5_INPUT_R2_T1_2_fastqc.zip fastqc/SPT5_INPUT_R2_T1_2_fastqc.zip
+    mkdir -p fastqc && ln -s /home/stain/src/92/work/61/31369dbe2c8facec99908a51f29747/SPT5_T0_R2_T1_1_fastqc.html fastqc/SPT5_T0_R2_T1_1_fastqc.html
+    mkdir -p fastqc && ln -s /home/stain/src/92/work/61/31369dbe2c8facec99908a51f29747/SPT5_T0_R2_T1_1_fastqc.zip fastqc/SPT5_T0_R2_T1_1_fastqc.zip
+    mkdir -p fastqc && ln -s /home/stain/src/92/work/61/31369dbe2c8facec99908a51f29747/SPT5_T0_R2_T1_2_fastqc.html fastqc/SPT5_T0_R2_T1_2_fastqc.html
+    mkdir -p fastqc && ln -s /home/stain/src/92/work/61/31369dbe2c8facec99908a51f29747/SPT5_T0_R2_T1_2_fastqc.zip fastqc/SPT5_T0_R2_T1_2_fastqc.zip
+    mkdir -p fastqc && ln -s /home/stain/src/92/work/3e/c3dc213310ea0917fa450c41c9e9dc/SPT5_T15_R2_T1_1_fastqc.html fastqc/SPT5_T15_R2_T1_1_fastqc.html
+    mkdir -p fastqc && ln -s /home/stain/src/92/work/3e/c3dc213310ea0917fa450c41c9e9dc/SPT5_T15_R2_T1_1_fastqc.zip fastqc/SPT5_T15_R2_T1_1_fastqc.zip
+    mkdir -p fastqc && ln -s /home/stain/src/92/work/3e/c3dc213310ea0917fa450c41c9e9dc/SPT5_T15_R2_T1_2_fastqc.html fastqc/SPT5_T15_R2_T1_2_fastqc.html
+    mkdir -p fastqc && ln -s /home/stain/src/92/work/3e/c3dc213310ea0917fa450c41c9e9dc/SPT5_T15_R2_T1_2_fastqc.zip fastqc/SPT5_T15_R2_T1_2_fastqc.zip
+    mkdir -p fastqc && ln -s /home/stain/src/92/work/be/022ad6920de21cbf8c93e357badbdf/SPT5_T15_R1_T1_1_fastqc.html fastqc/SPT5_T15_R1_T1_1_fastqc.html
+    mkdir -p fastqc && ln -s /home/stain/src/92/work/be/022ad6920de21cbf8c93e357badbdf/SPT5_T15_R1_T1_1_fastqc.zip fastqc/SPT5_T15_R1_T1_1_fastqc.zip
+    mkdir -p fastqc && ln -s /home/stain/src/92/work/be/022ad6920de21cbf8c93e357badbdf/SPT5_T15_R1_T1_2_fastqc.html fastqc/SPT5_T15_R1_T1_2_fastqc.html
+    mkdir -p fastqc && ln -s /home/stain/src/92/work/be/022ad6920de21cbf8c93e357badbdf/SPT5_T15_R1_T1_2_fastqc.zip fastqc/SPT5_T15_R1_T1_2_fastqc.zip
+    mkdir -p trimgalore && ln -s /home/stain/src/92/work/04/a990774f181426ac14d06fdb7dfe1a/SPT5_INPUT_R1_T1_1.fastq.gz_trimming_report.txt trimgalore/SPT5_INPUT_R1_T1_1.fastq.gz_trimming_report.txt
+    mkdir -p trimgalore && ln -s /home/stain/src/92/work/04/a990774f181426ac14d06fdb7dfe1a/SPT5_INPUT_R1_T1_2.fastq.gz_trimming_report.txt trimgalore/SPT5_INPUT_R1_T1_2.fastq.gz_trimming_report.txt
+    mkdir -p trimgalore && ln -s /home/stain/src/92/work/48/a3a1ab1b82b7419ce649c754fc9e71/SPT5_T0_R1_T1_1.fastq.gz_trimming_report.txt trimgalore/SPT5_T0_R1_T1_1.fastq.gz_trimming_report.txt
+    mkdir -p trimgalore && ln -s /home/stain/src/92/work/48/a3a1ab1b82b7419ce649c754fc9e71/SPT5_T0_R1_T1_2.fastq.gz_trimming_report.txt trimgalore/SPT5_T0_R1_T1_2.fastq.gz_trimming_report.txt
+    mkdir -p trimgalore && ln -s /home/stain/src/92/work/e4/1fd169dfc17dbbeeebd4b9585095ae/SPT5_INPUT_R2_T1_1.fastq.gz_trimming_report.txt trimgalore/SPT5_INPUT_R2_T1_1.fastq.gz_trimming_report.txt
+    mkdir -p trimgalore && ln -s /home/stain/src/92/work/e4/1fd169dfc17dbbeeebd4b9585095ae/SPT5_INPUT_R2_T1_2.fastq.gz_trimming_report.txt trimgalore/SPT5_INPUT_R2_T1_2.fastq.gz_trimming_report.txt
+    mkdir -p trimgalore && ln -s /home/stain/src/92/work/21/c7296069b7878889feb93e086c279f/SPT5_T0_R2_T1_1.fastq.gz_trimming_report.txt trimgalore/SPT5_T0_R2_T1_1.fastq.gz_trimming_report.txt
+    mkdir -p trimgalore && ln -s /home/stain/src/92/work/21/c7296069b7878889feb93e086c279f/SPT5_T0_R2_T1_2.fastq.gz_trimming_report.txt trimgalore/SPT5_T0_R2_T1_2.fastq.gz_trimming_report.txt
+    mkdir -p trimgalore && ln -s /home/stain/src/92/work/5c/92aafc701dbce3c06a4765f862123c/SPT5_T15_R2_T1_1.fastq.gz_trimming_report.txt trimgalore/SPT5_T15_R2_T1_1.fastq.gz_trimming_report.txt
+    mkdir -p trimgalore && ln -s /home/stain/src/92/work/5c/92aafc701dbce3c06a4765f862123c/SPT5_T15_R2_T1_2.fastq.gz_trimming_report.txt trimgalore/SPT5_T15_R2_T1_2.fastq.gz_trimming_report.txt
+    mkdir -p trimgalore && ln -s /home/stain/src/92/work/a1/70bf366821f68b8b95378153889db5/SPT5_T15_R1_T1_1.fastq.gz_trimming_report.txt trimgalore/SPT5_T15_R1_T1_1.fastq.gz_trimming_report.txt
+    mkdir -p trimgalore && ln -s /home/stain/src/92/work/a1/70bf366821f68b8b95378153889db5/SPT5_T15_R1_T1_2.fastq.gz_trimming_report.txt trimgalore/SPT5_T15_R1_T1_2.fastq.gz_trimming_report.txt
+    mkdir -p trimgalore/fastqc && ln -s /home/stain/src/92/work/04/a990774f181426ac14d06fdb7dfe1a/SPT5_INPUT_R1_T1_1_val_1_fastqc.html trimgalore/fastqc/SPT5_INPUT_R1_T1_1_val_1_fastqc.html
+    mkdir -p trimgalore/fastqc && ln -s /home/stain/src/92/work/04/a990774f181426ac14d06fdb7dfe1a/SPT5_INPUT_R1_T1_1_val_1_fastqc.zip trimgalore/fastqc/SPT5_INPUT_R1_T1_1_val_1_fastqc.zip
+    mkdir -p trimgalore/fastqc && ln -s /home/stain/src/92/work/04/a990774f181426ac14d06fdb7dfe1a/SPT5_INPUT_R1_T1_2_val_2_fastqc.html trimgalore/fastqc/SPT5_INPUT_R1_T1_2_val_2_fastqc.html
+    mkdir -p trimgalore/fastqc && ln -s /home/stain/src/92/work/04/a990774f181426ac14d06fdb7dfe1a/SPT5_INPUT_R1_T1_2_val_2_fastqc.zip trimgalore/fastqc/SPT5_INPUT_R1_T1_2_val_2_fastqc.zip
+    mkdir -p trimgalore/fastqc && ln -s /home/stain/src/92/work/48/a3a1ab1b82b7419ce649c754fc9e71/SPT5_T0_R1_T1_1_val_1_fastqc.html trimgalore/fastqc/SPT5_T0_R1_T1_1_val_1_fastqc.html
+    mkdir -p trimgalore/fastqc && ln -s /home/stain/src/92/work/48/a3a1ab1b82b7419ce649c754fc9e71/SPT5_T0_R1_T1_1_val_1_fastqc.zip trimgalore/fastqc/SPT5_T0_R1_T1_1_val_1_fastqc.zip
+    mkdir -p trimgalore/fastqc && ln -s /home/stain/src/92/work/48/a3a1ab1b82b7419ce649c754fc9e71/SPT5_T0_R1_T1_2_val_2_fastqc.html trimgalore/fastqc/SPT5_T0_R1_T1_2_val_2_fastqc.html
+    mkdir -p trimgalore/fastqc && ln -s /home/stain/src/92/work/48/a3a1ab1b82b7419ce649c754fc9e71/SPT5_T0_R1_T1_2_val_2_fastqc.zip trimgalore/fastqc/SPT5_T0_R1_T1_2_val_2_fastqc.zip
+    mkdir -p trimgalore/fastqc && ln -s /home/stain/src/92/work/e4/1fd169dfc17dbbeeebd4b9585095ae/SPT5_INPUT_R2_T1_1_val_1_fastqc.html trimgalore/fastqc/SPT5_INPUT_R2_T1_1_val_1_fastqc.html
+    mkdir -p trimgalore/fastqc && ln -s /home/stain/src/92/work/e4/1fd169dfc17dbbeeebd4b9585095ae/SPT5_INPUT_R2_T1_1_val_1_fastqc.zip trimgalore/fastqc/SPT5_INPUT_R2_T1_1_val_1_fastqc.zip
+    mkdir -p trimgalore/fastqc && ln -s /home/stain/src/92/work/e4/1fd169dfc17dbbeeebd4b9585095ae/SPT5_INPUT_R2_T1_2_val_2_fastqc.html trimgalore/fastqc/SPT5_INPUT_R2_T1_2_val_2_fastqc.html
+    mkdir -p trimgalore/fastqc && ln -s /home/stain/src/92/work/e4/1fd169dfc17dbbeeebd4b9585095ae/SPT5_INPUT_R2_T1_2_val_2_fastqc.zip trimgalore/fastqc/SPT5_INPUT_R2_T1_2_val_2_fastqc.zip
+    mkdir -p trimgalore/fastqc && ln -s /home/stain/src/92/work/21/c7296069b7878889feb93e086c279f/SPT5_T0_R2_T1_1_val_1_fastqc.html trimgalore/fastqc/SPT5_T0_R2_T1_1_val_1_fastqc.html
+    mkdir -p trimgalore/fastqc && ln -s /home/stain/src/92/work/21/c7296069b7878889feb93e086c279f/SPT5_T0_R2_T1_1_val_1_fastqc.zip trimgalore/fastqc/SPT5_T0_R2_T1_1_val_1_fastqc.zip
+    mkdir -p trimgalore/fastqc && ln -s /home/stain/src/92/work/21/c7296069b7878889feb93e086c279f/SPT5_T0_R2_T1_2_val_2_fastqc.html trimgalore/fastqc/SPT5_T0_R2_T1_2_val_2_fastqc.html
+    mkdir -p trimgalore/fastqc && ln -s /home/stain/src/92/work/21/c7296069b7878889feb93e086c279f/SPT5_T0_R2_T1_2_val_2_fastqc.zip trimgalore/fastqc/SPT5_T0_R2_T1_2_val_2_fastqc.zip
+    mkdir -p trimgalore/fastqc && ln -s /home/stain/src/92/work/5c/92aafc701dbce3c06a4765f862123c/SPT5_T15_R2_T1_1_val_1_fastqc.html trimgalore/fastqc/SPT5_T15_R2_T1_1_val_1_fastqc.html
+    mkdir -p trimgalore/fastqc && ln -s /home/stain/src/92/work/5c/92aafc701dbce3c06a4765f862123c/SPT5_T15_R2_T1_1_val_1_fastqc.zip trimgalore/fastqc/SPT5_T15_R2_T1_1_val_1_fastqc.zip
+    mkdir -p trimgalore/fastqc && ln -s /home/stain/src/92/work/5c/92aafc701dbce3c06a4765f862123c/SPT5_T15_R2_T1_2_val_2_fastqc.html trimgalore/fastqc/SPT5_T15_R2_T1_2_val_2_fastqc.html
+    mkdir -p trimgalore/fastqc && ln -s /home/stain/src/92/work/5c/92aafc701dbce3c06a4765f862123c/SPT5_T15_R2_T1_2_val_2_fastqc.zip trimgalore/fastqc/SPT5_T15_R2_T1_2_val_2_fastqc.zip
+    mkdir -p trimgalore/fastqc && ln -s /home/stain/src/92/work/a1/70bf366821f68b8b95378153889db5/SPT5_T15_R1_T1_1_val_1_fastqc.html trimgalore/fastqc/SPT5_T15_R1_T1_1_val_1_fastqc.html
+    mkdir -p trimgalore/fastqc && ln -s /home/stain/src/92/work/a1/70bf366821f68b8b95378153889db5/SPT5_T15_R1_T1_1_val_1_fastqc.zip trimgalore/fastqc/SPT5_T15_R1_T1_1_val_1_fastqc.zip
+    mkdir -p trimgalore/fastqc && ln -s /home/stain/src/92/work/a1/70bf366821f68b8b95378153889db5/SPT5_T15_R1_T1_2_val_2_fastqc.html trimgalore/fastqc/SPT5_T15_R1_T1_2_val_2_fastqc.html
+    mkdir -p trimgalore/fastqc && ln -s /home/stain/src/92/work/a1/70bf366821f68b8b95378153889db5/SPT5_T15_R1_T1_2_val_2_fastqc.zip trimgalore/fastqc/SPT5_T15_R1_T1_2_val_2_fastqc.zip
+    mkdir -p alignment/library && ln -s /home/stain/src/92/work/7c/53671be7fb3d099b2a13e44ac4ca20/SPT5_INPUT_R1_T1.Lb.sorted.bam.flagstat alignment/library/SPT5_INPUT_R1_T1.Lb.sorted.bam.flagstat
+    mkdir -p alignment/library && ln -s /home/stain/src/92/work/7c/53671be7fb3d099b2a13e44ac4ca20/SPT5_INPUT_R1_T1.Lb.sorted.bam.idxstats alignment/library/SPT5_INPUT_R1_T1.Lb.sorted.bam.idxstats
+    mkdir -p alignment/library && ln -s /home/stain/src/92/work/7c/53671be7fb3d099b2a13e44ac4ca20/SPT5_INPUT_R1_T1.Lb.sorted.bam.stats alignment/library/SPT5_INPUT_R1_T1.Lb.sorted.bam.stats
+    mkdir -p alignment/library && ln -s /home/stain/src/92/work/86/61e059753a1df75a6bb1df49691350/SPT5_T0_R1_T1.Lb.sorted.bam.flagstat alignment/library/SPT5_T0_R1_T1.Lb.sorted.bam.flagstat
+    mkdir -p alignment/library && ln -s /home/stain/src/92/work/86/61e059753a1df75a6bb1df49691350/SPT5_T0_R1_T1.Lb.sorted.bam.idxstats alignment/library/SPT5_T0_R1_T1.Lb.sorted.bam.idxstats
+    mkdir -p alignment/library && ln -s /home/stain/src/92/work/86/61e059753a1df75a6bb1df49691350/SPT5_T0_R1_T1.Lb.sorted.bam.stats alignment/library/SPT5_T0_R1_T1.Lb.sorted.bam.stats
+    mkdir -p alignment/library && ln -s /home/stain/src/92/work/5b/bd582683564791141c0c03b080bb11/SPT5_INPUT_R2_T1.Lb.sorted.bam.flagstat alignment/library/SPT5_INPUT_R2_T1.Lb.sorted.bam.flagstat
+    mkdir -p alignment/library && ln -s /home/stain/src/92/work/5b/bd582683564791141c0c03b080bb11/SPT5_INPUT_R2_T1.Lb.sorted.bam.idxstats alignment/library/SPT5_INPUT_R2_T1.Lb.sorted.bam.idxstats
+    mkdir -p alignment/library && ln -s /home/stain/src/92/work/5b/bd582683564791141c0c03b080bb11/SPT5_INPUT_R2_T1.Lb.sorted.bam.stats alignment/library/SPT5_INPUT_R2_T1.Lb.sorted.bam.stats
+    mkdir -p alignment/library && ln -s /home/stain/src/92/work/c9/741bb9a82d317097707762e5f7ba67/SPT5_T0_R2_T1.Lb.sorted.bam.flagstat alignment/library/SPT5_T0_R2_T1.Lb.sorted.bam.flagstat
+    mkdir -p alignment/library && ln -s /home/stain/src/92/work/c9/741bb9a82d317097707762e5f7ba67/SPT5_T0_R2_T1.Lb.sorted.bam.idxstats alignment/library/SPT5_T0_R2_T1.Lb.sorted.bam.idxstats
+    mkdir -p alignment/library && ln -s /home/stain/src/92/work/c9/741bb9a82d317097707762e5f7ba67/SPT5_T0_R2_T1.Lb.sorted.bam.stats alignment/library/SPT5_T0_R2_T1.Lb.sorted.bam.stats
+    mkdir -p alignment/library && ln -s /home/stain/src/92/work/93/52da3ff86d103581079d37639d7e30/SPT5_T15_R2_T1.Lb.sorted.bam.flagstat alignment/library/SPT5_T15_R2_T1.Lb.sorted.bam.flagstat
+    mkdir -p alignment/library && ln -s /home/stain/src/92/work/93/52da3ff86d103581079d37639d7e30/SPT5_T15_R2_T1.Lb.sorted.bam.idxstats alignment/library/SPT5_T15_R2_T1.Lb.sorted.bam.idxstats
+    mkdir -p alignment/library && ln -s /home/stain/src/92/work/93/52da3ff86d103581079d37639d7e30/SPT5_T15_R2_T1.Lb.sorted.bam.stats alignment/library/SPT5_T15_R2_T1.Lb.sorted.bam.stats
+    mkdir -p alignment/library && ln -s /home/stain/src/92/work/a2/74e365dacc9117906c19f497b4b09b/SPT5_T15_R1_T1.Lb.sorted.bam.flagstat alignment/library/SPT5_T15_R1_T1.Lb.sorted.bam.flagstat
+    mkdir -p alignment/library && ln -s /home/stain/src/92/work/a2/74e365dacc9117906c19f497b4b09b/SPT5_T15_R1_T1.Lb.sorted.bam.idxstats alignment/library/SPT5_T15_R1_T1.Lb.sorted.bam.idxstats
+    mkdir -p alignment/library && ln -s /home/stain/src/92/work/a2/74e365dacc9117906c19f497b4b09b/SPT5_T15_R1_T1.Lb.sorted.bam.stats alignment/library/SPT5_T15_R1_T1.Lb.sorted.bam.stats
+    mkdir -p alignment/mergedLibrary && ln -s /home/stain/src/92/work/a0/83ea2611c219cd19a003abbfc5c96f/SPT5_T0_R1.mLb.mkD.sorted.bam.flagstat alignment/mergedLibrary/SPT5_T0_R1.mLb.mkD.sorted.bam.flagstat
+    mkdir -p alignment/mergedLibrary && ln -s /home/stain/src/92/work/a0/83ea2611c219cd19a003abbfc5c96f/SPT5_T0_R1.mLb.mkD.sorted.bam.idxstats alignment/mergedLibrary/SPT5_T0_R1.mLb.mkD.sorted.bam.idxstats
+    mkdir -p alignment/mergedLibrary && ln -s /home/stain/src/92/work/a0/83ea2611c219cd19a003abbfc5c96f/SPT5_T0_R1.mLb.mkD.sorted.bam.stats alignment/mergedLibrary/SPT5_T0_R1.mLb.mkD.sorted.bam.stats
+    mkdir -p alignment/mergedLibrary && ln -s /home/stain/src/92/work/18/7f78a96014a6590cb37cd60a9d6151/SPT5_INPUT_R1.mLb.mkD.sorted.bam.flagstat alignment/mergedLibrary/SPT5_INPUT_R1.mLb.mkD.sorted.bam.flagstat
+    mkdir -p alignment/mergedLibrary && ln -s /home/stain/src/92/work/18/7f78a96014a6590cb37cd60a9d6151/SPT5_INPUT_R1.mLb.mkD.sorted.bam.idxstats alignment/mergedLibrary/SPT5_INPUT_R1.mLb.mkD.sorted.bam.idxstats
+    mkdir -p alignment/mergedLibrary && ln -s /home/stain/src/92/work/18/7f78a96014a6590cb37cd60a9d6151/SPT5_INPUT_R1.mLb.mkD.sorted.bam.stats alignment/mergedLibrary/SPT5_INPUT_R1.mLb.mkD.sorted.bam.stats
+    mkdir -p alignment/mergedLibrary && ln -s /home/stain/src/92/work/a0/5b8bb4a74ab57eeb47c041a245137f/SPT5_T0_R2.mLb.mkD.sorted.bam.flagstat alignment/mergedLibrary/SPT5_T0_R2.mLb.mkD.sorted.bam.flagstat
+    mkdir -p alignment/mergedLibrary && ln -s /home/stain/src/92/work/a0/5b8bb4a74ab57eeb47c041a245137f/SPT5_T0_R2.mLb.mkD.sorted.bam.idxstats alignment/mergedLibrary/SPT5_T0_R2.mLb.mkD.sorted.bam.idxstats
+    mkdir -p alignment/mergedLibrary && ln -s /home/stain/src/92/work/a0/5b8bb4a74ab57eeb47c041a245137f/SPT5_T0_R2.mLb.mkD.sorted.bam.stats alignment/mergedLibrary/SPT5_T0_R2.mLb.mkD.sorted.bam.stats
+    mkdir -p alignment/mergedLibrary && ln -s /home/stain/src/92/work/20/d306ec9628fc88328366ab31440ac2/SPT5_INPUT_R2.mLb.mkD.sorted.bam.flagstat alignment/mergedLibrary/SPT5_INPUT_R2.mLb.mkD.sorted.bam.flagstat
+    mkdir -p alignment/mergedLibrary && ln -s /home/stain/src/92/work/20/d306ec9628fc88328366ab31440ac2/SPT5_INPUT_R2.mLb.mkD.sorted.bam.idxstats alignment/mergedLibrary/SPT5_INPUT_R2.mLb.mkD.sorted.bam.idxstats
+    mkdir -p alignment/mergedLibrary && ln -s /home/stain/src/92/work/20/d306ec9628fc88328366ab31440ac2/SPT5_INPUT_R2.mLb.mkD.sorted.bam.stats alignment/mergedLibrary/SPT5_INPUT_R2.mLb.mkD.sorted.bam.stats
+    mkdir -p alignment/mergedLibrary && ln -s /home/stain/src/92/work/41/b46a474bff7892f3851375891e3dd3/SPT5_T15_R1.mLb.mkD.sorted.bam.flagstat alignment/mergedLibrary/SPT5_T15_R1.mLb.mkD.sorted.bam.flagstat
+    mkdir -p alignment/mergedLibrary && ln -s /home/stain/src/92/work/41/b46a474bff7892f3851375891e3dd3/SPT5_T15_R1.mLb.mkD.sorted.bam.idxstats alignment/mergedLibrary/SPT5_T15_R1.mLb.mkD.sorted.bam.idxstats
+    mkdir -p alignment/mergedLibrary && ln -s /home/stain/src/92/work/41/b46a474bff7892f3851375891e3dd3/SPT5_T15_R1.mLb.mkD.sorted.bam.stats alignment/mergedLibrary/SPT5_T15_R1.mLb.mkD.sorted.bam.stats
+    mkdir -p alignment/mergedLibrary && ln -s /home/stain/src/92/work/17/674501cdeedbb3303fccdda0154349/SPT5_T15_R2.mLb.mkD.sorted.bam.flagstat alignment/mergedLibrary/SPT5_T15_R2.mLb.mkD.sorted.bam.flagstat
+    mkdir -p alignment/mergedLibrary && ln -s /home/stain/src/92/work/17/674501cdeedbb3303fccdda0154349/SPT5_T15_R2.mLb.mkD.sorted.bam.idxstats alignment/mergedLibrary/SPT5_T15_R2.mLb.mkD.sorted.bam.idxstats
+    mkdir -p alignment/mergedLibrary && ln -s /home/stain/src/92/work/17/674501cdeedbb3303fccdda0154349/SPT5_T15_R2.mLb.mkD.sorted.bam.stats alignment/mergedLibrary/SPT5_T15_R2.mLb.mkD.sorted.bam.stats
+    mkdir -p alignment/mergedLibrary && ln -s /home/stain/src/92/work/52/5d9786705629ee9b8cbc8b0f5b7631/SPT5_T0_R1.mLb.clN.sorted.bam.flagstat alignment/mergedLibrary/SPT5_T0_R1.mLb.clN.sorted.bam.flagstat
+    mkdir -p alignment/mergedLibrary && ln -s /home/stain/src/92/work/6e/b5ca3ca579a6d1e26364ec9ac8f05d/SPT5_INPUT_R1.mLb.clN.sorted.bam.flagstat alignment/mergedLibrary/SPT5_INPUT_R1.mLb.clN.sorted.bam.flagstat
+    mkdir -p alignment/mergedLibrary && ln -s /home/stain/src/92/work/3f/c7d0d71a1b19c161d8d77a0942a4a0/SPT5_T0_R2.mLb.clN.sorted.bam.flagstat alignment/mergedLibrary/SPT5_T0_R2.mLb.clN.sorted.bam.flagstat
+    mkdir -p alignment/mergedLibrary && ln -s /home/stain/src/92/work/32/8acc3d02a6432984277cfbe2548d26/SPT5_INPUT_R2.mLb.clN.sorted.bam.flagstat alignment/mergedLibrary/SPT5_INPUT_R2.mLb.clN.sorted.bam.flagstat
+    mkdir -p alignment/mergedLibrary && ln -s /home/stain/src/92/work/26/fb502b6ef8aa85fcee3fe38cfcc773/SPT5_T15_R1.mLb.clN.sorted.bam.flagstat alignment/mergedLibrary/SPT5_T15_R1.mLb.clN.sorted.bam.flagstat
+    mkdir -p alignment/mergedLibrary && ln -s /home/stain/src/92/work/2f/c60b2d2b4456d095e7e5e8ea50d11f/SPT5_T15_R2.mLb.clN.sorted.bam.flagstat alignment/mergedLibrary/SPT5_T15_R2.mLb.clN.sorted.bam.flagstat
+    mkdir -p alignment/mergedLibrary && ln -s /home/stain/src/92/work/52/5d9786705629ee9b8cbc8b0f5b7631/SPT5_T0_R1.mLb.clN.sorted.bam.idxstats alignment/mergedLibrary/SPT5_T0_R1.mLb.clN.sorted.bam.idxstats
+    mkdir -p alignment/mergedLibrary && ln -s /home/stain/src/92/work/52/5d9786705629ee9b8cbc8b0f5b7631/SPT5_T0_R1.mLb.clN.sorted.bam.stats alignment/mergedLibrary/SPT5_T0_R1.mLb.clN.sorted.bam.stats
+    mkdir -p alignment/mergedLibrary && ln -s /home/stain/src/92/work/6e/b5ca3ca579a6d1e26364ec9ac8f05d/SPT5_INPUT_R1.mLb.clN.sorted.bam.idxstats alignment/mergedLibrary/SPT5_INPUT_R1.mLb.clN.sorted.bam.idxstats
+    mkdir -p alignment/mergedLibrary && ln -s /home/stain/src/92/work/6e/b5ca3ca579a6d1e26364ec9ac8f05d/SPT5_INPUT_R1.mLb.clN.sorted.bam.stats alignment/mergedLibrary/SPT5_INPUT_R1.mLb.clN.sorted.bam.stats
+    mkdir -p alignment/mergedLibrary && ln -s /home/stain/src/92/work/3f/c7d0d71a1b19c161d8d77a0942a4a0/SPT5_T0_R2.mLb.clN.sorted.bam.idxstats alignment/mergedLibrary/SPT5_T0_R2.mLb.clN.sorted.bam.idxstats
+    mkdir -p alignment/mergedLibrary && ln -s /home/stain/src/92/work/3f/c7d0d71a1b19c161d8d77a0942a4a0/SPT5_T0_R2.mLb.clN.sorted.bam.stats alignment/mergedLibrary/SPT5_T0_R2.mLb.clN.sorted.bam.stats
+    mkdir -p alignment/mergedLibrary && ln -s /home/stain/src/92/work/32/8acc3d02a6432984277cfbe2548d26/SPT5_INPUT_R2.mLb.clN.sorted.bam.idxstats alignment/mergedLibrary/SPT5_INPUT_R2.mLb.clN.sorted.bam.idxstats
+    mkdir -p alignment/mergedLibrary && ln -s /home/stain/src/92/work/32/8acc3d02a6432984277cfbe2548d26/SPT5_INPUT_R2.mLb.clN.sorted.bam.stats alignment/mergedLibrary/SPT5_INPUT_R2.mLb.clN.sorted.bam.stats
+    mkdir -p alignment/mergedLibrary && ln -s /home/stain/src/92/work/26/fb502b6ef8aa85fcee3fe38cfcc773/SPT5_T15_R1.mLb.clN.sorted.bam.idxstats alignment/mergedLibrary/SPT5_T15_R1.mLb.clN.sorted.bam.idxstats
+    mkdir -p alignment/mergedLibrary && ln -s /home/stain/src/92/work/26/fb502b6ef8aa85fcee3fe38cfcc773/SPT5_T15_R1.mLb.clN.sorted.bam.stats alignment/mergedLibrary/SPT5_T15_R1.mLb.clN.sorted.bam.stats
+    mkdir -p alignment/mergedLibrary && ln -s /home/stain/src/92/work/2f/c60b2d2b4456d095e7e5e8ea50d11f/SPT5_T15_R2.mLb.clN.sorted.bam.idxstats alignment/mergedLibrary/SPT5_T15_R2.mLb.clN.sorted.bam.idxstats
+    mkdir -p alignment/mergedLibrary && ln -s /home/stain/src/92/work/2f/c60b2d2b4456d095e7e5e8ea50d11f/SPT5_T15_R2.mLb.clN.sorted.bam.stats alignment/mergedLibrary/SPT5_T15_R2.mLb.clN.sorted.bam.stats
+    mkdir -p alignment/mergedLibrary/picard_metrics && ln -s /home/stain/src/92/work/a0/83ea2611c219cd19a003abbfc5c96f/SPT5_T0_R1.mLb.mkD.MarkDuplicates.metrics.txt alignment/mergedLibrary/picard_metrics/SPT5_T0_R1.mLb.mkD.MarkDuplicates.metrics.txt
+    mkdir -p alignment/mergedLibrary/picard_metrics && ln -s /home/stain/src/92/work/18/7f78a96014a6590cb37cd60a9d6151/SPT5_INPUT_R1.mLb.mkD.MarkDuplicates.metrics.txt alignment/mergedLibrary/picard_metrics/SPT5_INPUT_R1.mLb.mkD.MarkDuplicates.metrics.txt
+    mkdir -p alignment/mergedLibrary/picard_metrics && ln -s /home/stain/src/92/work/a0/5b8bb4a74ab57eeb47c041a245137f/SPT5_T0_R2.mLb.mkD.MarkDuplicates.metrics.txt alignment/mergedLibrary/picard_metrics/SPT5_T0_R2.mLb.mkD.MarkDuplicates.metrics.txt
+    mkdir -p alignment/mergedLibrary/picard_metrics && ln -s /home/stain/src/92/work/20/d306ec9628fc88328366ab31440ac2/SPT5_INPUT_R2.mLb.mkD.MarkDuplicates.metrics.txt alignment/mergedLibrary/picard_metrics/SPT5_INPUT_R2.mLb.mkD.MarkDuplicates.metrics.txt
+    mkdir -p alignment/mergedLibrary/picard_metrics && ln -s /home/stain/src/92/work/41/b46a474bff7892f3851375891e3dd3/SPT5_T15_R1.mLb.mkD.MarkDuplicates.metrics.txt alignment/mergedLibrary/picard_metrics/SPT5_T15_R1.mLb.mkD.MarkDuplicates.metrics.txt
+    mkdir -p alignment/mergedLibrary/picard_metrics && ln -s /home/stain/src/92/work/17/674501cdeedbb3303fccdda0154349/SPT5_T15_R2.mLb.mkD.MarkDuplicates.metrics.txt alignment/mergedLibrary/picard_metrics/SPT5_T15_R2.mLb.mkD.MarkDuplicates.metrics.txt
+    mkdir -p alignment/mergedLibrary/picard_metrics && ln -s /home/stain/src/92/work/87/f4d9b4950e55bf8948e9fe1e5be065/SPT5_T0_R1.mLb.clN.CollectMultipleMetrics.alignment_summary_metrics alignment/mergedLibrary/picard_metrics/SPT5_T0_R1.mLb.clN.CollectMultipleMetrics.alignment_summary_metrics
+    mkdir -p alignment/mergedLibrary/picard_metrics && ln -s /home/stain/src/92/work/87/f4d9b4950e55bf8948e9fe1e5be065/SPT5_T0_R1.mLb.clN.CollectMultipleMetrics.base_distribution_by_cycle_metrics alignment/mergedLibrary/picard_metrics/SPT5_T0_R1.mLb.clN.CollectMultipleMetrics.base_distribution_by_cycle_metrics
+    mkdir -p alignment/mergedLibrary/picard_metrics && ln -s /home/stain/src/92/work/87/f4d9b4950e55bf8948e9fe1e5be065/SPT5_T0_R1.mLb.clN.CollectMultipleMetrics.insert_size_metrics alignment/mergedLibrary/picard_metrics/SPT5_T0_R1.mLb.clN.CollectMultipleMetrics.insert_size_metrics
+    mkdir -p alignment/mergedLibrary/picard_metrics && ln -s /home/stain/src/92/work/87/f4d9b4950e55bf8948e9fe1e5be065/SPT5_T0_R1.mLb.clN.CollectMultipleMetrics.quality_by_cycle_metrics alignment/mergedLibrary/picard_metrics/SPT5_T0_R1.mLb.clN.CollectMultipleMetrics.quality_by_cycle_metrics
+    mkdir -p alignment/mergedLibrary/picard_metrics && ln -s /home/stain/src/92/work/87/f4d9b4950e55bf8948e9fe1e5be065/SPT5_T0_R1.mLb.clN.CollectMultipleMetrics.quality_distribution_metrics alignment/mergedLibrary/picard_metrics/SPT5_T0_R1.mLb.clN.CollectMultipleMetrics.quality_distribution_metrics
+    mkdir -p alignment/mergedLibrary/picard_metrics && ln -s /home/stain/src/92/work/4b/6887edb016e053dc59a14d457c2e4b/SPT5_INPUT_R1.mLb.clN.CollectMultipleMetrics.alignment_summary_metrics alignment/mergedLibrary/picard_metrics/SPT5_INPUT_R1.mLb.clN.CollectMultipleMetrics.alignment_summary_metrics
+    mkdir -p alignment/mergedLibrary/picard_metrics && ln -s /home/stain/src/92/work/4b/6887edb016e053dc59a14d457c2e4b/SPT5_INPUT_R1.mLb.clN.CollectMultipleMetrics.base_distribution_by_cycle_metrics alignment/mergedLibrary/picard_metrics/SPT5_INPUT_R1.mLb.clN.CollectMultipleMetrics.base_distribution_by_cycle_metrics
+    mkdir -p alignment/mergedLibrary/picard_metrics && ln -s /home/stain/src/92/work/4b/6887edb016e053dc59a14d457c2e4b/SPT5_INPUT_R1.mLb.clN.CollectMultipleMetrics.insert_size_metrics alignment/mergedLibrary/picard_metrics/SPT5_INPUT_R1.mLb.clN.CollectMultipleMetrics.insert_size_metrics
+    mkdir -p alignment/mergedLibrary/picard_metrics && ln -s /home/stain/src/92/work/4b/6887edb016e053dc59a14d457c2e4b/SPT5_INPUT_R1.mLb.clN.CollectMultipleMetrics.quality_by_cycle_metrics alignment/mergedLibrary/picard_metrics/SPT5_INPUT_R1.mLb.clN.CollectMultipleMetrics.quality_by_cycle_metrics
+    mkdir -p alignment/mergedLibrary/picard_metrics && ln -s /home/stain/src/92/work/4b/6887edb016e053dc59a14d457c2e4b/SPT5_INPUT_R1.mLb.clN.CollectMultipleMetrics.quality_distribution_metrics alignment/mergedLibrary/picard_metrics/SPT5_INPUT_R1.mLb.clN.CollectMultipleMetrics.quality_distribution_metrics
+    mkdir -p alignment/mergedLibrary/picard_metrics && ln -s /home/stain/src/92/work/3a/671f0593defd2ce8b6c66debc901c7/SPT5_T0_R2.mLb.clN.CollectMultipleMetrics.alignment_summary_metrics alignment/mergedLibrary/picard_metrics/SPT5_T0_R2.mLb.clN.CollectMultipleMetrics.alignment_summary_metrics
+    mkdir -p alignment/mergedLibrary/picard_metrics && ln -s /home/stain/src/92/work/3a/671f0593defd2ce8b6c66debc901c7/SPT5_T0_R2.mLb.clN.CollectMultipleMetrics.base_distribution_by_cycle_metrics alignment/mergedLibrary/picard_metrics/SPT5_T0_R2.mLb.clN.CollectMultipleMetrics.base_distribution_by_cycle_metrics
+    mkdir -p alignment/mergedLibrary/picard_metrics && ln -s /home/stain/src/92/work/3a/671f0593defd2ce8b6c66debc901c7/SPT5_T0_R2.mLb.clN.CollectMultipleMetrics.insert_size_metrics alignment/mergedLibrary/picard_metrics/SPT5_T0_R2.mLb.clN.CollectMultipleMetrics.insert_size_metrics
+    mkdir -p alignment/mergedLibrary/picard_metrics && ln -s /home/stain/src/92/work/3a/671f0593defd2ce8b6c66debc901c7/SPT5_T0_R2.mLb.clN.CollectMultipleMetrics.quality_by_cycle_metrics alignment/mergedLibrary/picard_metrics/SPT5_T0_R2.mLb.clN.CollectMultipleMetrics.quality_by_cycle_metrics
+    mkdir -p alignment/mergedLibrary/picard_metrics && ln -s /home/stain/src/92/work/3a/671f0593defd2ce8b6c66debc901c7/SPT5_T0_R2.mLb.clN.CollectMultipleMetrics.quality_distribution_metrics alignment/mergedLibrary/picard_metrics/SPT5_T0_R2.mLb.clN.CollectMultipleMetrics.quality_distribution_metrics
+    mkdir -p alignment/mergedLibrary/picard_metrics && ln -s /home/stain/src/92/work/b5/9ba59369250842a5f4abda4d43d745/SPT5_INPUT_R2.mLb.clN.CollectMultipleMetrics.alignment_summary_metrics alignment/mergedLibrary/picard_metrics/SPT5_INPUT_R2.mLb.clN.CollectMultipleMetrics.alignment_summary_metrics
+    mkdir -p alignment/mergedLibrary/picard_metrics && ln -s /home/stain/src/92/work/b5/9ba59369250842a5f4abda4d43d745/SPT5_INPUT_R2.mLb.clN.CollectMultipleMetrics.base_distribution_by_cycle_metrics alignment/mergedLibrary/picard_metrics/SPT5_INPUT_R2.mLb.clN.CollectMultipleMetrics.base_distribution_by_cycle_metrics
+    mkdir -p alignment/mergedLibrary/picard_metrics && ln -s /home/stain/src/92/work/b5/9ba59369250842a5f4abda4d43d745/SPT5_INPUT_R2.mLb.clN.CollectMultipleMetrics.insert_size_metrics alignment/mergedLibrary/picard_metrics/SPT5_INPUT_R2.mLb.clN.CollectMultipleMetrics.insert_size_metrics
+    mkdir -p alignment/mergedLibrary/picard_metrics && ln -s /home/stain/src/92/work/b5/9ba59369250842a5f4abda4d43d745/SPT5_INPUT_R2.mLb.clN.CollectMultipleMetrics.quality_by_cycle_metrics alignment/mergedLibrary/picard_metrics/SPT5_INPUT_R2.mLb.clN.CollectMultipleMetrics.quality_by_cycle_metrics
+    mkdir -p alignment/mergedLibrary/picard_metrics && ln -s /home/stain/src/92/work/b5/9ba59369250842a5f4abda4d43d745/SPT5_INPUT_R2.mLb.clN.CollectMultipleMetrics.quality_distribution_metrics alignment/mergedLibrary/picard_metrics/SPT5_INPUT_R2.mLb.clN.CollectMultipleMetrics.quality_distribution_metrics
+    mkdir -p alignment/mergedLibrary/picard_metrics && ln -s /home/stain/src/92/work/ae/351ea96910eebf145df42ff510752e/SPT5_T15_R1.mLb.clN.CollectMultipleMetrics.alignment_summary_metrics alignment/mergedLibrary/picard_metrics/SPT5_T15_R1.mLb.clN.CollectMultipleMetrics.alignment_summary_metrics
+    mkdir -p alignment/mergedLibrary/picard_metrics && ln -s /home/stain/src/92/work/ae/351ea96910eebf145df42ff510752e/SPT5_T15_R1.mLb.clN.CollectMultipleMetrics.base_distribution_by_cycle_metrics alignment/mergedLibrary/picard_metrics/SPT5_T15_R1.mLb.clN.CollectMultipleMetrics.base_distribution_by_cycle_metrics
+    mkdir -p alignment/mergedLibrary/picard_metrics && ln -s /home/stain/src/92/work/ae/351ea96910eebf145df42ff510752e/SPT5_T15_R1.mLb.clN.CollectMultipleMetrics.insert_size_metrics alignment/mergedLibrary/picard_metrics/SPT5_T15_R1.mLb.clN.CollectMultipleMetrics.insert_size_metrics
+    mkdir -p alignment/mergedLibrary/picard_metrics && ln -s /home/stain/src/92/work/ae/351ea96910eebf145df42ff510752e/SPT5_T15_R1.mLb.clN.CollectMultipleMetrics.quality_by_cycle_metrics alignment/mergedLibrary/picard_metrics/SPT5_T15_R1.mLb.clN.CollectMultipleMetrics.quality_by_cycle_metrics
+    mkdir -p alignment/mergedLibrary/picard_metrics && ln -s /home/stain/src/92/work/ae/351ea96910eebf145df42ff510752e/SPT5_T15_R1.mLb.clN.CollectMultipleMetrics.quality_distribution_metrics alignment/mergedLibrary/picard_metrics/SPT5_T15_R1.mLb.clN.CollectMultipleMetrics.quality_distribution_metrics
+    mkdir -p alignment/mergedLibrary/picard_metrics && ln -s /home/stain/src/92/work/97/2d093f187ddca0096f53f328bf7354/SPT5_T15_R2.mLb.clN.CollectMultipleMetrics.alignment_summary_metrics alignment/mergedLibrary/picard_metrics/SPT5_T15_R2.mLb.clN.CollectMultipleMetrics.alignment_summary_metrics
+    mkdir -p alignment/mergedLibrary/picard_metrics && ln -s /home/stain/src/92/work/97/2d093f187ddca0096f53f328bf7354/SPT5_T15_R2.mLb.clN.CollectMultipleMetrics.base_distribution_by_cycle_metrics alignment/mergedLibrary/picard_metrics/SPT5_T15_R2.mLb.clN.CollectMultipleMetrics.base_distribution_by_cycle_metrics
+    mkdir -p alignment/mergedLibrary/picard_metrics && ln -s /home/stain/src/92/work/97/2d093f187ddca0096f53f328bf7354/SPT5_T15_R2.mLb.clN.CollectMultipleMetrics.insert_size_metrics alignment/mergedLibrary/picard_metrics/SPT5_T15_R2.mLb.clN.CollectMultipleMetrics.insert_size_metrics
+    mkdir -p alignment/mergedLibrary/picard_metrics && ln -s /home/stain/src/92/work/97/2d093f187ddca0096f53f328bf7354/SPT5_T15_R2.mLb.clN.CollectMultipleMetrics.quality_by_cycle_metrics alignment/mergedLibrary/picard_metrics/SPT5_T15_R2.mLb.clN.CollectMultipleMetrics.quality_by_cycle_metrics
+    mkdir -p alignment/mergedLibrary/picard_metrics && ln -s /home/stain/src/92/work/97/2d093f187ddca0096f53f328bf7354/SPT5_T15_R2.mLb.clN.CollectMultipleMetrics.quality_distribution_metrics alignment/mergedLibrary/picard_metrics/SPT5_T15_R2.mLb.clN.CollectMultipleMetrics.quality_distribution_metrics
+    mkdir -p macs && ln -s /home/stain/src/92/work/03/ff7efa127feec986408310e8bda72f/SPT5_T0_R1_peaks.FRiP_mqc.tsv macs/SPT5_T0_R1_peaks.FRiP_mqc.tsv
+    mkdir -p macs && ln -s /home/stain/src/92/work/03/ff7efa127feec986408310e8bda72f/SPT5_T0_R1_peaks.count_mqc.tsv macs/SPT5_T0_R1_peaks.count_mqc.tsv
+    mkdir -p macs && ln -s /home/stain/src/92/work/86/dbe579e8575d83ed63a9486bae37fe/SPT5_T0_R2_peaks.FRiP_mqc.tsv macs/SPT5_T0_R2_peaks.FRiP_mqc.tsv
+    mkdir -p macs && ln -s /home/stain/src/92/work/86/dbe579e8575d83ed63a9486bae37fe/SPT5_T0_R2_peaks.count_mqc.tsv macs/SPT5_T0_R2_peaks.count_mqc.tsv
+    mkdir -p macs && ln -s /home/stain/src/92/work/53/a7f0c7a4d45bc345466a7e1c32612d/SPT5_T15_R1_peaks.FRiP_mqc.tsv macs/SPT5_T15_R1_peaks.FRiP_mqc.tsv
+    mkdir -p macs && ln -s /home/stain/src/92/work/53/a7f0c7a4d45bc345466a7e1c32612d/SPT5_T15_R1_peaks.count_mqc.tsv macs/SPT5_T15_R1_peaks.count_mqc.tsv
+    mkdir -p macs && ln -s /home/stain/src/92/work/be/4eaebd136f463746c5223583404564/SPT5_T15_R2_peaks.FRiP_mqc.tsv macs/SPT5_T15_R2_peaks.FRiP_mqc.tsv
+    mkdir -p macs && ln -s /home/stain/src/92/work/be/4eaebd136f463746c5223583404564/SPT5_T15_R2_peaks.count_mqc.tsv macs/SPT5_T15_R2_peaks.count_mqc.tsv
+    mkdir -p macs && ln -s /home/stain/src/92/work/2e/c38082f875fe2b118056863d3a0be6/macs_annotatePeaks.summary_mqc.tsv macs/macs_annotatePeaks.summary_mqc.tsv
+    mkdir -p macs/consensus && ln -s /home/stain/src/92/work/48/070bc11d8a2809e44b66b107782288/SPT5.consensus_peaks.featureCounts.txt.summary macs/consensus/SPT5.consensus_peaks.featureCounts.txt.summary
+    mkdir -p macs/consensus && ln -s /home/stain/src/92/work/ef/d1ca3831745b50b2efc1dcc7fd5817/SPT5.consensus_peaks.pca.vals_mqc.tsv macs/consensus/SPT5.consensus_peaks.pca.vals_mqc.tsv
+    mkdir -p macs/consensus && ln -s /home/stain/src/92/work/ef/d1ca3831745b50b2efc1dcc7fd5817/SPT5.consensus_peaks.sample.dists_mqc.tsv macs/consensus/SPT5.consensus_peaks.sample.dists_mqc.tsv
+    mkdir -p preseq && ln -s /home/stain/src/92/work/b4/65bc40e814bcea8cc24a82ac0c516d/SPT5_T0_R1.ccurve.txt preseq/SPT5_T0_R1.ccurve.txt
+    mkdir -p preseq && ln -s /home/stain/src/92/work/00/57829019113b3d2bcac42788b23308/SPT5_T0_R2.ccurve.txt preseq/SPT5_T0_R2.ccurve.txt
+    mkdir -p preseq && ln -s /home/stain/src/92/work/eb/7f68c9a21bb256577acc0a230b7283/SPT5_T15_R1.ccurve.txt preseq/SPT5_T15_R1.ccurve.txt
+    mkdir -p preseq && ln -s /home/stain/src/92/work/c4/34c7e6346e7929bc2dc4a192b53244/SPT5_T15_R2.ccurve.txt preseq/SPT5_T15_R2.ccurve.txt
+    mkdir -p deeptools && ln -s /home/stain/src/92/work/17/fd385048178a6fc506620877c6938a/SPT5_T0_R1.plotFingerprint.raw.txt deeptools/SPT5_T0_R1.plotFingerprint.raw.txt
+    mkdir -p deeptools && ln -s /home/stain/src/92/work/70/024eb177ee473ecfe3505873393e2e/SPT5_T0_R2.plotFingerprint.raw.txt deeptools/SPT5_T0_R2.plotFingerprint.raw.txt
+    mkdir -p deeptools && ln -s /home/stain/src/92/work/e8/c7dfee4e9d8fe5aef5c5488bb4ad30/SPT5_T15_R1.plotFingerprint.raw.txt deeptools/SPT5_T15_R1.plotFingerprint.raw.txt
+    mkdir -p deeptools && ln -s /home/stain/src/92/work/79/2670ee589ff993e1bfd0e9d33e7683/SPT5_T15_R2.plotFingerprint.raw.txt deeptools/SPT5_T15_R2.plotFingerprint.raw.txt
+    mkdir -p deeptools && ln -s /home/stain/src/92/work/75/a683f1ea45d06b92ea8483f9de6636/SPT5_T0_R1.plotProfile.tab deeptools/SPT5_T0_R1.plotProfile.tab
+    mkdir -p deeptools && ln -s /home/stain/src/92/work/61/b05864a4dbd581a5d170ed2210d31a/SPT5_INPUT_R1.plotProfile.tab deeptools/SPT5_INPUT_R1.plotProfile.tab
+    mkdir -p deeptools && ln -s /home/stain/src/92/work/72/4ba4e7feb9a4d964cff313f56b33c4/SPT5_T0_R2.plotProfile.tab deeptools/SPT5_T0_R2.plotProfile.tab
+    mkdir -p deeptools && ln -s /home/stain/src/92/work/ad/2c47a1d51b8f773b44831dd538dab7/SPT5_INPUT_R2.plotProfile.tab deeptools/SPT5_INPUT_R2.plotProfile.tab
+    mkdir -p deeptools && ln -s /home/stain/src/92/work/ca/fbf7fba943af55e3c7970d66518da9/SPT5_T15_R1.plotProfile.tab deeptools/SPT5_T15_R1.plotProfile.tab
+    mkdir -p deeptools && ln -s /home/stain/src/92/work/93/adeaf4ba0622f2f9de04bd39bb049d/SPT5_T15_R2.plotProfile.tab deeptools/SPT5_T15_R2.plotProfile.tab
+    mkdir -p phantompeakqualtools && ln -s /home/stain/src/92/work/93/950ed5fda145752429739aeff99e85/SPT5_T0_R1.spp.out phantompeakqualtools/SPT5_T0_R1.spp.out
+    mkdir -p phantompeakqualtools && ln -s /home/stain/src/92/work/e2/327bfd1f639bd49dbc4106c6d1d2fc/SPT5_INPUT_R1.spp.out phantompeakqualtools/SPT5_INPUT_R1.spp.out
+    mkdir -p phantompeakqualtools && ln -s /home/stain/src/92/work/42/5456ea7551cb7c32c211c1c6511228/SPT5_T0_R2.spp.out phantompeakqualtools/SPT5_T0_R2.spp.out
+    mkdir -p phantompeakqualtools && ln -s /home/stain/src/92/work/ce/288494752cda977e54e32b846ca489/SPT5_INPUT_R2.spp.out phantompeakqualtools/SPT5_INPUT_R2.spp.out
+    mkdir -p phantompeakqualtools && ln -s /home/stain/src/92/work/75/0ddfaf7dbba46073bbb4c511888b84/SPT5_T15_R1.spp.out phantompeakqualtools/SPT5_T15_R1.spp.out
+    mkdir -p phantompeakqualtools && ln -s /home/stain/src/92/work/e7/82015b8b24b6b9c8323e34d9aa2d26/SPT5_T15_R2.spp.out phantompeakqualtools/SPT5_T15_R2.spp.out
+    mkdir -p phantompeakqualtools && ln -s /home/stain/src/92/work/93/950ed5fda145752429739aeff99e85/SPT5_T0_R1_spp_correlation_mqc.tsv phantompeakqualtools/SPT5_T0_R1_spp_correlation_mqc.tsv
+    mkdir -p phantompeakqualtools && ln -s /home/stain/src/92/work/93/950ed5fda145752429739aeff99e85/SPT5_T0_R1_spp_nsc_mqc.tsv phantompeakqualtools/SPT5_T0_R1_spp_nsc_mqc.tsv
+    mkdir -p phantompeakqualtools && ln -s /home/stain/src/92/work/93/950ed5fda145752429739aeff99e85/SPT5_T0_R1_spp_rsc_mqc.tsv phantompeakqualtools/SPT5_T0_R1_spp_rsc_mqc.tsv
+    mkdir -p phantompeakqualtools && ln -s /home/stain/src/92/work/e2/327bfd1f639bd49dbc4106c6d1d2fc/SPT5_INPUT_R1_spp_correlation_mqc.tsv phantompeakqualtools/SPT5_INPUT_R1_spp_correlation_mqc.tsv
+    mkdir -p phantompeakqualtools && ln -s /home/stain/src/92/work/e2/327bfd1f639bd49dbc4106c6d1d2fc/SPT5_INPUT_R1_spp_nsc_mqc.tsv phantompeakqualtools/SPT5_INPUT_R1_spp_nsc_mqc.tsv
+    mkdir -p phantompeakqualtools && ln -s /home/stain/src/92/work/e2/327bfd1f639bd49dbc4106c6d1d2fc/SPT5_INPUT_R1_spp_rsc_mqc.tsv phantompeakqualtools/SPT5_INPUT_R1_spp_rsc_mqc.tsv
+    mkdir -p phantompeakqualtools && ln -s /home/stain/src/92/work/42/5456ea7551cb7c32c211c1c6511228/SPT5_T0_R2_spp_correlation_mqc.tsv phantompeakqualtools/SPT5_T0_R2_spp_correlation_mqc.tsv
+    mkdir -p phantompeakqualtools && ln -s /home/stain/src/92/work/42/5456ea7551cb7c32c211c1c6511228/SPT5_T0_R2_spp_nsc_mqc.tsv phantompeakqualtools/SPT5_T0_R2_spp_nsc_mqc.tsv
+    mkdir -p phantompeakqualtools && ln -s /home/stain/src/92/work/42/5456ea7551cb7c32c211c1c6511228/SPT5_T0_R2_spp_rsc_mqc.tsv phantompeakqualtools/SPT5_T0_R2_spp_rsc_mqc.tsv
+    mkdir -p phantompeakqualtools && ln -s /home/stain/src/92/work/ce/288494752cda977e54e32b846ca489/SPT5_INPUT_R2_spp_correlation_mqc.tsv phantompeakqualtools/SPT5_INPUT_R2_spp_correlation_mqc.tsv
+    mkdir -p phantompeakqualtools && ln -s /home/stain/src/92/work/ce/288494752cda977e54e32b846ca489/SPT5_INPUT_R2_spp_nsc_mqc.tsv phantompeakqualtools/SPT5_INPUT_R2_spp_nsc_mqc.tsv
+    mkdir -p phantompeakqualtools && ln -s /home/stain/src/92/work/ce/288494752cda977e54e32b846ca489/SPT5_INPUT_R2_spp_rsc_mqc.tsv phantompeakqualtools/SPT5_INPUT_R2_spp_rsc_mqc.tsv
+    mkdir -p phantompeakqualtools && ln -s /home/stain/src/92/work/75/0ddfaf7dbba46073bbb4c511888b84/SPT5_T15_R1_spp_correlation_mqc.tsv phantompeakqualtools/SPT5_T15_R1_spp_correlation_mqc.tsv
+    mkdir -p phantompeakqualtools && ln -s /home/stain/src/92/work/75/0ddfaf7dbba46073bbb4c511888b84/SPT5_T15_R1_spp_nsc_mqc.tsv phantompeakqualtools/SPT5_T15_R1_spp_nsc_mqc.tsv
+    mkdir -p phantompeakqualtools && ln -s /home/stain/src/92/work/75/0ddfaf7dbba46073bbb4c511888b84/SPT5_T15_R1_spp_rsc_mqc.tsv phantompeakqualtools/SPT5_T15_R1_spp_rsc_mqc.tsv
+    mkdir -p phantompeakqualtools && ln -s /home/stain/src/92/work/e7/82015b8b24b6b9c8323e34d9aa2d26/SPT5_T15_R2_spp_correlation_mqc.tsv phantompeakqualtools/SPT5_T15_R2_spp_correlation_mqc.tsv
+    mkdir -p phantompeakqualtools && ln -s /home/stain/src/92/work/e7/82015b8b24b6b9c8323e34d9aa2d26/SPT5_T15_R2_spp_nsc_mqc.tsv phantompeakqualtools/SPT5_T15_R2_spp_nsc_mqc.tsv
+    mkdir -p phantompeakqualtools && ln -s /home/stain/src/92/work/e7/82015b8b24b6b9c8323e34d9aa2d26/SPT5_T15_R2_spp_rsc_mqc.tsv phantompeakqualtools/SPT5_T15_R2_spp_rsc_mqc.tsv
+}
+
+nxf_unstage() {
+    true
+    [[ ${nxf_main_ret:=0} != 0 ]] && return
+}
+
+nxf_main() {
+    trap on_exit EXIT
+    trap on_term TERM INT USR1 USR2
+
+    NXF_SCRATCH=''
+    [[ $NXF_DEBUG > 0 ]] && nxf_env
+    touch /home/stain/src/92/work/68/199ec6aa2e3639d57438cd9f8737c8/.command.begin
+    set +u
+    # conda environment
+    source activate /home/stain/src/92/work/conda/nf-core-chipseq-1.2.1-124f0f8d69d9dfbfcea852493605e617
+    set -u
+    export PYTHONNOUSERSITE="1"
+    export R_PROFILE_USER="/.Rprofile"
+    export R_ENVIRON_USER="/.Renviron"
+    export PATH="/home/stain/.nextflow/assets/nf-core/chipseq/bin:$PATH"
+    [[ $NXF_SCRATCH ]] && echo "nxf-scratch-dir $HOSTNAME:$NXF_SCRATCH" && cd $NXF_SCRATCH
+    nxf_stage
+
+    set +e
+    local ctmp=$(set +u; nxf_mktemp /dev/shm 2>/dev/null || nxf_mktemp $TMPDIR)
+    local cout=$ctmp/.command.out; mkfifo $cout
+    local cerr=$ctmp/.command.err; mkfifo $cerr
+    tee .command.out < $cout &
+    tee1=$!
+    tee .command.err < $cerr >&2 &
+    tee2=$!
+    ( nxf_launch ) >$cout 2>$cerr &
+    pid=$!
+    wait $pid || nxf_main_ret=$?
+    wait $tee1 $tee2
+    nxf_unstage
+}
+
+$NXF_ENTRY

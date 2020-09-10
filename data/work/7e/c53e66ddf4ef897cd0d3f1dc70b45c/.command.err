@@ -1,0 +1,16 @@
+PAIRED_END_BAM_INPUT
+paired = 95833
+unpaired = 452
+MERGED PAIRED END READS = 95833
+MATES PROCESSED = 192118
+TOTAL READS     = 96285
+DISTINCT READS  = 96262
+DISTINCT COUNTS = 2
+MAX COUNT       = 2
+COUNTS OF 1     = 96239
+MAX TERMS       = 2
+OBSERVED COUNTS (3)
+1	96239
+2	23
+
+ERROR:	max count before zero is les than min required count (4), sample not sufficiently deep or duplicates removed

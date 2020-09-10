@@ -1,0 +1,60 @@
+Skipping YDR545C-A, due to being absent in the computeMatrix output.
+Skipping YIL177C, due to being absent in the computeMatrix output.
+Skipping YIL177W-A, due to being absent in the computeMatrix output.
+Skipping YIL176C, due to being absent in the computeMatrix output.
+Skipping YIL175W, due to being absent in the computeMatrix output.
+Skipping YIL174W, due to being absent in the computeMatrix output.
+Skipping Q0142, due to being absent in the computeMatrix output.
+Skipping Q0143, due to being absent in the computeMatrix output.
+Skipping tI(GAU)Q, due to being absent in the computeMatrix output.
+Skipping tY(GUA)Q, due to being absent in the computeMatrix output.
+Skipping YER190C-A, due to being absent in the computeMatrix output.
+Skipping YER190C-B, due to being absent in the computeMatrix output.
+Skipping YGR296C-A, due to being absent in the computeMatrix output.
+Skipping YGR296C-B, due to being absent in the computeMatrix output.
+Skipping YJL225C, due to being absent in the computeMatrix output.
+Skipping YJL225W-A, due to being absent in the computeMatrix output.
+Skipping YJL223C, due to being absent in the computeMatrix output.
+Skipping YJL222W-B, due to being absent in the computeMatrix output.
+Skipping YJL222W-A, due to being absent in the computeMatrix output.
+Skipping YLR154W-B, due to being absent in the computeMatrix output.
+Skipping YLR154W-C, due to being absent in the computeMatrix output.
+Skipping RDN58-1, due to being absent in the computeMatrix output.
+Skipping YLR154W-E, due to being absent in the computeMatrix output.
+Skipping YLR154W-F, due to being absent in the computeMatrix output.
+Skipping RDN58-2, due to being absent in the computeMatrix output.
+Skipping RDN18-2, due to being absent in the computeMatrix output.
+Skipping RDN5-2, due to being absent in the computeMatrix output.
+Skipping YLR154C-H, due to being absent in the computeMatrix output.
+Skipping YLR155C, due to being absent in the computeMatrix output.
+Skipping YLR156W, due to being absent in the computeMatrix output.
+Skipping RDN5-3, due to being absent in the computeMatrix output.
+Skipping YLR156C-A, due to being absent in the computeMatrix output.
+Skipping YLR157C, due to being absent in the computeMatrix output.
+Skipping YLR157W-D, due to being absent in the computeMatrix output.
+Skipping YLR157C-B, due to being absent in the computeMatrix output.
+Skipping YLR157C-A, due to being absent in the computeMatrix output.
+Skipping YLR157W-E, due to being absent in the computeMatrix output.
+Skipping RDN5-4, due to being absent in the computeMatrix output.
+Skipping YLR157C-C, due to being absent in the computeMatrix output.
+Skipping YLR158C, due to being absent in the computeMatrix output.
+Skipping YLR159W, due to being absent in the computeMatrix output.
+Skipping RDN5-5, due to being absent in the computeMatrix output.
+Skipping YLR159C-A, due to being absent in the computeMatrix output.
+Skipping YLR467C-A, due to being absent in the computeMatrix output.
+Skipping YNL339W-B, due to being absent in the computeMatrix output.
+Skipping YNL339W-A, due to being absent in the computeMatrix output.
+Skipping YPL283W-B, due to being absent in the computeMatrix output.
+Skipping YPL283W-A, due to being absent in the computeMatrix output.
+/home/stain/src/92/work/conda/nf-core-chipseq-1.2.1-124f0f8d69d9dfbfcea852493605e617/lib/python3.7/site-packages/deeptools/plotHeatmap.py:454: MatplotlibDeprecationWarning:
+
+You are modifying the state of a globally registered colormap. In future versions, you will not be able to modify a registered colormap in-place. To remove this warning, you can make a copy of the colormap first. cmap = copy.copy(mpl.cm.get_cmap("RdYlBu"))
+
+/home/stain/src/92/work/conda/nf-core-chipseq-1.2.1-124f0f8d69d9dfbfcea852493605e617/lib/python3.7/site-packages/deeptools/plotHeatmap.py:735: MatplotlibDeprecationWarning:
+
+The 'alpha' parameter to Colorbar has no effect because it is overridden by the mappable; it is deprecated since 3.3 and will be removed two minor releases later.
+
+/home/stain/src/92/work/conda/nf-core-chipseq-1.2.1-124f0f8d69d9dfbfcea852493605e617/lib/python3.7/site-packages/deeptools/plotHeatmap.py:743: MatplotlibDeprecationWarning:
+
+savefig() got unexpected keyword argument "pdd_inches" which is no longer supported as of 3.3 and will become an error two minor releases later
+

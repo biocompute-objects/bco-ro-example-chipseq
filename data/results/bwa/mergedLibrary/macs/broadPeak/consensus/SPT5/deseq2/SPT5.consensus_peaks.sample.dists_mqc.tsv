@@ -1,0 +1,17 @@
+#id: 'deseq2_clustering_1'
+#section_name: 'MERGED LIB: SPT5 DESeq2 sample similarity'
+#description: " matrix is generated from clustering by Euclidean distances between
+#	       <a href='https://bioconductor.org/packages/release/bioc/html/DESeq2.html' target='_blank'>DESeq2</a>
+#              rlog values for each sample
+#              (see <a href='https://github.com/nf-core/chipseq/blob/master/bin/featurecounts_deseq2.r'><code>featurecounts_deseq2.r</code></a> script)."
+#plot_type: 'heatmap'
+#anchor: 'deseq2_clustering_1'
+#pconfig:
+#    title: 'DESeq2: Heatmap of the sample-to-sample distances'
+#    xlab: True
+#    reverseColors: True
+sample	SPT5_T0_R1	SPT5_T0_R2	SPT5_T15_R1	SPT5_T15_R2
+SPT5_T0_R1	0	9.3273391754571	11.8570539838733	11.7001438379746
+SPT5_T0_R2	9.3273391754571	0	14.0904695833072	13.822175589658
+SPT5_T15_R1	11.8570539838733	14.0904695833072	0	8.30068241946825
+SPT5_T15_R2	11.7001438379746	13.822175589658	8.30068241946825	0

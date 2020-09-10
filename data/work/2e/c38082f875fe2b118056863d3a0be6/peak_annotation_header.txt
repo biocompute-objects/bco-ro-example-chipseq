@@ -1,0 +1,1 @@
+/home/stain/.nextflow/assets/nf-core/chipseq/assets/multiqc/peak_annotation_header.txt

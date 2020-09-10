@@ -1,0 +1,1 @@
+/home/stain/.nextflow/assets/nf-core/chipseq/assets/multiqc/spp_nsc_header.txt
