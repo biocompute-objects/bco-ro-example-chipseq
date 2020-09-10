@@ -18,8 +18,8 @@
             {"contribution": ["authoredBy"], "name": "mashehu" },
             {"contribution": ["authoredBy"], "name": "Rotholandus" },
             {"contribution": ["authoredBy"], "name": "Sofia Haglund" },
-            {"contribution": ["authoredBy"], "name": "Winni Kretzschmar" },                                     
-            { "contribution": ["createdBy"],
+            {"contribution": ["authoredBy"], "name": "Winni Kretzschmar" },
+            {"contribution": ["createdBy"],
               "name": "Stian Soiland-Reyes",
               "orcid": "https://orcid.org/0000-0001-9842-9718",
             }   
@@ -73,10 +73,5 @@
     "execution_domain": {},
     "io_domain": {}
 }
-
-https://doi.org/10.5281/zenodo.3966161
-
-
-
 
 
