@@ -1,0 +1,3 @@
+ROCrate_Specification_Identifier: https://researchobject.github.io/ro-crate/1.0/
+External-Description: Workflow run of a ChIP-seq peak-calling, QC and differential analysis pipeline
+Bagging-Date: 2020-09-10T19:27:45Z
