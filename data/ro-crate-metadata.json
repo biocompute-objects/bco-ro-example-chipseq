@@ -1,0 +1,102 @@
+{
+  "@context": [
+    "https://w3id.org/ro/crate/1.0/context",
+    {
+      "@vocab": "https://schema.org/"
+    }
+  ],
+  "@graph": [
+    {
+      "@id": "ro-crate-metadata.json",
+      "@type": "CreativeWork",
+      "about": {
+        "@id": "./"
+      },
+      "identifier": "ro-crate-metadata.json",
+      "conformsTo": {
+        "@id": "https://w3id.org/ro/crate/1.0"
+      },
+      "license": {
+        "@id": "https://creativecommons.org/licenses/by-sa/3.0"
+      },
+      "description": "Made with Describo: https://uts-eresearch.github.io/describo/"
+    },
+    {
+      "@type": "Dataset",
+      "name": "Workflow run of nf-core/chipseq",
+      "description": "Workflow run of a ChIP-seq peak-calling, QC and differential analysis pipeline",
+      "license": {
+        "@id": "#3a28339e-5be3-4674-9623-51a7ccd40183"
+      },
+      "datePublished": "2020-09-09T23:00:00.000Z",
+      "author": [
+        {
+          "@id": "#97c3bb40-1d9b-402c-87ec-f012a8e56800"
+        }
+      ],
+      "hasPart": [
+        {
+          "@id": "#25b07603-a902-4dd3-b797-17333d2a908c"
+        }
+      ],
+      "@id": "./"
+    },
+    {
+      "@type": "CreativeWork",
+      "identifier": [
+        "https://spdx.org/licenses/CC0-1.0"
+      ],
+      "name": "Creative Commons Zero v1.0 Universal",
+      "@reverse": {
+        "license": [
+          {
+            "@id": "./"
+          }
+        ]
+      },
+      "@id": "#3a28339e-5be3-4674-9623-51a7ccd40183"
+    },
+    {
+      "@type": "Person",
+      "name": "Stian Soiland-Reyes",
+      "@reverse": {
+        "author": [
+          {
+            "@id": "./"
+          }
+        ]
+      },
+      "@id": "#97c3bb40-1d9b-402c-87ec-f012a8e56800"
+    },
+    {
+      "@type": "Workflow",
+      "name": "chipseq",
+      "description": "nfcore/chipseq is a bioinformatics analysis pipeline used for Chromatin ImmunopreciPitation sequencing (ChIP-seq) data",
+      "@reverse": {
+        "hasPart": [
+          {
+            "@id": "./"
+          }
+        ]
+      },
+      "author": [
+        {
+          "@id": "#714de175-aa77-47f1-9f99-6a4fba65530a"
+        }
+      ],
+      "@id": "#25b07603-a902-4dd3-b797-17333d2a908c"
+    },
+    {
+      "@type": "Person",
+      "name": "Harshil Patel",
+      "@reverse": {
+        "author": [
+          {
+            "@id": "#25b07603-a902-4dd3-b797-17333d2a908c"
+          }
+        ]
+      },
+      "@id": "#714de175-aa77-47f1-9f99-6a4fba65530a"
+    }
+  ]
+}
