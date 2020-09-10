@@ -1,0 +1,1883 @@
+Sep-10 11:30:06.942 [main] DEBUG nextflow.cli.Launcher - $> nextflow run nf-core/chipseq -profile test,conda
+Sep-10 11:30:07.183 [main] INFO  nextflow.cli.CmdRun - N E X T F L O W  ~  version 19.10.0
+Sep-10 11:30:08.746 [main] DEBUG nextflow.scm.AssetManager - Git config: /home/stain/.nextflow/assets/nf-core/chipseq/.git/config; branch: master; remote: origin; url: https://github.com/nf-core/chipseq.git
+Sep-10 11:30:08.768 [main] DEBUG nextflow.scm.AssetManager - Git config: /home/stain/.nextflow/assets/nf-core/chipseq/.git/config; branch: master; remote: origin; url: https://github.com/nf-core/chipseq.git
+Sep-10 11:30:08.966 [main] DEBUG nextflow.scm.AssetManager - Git config: /home/stain/.nextflow/assets/nf-core/chipseq/.git/config; branch: master; remote: origin; url: https://github.com/nf-core/chipseq.git
+Sep-10 11:30:08.967 [main] INFO  nextflow.cli.CmdRun - Launching `nf-core/chipseq` [agitated_franklin] - revision: 0f487ed76d [master]
+Sep-10 11:30:11.299 [main] DEBUG nextflow.config.ConfigBuilder - Found config base: /home/stain/.nextflow/assets/nf-core/chipseq/nextflow.config
+Sep-10 11:30:11.302 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /home/stain/.nextflow/assets/nf-core/chipseq/nextflow.config
+Sep-10 11:30:11.326 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `test,conda`
+Sep-10 11:30:13.452 [main] DEBUG nextflow.config.ConfigBuilder - Available config profiles: [cfc_dev, denbi_qbic, bi, genotoul, bigpurple, uppmax, docker, gis, utd_ganymede, conda, singularity, icr_davros, munin, prince, czbiohub_aws, hebbe, cfc, uzh, ccga_med, debug, test, genouest, cbe, ebc, ccga_dx, crick, google, kraken, phoenix, shh, awsbatch, pasteur, uct_hpc, test_full, binac]
+Sep-10 11:30:13.593 [main] DEBUG nextflow.extension.OperatorEx - Dataflow extension methods: branch,buffer,chain,choice,collate,collect,collectFile,combine,concat,count,countBy,countFasta,countFastq,countLines,countText,cross,distinct,filter,first,flatMap,flatten,fork,groupBy,groupTuple,ifEmpty,into,join,last,map,max,mean,merge,min,mix,phase,print,println,randomSample,reduce,separate,set,splitCsv,splitFasta,splitFastq,splitText,spread,subscribe,sum,take,tap,toDouble,toFloat,toInteger,toList,toLong,toSortedList,transpose,unique,until,view
+Sep-10 11:30:13.606 [main] DEBUG nextflow.Session - Session uuid: 57a11426-87fc-4322-8adb-d8ef85fd2370
+Sep-10 11:30:13.606 [main] DEBUG nextflow.Session - Run name: agitated_franklin
+Sep-10 11:30:13.607 [main] DEBUG nextflow.Session - Executor pool size: 4
+Sep-10 11:30:13.693 [main] DEBUG nextflow.cli.CmdRun - 
+  Version: 19.10.0 build 5170
+  Created: 21-10-2019 15:07 UTC (16:07 BST)
+  System: Linux 5.4.0-47-generic
+  Runtime: Groovy 2.5.8 on OpenJDK 64-Bit Server VM 11.0.8+10-post-Ubuntu-0ubuntu120.04
+  Encoding: UTF-8 (UTF-8)
+  Process: 60757@biggie.ds.s11.no [192.168.2.218]
+  CPUs: 4 - Mem: 15.6 GB (6.7 GB) - Swap: 2 GB (2 GB)
+Sep-10 11:30:13.737 [main] DEBUG nextflow.Session - Work-dir: /home/stain/src/92/work [zfs]
+Sep-10 11:30:13.791 [main] DEBUG nextflow.Session - Observer factory: TowerFactory
+Sep-10 11:30:13.796 [main] DEBUG nextflow.Session - Observer factory: DefaultObserverFactory
+Sep-10 11:30:14.172 [main] DEBUG nextflow.Session - Session start invoked
+Sep-10 11:30:14.180 [main] DEBUG nextflow.trace.TraceFileObserver - Flow starting -- trace file: /home/stain/src/92/results/pipeline_info/execution_trace.txt
+Sep-10 11:30:16.169 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Sep-10 11:30:16.630 [main] INFO  nextflow.Nextflow - -[2m--------------------------------------------------[0m-
+                                        [0;32m,--.[0;30m/[0;32m,-.[0m
+[0;34m        ___     __   __   __   ___     [0;32m/,-._.--~'[0m
+[0;34m  |\ | |__  __ /  ` /  \ |__) |__         [0;33m}  {[0m
+[0;34m  | \| |       \__, \__/ |  \ |___     [0;32m\`-._,-`-,[0m
+                                        [0;32m`._,._,'[0m
+[0;35m  nf-core/chipseq v1.2.1[0m
+-[2m--------------------------------------------------[0m-
+
+Sep-10 11:30:16.690 [main] INFO  nextflow.Nextflow - Run Name            : agitated_franklin
+Data Type           : Paired-End
+Design File         : https://raw.githubusercontent.com/nf-core/test-datasets/chipseq/design.csv
+Genome              : Not supplied
+Fasta File          : https://raw.githubusercontent.com/nf-core/test-datasets/atacseq/reference/genome.fa
+GTF File            : https://raw.githubusercontent.com/nf-core/test-datasets/atacseq/reference/genes.gtf
+MACS2 Genome Size   : 1.2E+7
+Min Consensus Reps  : 1
+MACS2 Narrow Peaks  : No
+MACS2 Broad Cutoff  : 0.1
+Trim R1             : 0 bp
+Trim R2             : 0 bp
+Trim 3' R1          : 0 bp
+Trim 3' R2          : 0 bp
+NextSeq Trim        : 0 bp
+Fingerprint Bins    : 100
+Save Genome Index   : No
+Max Resources       : 6 GB memory, 2 cpus, 12h time per job
+Output Dir          : ./results
+Launch Dir          : /home/stain/src/92
+Working Dir         : /home/stain/src/92/work
+Script Dir          : /home/stain/.nextflow/assets/nf-core/chipseq
+User                : stain
+Config Profile      : test,conda
+Config Description  : Minimal test dataset to check pipeline function
+Sep-10 11:30:16.691 [main] INFO  nextflow.Nextflow - -[2m--------------------------------------------------[0m-
+Sep-10 11:30:16.886 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-10 11:30:16.887 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-10 11:30:16.901 [main] DEBUG nextflow.executor.Executor - [warm up] executor > local
+Sep-10 11:30:16.911 [main] DEBUG n.processor.LocalPollingMonitor - Creating local task monitor for executor 'local' > cpus=4; memory=15.6 GB; capacity=4; pollInterval=100ms; dumpInterval=5m
+Sep-10 11:30:17.028 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > CHECK_DESIGN -- maxForks: 4
+Sep-10 11:30:17.445 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_high` matches label `process_high` for process with name BWA_INDEX
+Sep-10 11:30:17.448 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-10 11:30:17.448 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-10 11:30:17.453 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > BWA_INDEX -- maxForks: 4
+Sep-10 11:30:17.470 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_low` matches label `process_low` for process with name MAKE_GENE_BED
+Sep-10 11:30:17.472 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-10 11:30:17.472 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-10 11:30:17.474 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > MAKE_GENE_BED -- maxForks: 4
+Sep-10 11:30:17.527 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-10 11:30:17.527 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-10 11:30:17.556 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > MAKE_GENOME_FILTER -- maxForks: 4
+Sep-10 11:30:17.654 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_medium` matches label `process_medium` for process with name FASTQC
+Sep-10 11:30:17.656 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-10 11:30:17.657 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-10 11:30:17.662 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > FASTQC -- maxForks: 4
+Sep-10 11:30:17.727 [Actor Thread 3] DEBUG n.util.BlockingThreadExecutorFactory - Thread pool name=FileTransfer; maxThreads=12; maxQueueSize=36; keepAlive=1m
+Sep-10 11:30:17.750 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_high` matches label `process_high` for process with name TRIMGALORE
+Sep-10 11:30:17.752 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-10 11:30:17.752 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-10 11:30:17.755 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > TRIMGALORE -- maxForks: 4
+Sep-10 11:30:17.782 [FileTransfer-thread-1] DEBUG nextflow.file.FilePorter - Copying foreign file https://raw.githubusercontent.com/nf-core/test-datasets/chipseq/design.csv to work dir: /home/stain/src/92/work/stage/c6/c1bbf8ff75be5c895992ce7b24701a/design.csv
+Sep-10 11:30:17.793 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_high` matches label `process_high` for process with name BWA_MEM
+Sep-10 11:30:17.797 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-10 11:30:17.797 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-10 11:30:17.803 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > BWA_MEM -- maxForks: 4
+Sep-10 11:30:17.832 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_medium` matches label `process_medium` for process with name SORT_BAM
+Sep-10 11:30:17.838 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-10 11:30:17.839 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-10 11:30:17.843 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > SORT_BAM -- maxForks: 4
+Sep-10 11:30:17.856 [FileTransfer-thread-2] DEBUG nextflow.file.FilePorter - Copying foreign file https://raw.githubusercontent.com/nf-core/test-datasets/atacseq/reference/genome.fa to work dir: /home/stain/src/92/work/stage/57/5a4505658752a6830794aab2cddf0d/genome.fa
+Sep-10 11:30:17.914 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_medium` matches label `process_medium` for process with name MERGED_BAM
+Sep-10 11:30:17.916 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-10 11:30:17.916 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-10 11:30:17.919 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > MERGED_BAM -- maxForks: 4
+Sep-10 11:30:17.947 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_medium` matches label `process_medium` for process with name MERGED_BAM_FILTER
+Sep-10 11:30:17.954 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-10 11:30:17.954 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-10 11:30:17.956 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > MERGED_BAM_FILTER -- maxForks: 4
+Sep-10 11:30:17.999 [FileTransfer-thread-3] DEBUG nextflow.file.FilePorter - Copying foreign file https://raw.githubusercontent.com/nf-core/test-datasets/atacseq/reference/genes.gtf to work dir: /home/stain/src/92/work/stage/51/92d7396f0d182420a585a93e70f261/genes.gtf
+Sep-10 11:30:18.010 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_medium` matches label `process_medium` for process with name MERGED_BAM_REMOVE_ORPHAN
+Sep-10 11:30:18.011 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-10 11:30:18.011 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-10 11:30:18.017 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > MERGED_BAM_REMOVE_ORPHAN -- maxForks: 4
+Sep-10 11:30:18.028 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_medium` matches label `process_medium` for process with name PRESEQ
+Sep-10 11:30:18.029 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:error_ignore` matches label `error_ignore` for process with name PRESEQ
+Sep-10 11:30:18.030 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-10 11:30:18.030 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-10 11:30:18.040 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > PRESEQ -- maxForks: 4
+Sep-10 11:30:18.066 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_medium` matches label `process_medium` for process with name PICARD_METRICS
+Sep-10 11:30:18.077 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-10 11:30:18.078 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-10 11:30:18.079 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > PICARD_METRICS -- maxForks: 4
+Sep-10 11:30:18.138 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_medium` matches label `process_medium` for process with name BIGWIG
+Sep-10 11:30:18.139 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-10 11:30:18.140 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-10 11:30:18.141 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > BIGWIG -- maxForks: 4
+Sep-10 11:30:18.154 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_high` matches label `process_high` for process with name PLOTPROFILE
+Sep-10 11:30:18.155 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-10 11:30:18.155 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-10 11:30:18.157 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > PLOTPROFILE -- maxForks: 4
+Sep-10 11:30:18.188 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_medium` matches label `process_medium` for process with name PHANTOMPEAKQUALTOOLS
+Sep-10 11:30:18.191 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-10 11:30:18.191 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-10 11:30:18.207 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > PHANTOMPEAKQUALTOOLS -- maxForks: 4
+Sep-10 11:30:18.251 [Actor Thread 11] INFO  nextflow.conda.CondaCache - Creating Conda env: /home/stain/.nextflow/assets/nf-core/chipseq/environment.yml [cache /home/stain/src/92/work/conda/nf-core-chipseq-1.2.1-124f0f8d69d9dfbfcea852493605e617]
+Sep-10 11:30:18.299 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_high` matches label `process_high` for process with name PLOTFINGERPRINT
+Sep-10 11:30:18.301 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-10 11:30:18.301 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-10 11:30:18.305 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > PLOTFINGERPRINT -- maxForks: 4
+Sep-10 11:30:18.348 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_medium` matches label `process_medium` for process with name MACS2
+Sep-10 11:30:18.351 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-10 11:30:18.351 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-10 11:30:18.353 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > MACS2 -- maxForks: 4
+Sep-10 11:30:18.371 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_medium` matches label `process_medium` for process with name MACS2_ANNOTATE
+Sep-10 11:30:18.372 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-10 11:30:18.375 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-10 11:30:18.379 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > MACS2_ANNOTATE -- maxForks: 4
+Sep-10 11:30:18.413 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_medium` matches label `process_medium` for process with name MACS2_QC
+Sep-10 11:30:18.416 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-10 11:30:18.416 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-10 11:30:18.418 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > MACS2_QC -- maxForks: 4
+Sep-10 11:30:18.463 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_long` matches label `process_long` for process with name CONSENSUS_PEAKS
+Sep-10 11:30:18.464 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-10 11:30:18.465 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-10 11:30:18.466 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > CONSENSUS_PEAKS -- maxForks: 4
+Sep-10 11:30:18.477 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_medium` matches label `process_medium` for process with name CONSENSUS_PEAKS_ANNOTATE
+Sep-10 11:30:18.478 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-10 11:30:18.478 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-10 11:30:18.480 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > CONSENSUS_PEAKS_ANNOTATE -- maxForks: 4
+Sep-10 11:30:18.501 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_medium` matches label `process_medium` for process with name CONSENSUS_PEAKS_COUNTS
+Sep-10 11:30:18.502 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-10 11:30:18.502 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-10 11:30:18.503 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > CONSENSUS_PEAKS_COUNTS -- maxForks: 4
+Sep-10 11:30:18.513 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_medium` matches label `process_medium` for process with name CONSENSUS_PEAKS_DESEQ2
+Sep-10 11:30:18.514 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-10 11:30:18.514 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-10 11:30:18.516 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > CONSENSUS_PEAKS_DESEQ2 -- maxForks: 4
+Sep-10 11:30:18.618 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-10 11:30:18.618 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-10 11:30:18.620 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > IGV -- maxForks: 4
+Sep-10 11:30:18.628 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:get_software_versions` matches process get_software_versions
+Sep-10 11:30:18.629 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-10 11:30:18.629 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-10 11:30:18.630 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > get_software_versions -- maxForks: 4
+Sep-10 11:30:18.971 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-10 11:30:18.971 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-10 11:30:18.974 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > MULTIQC -- maxForks: 4
+Sep-10 11:30:19.003 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-10 11:30:19.004 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-10 11:30:19.006 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > output_documentation -- maxForks: 4
+Sep-10 11:30:19.027 [main] DEBUG nextflow.script.BaseScript - No entry workflow defined
+Sep-10 11:30:19.029 [main] DEBUG nextflow.script.ScriptRunner - > Await termination 
+Sep-10 11:30:19.029 [main] DEBUG nextflow.Session - Session await
+Sep-10 11:30:19.194 [Actor Thread 14] DEBUG nextflow.sort.BigSort - Sort completed -- entries: 1; slices: 1; internal sort time: 0.002 s; external sort time: 0.023 s; total time: 0.025 s
+Sep-10 11:30:19.223 [Actor Thread 14] DEBUG nextflow.file.FileCollector - Saved collect-files list to: /tmp/d5624bd4936c7cc0fbd67575165fb7d4.collect-file
+Sep-10 11:30:19.254 [Actor Thread 14] DEBUG nextflow.file.FileCollector - Deleting file collector temp dir: /tmp/nxf-13276930652556654149
+Sep-10 11:30:19.854 [Actor Thread 9] INFO  nextflow.file.FilePorter - Staging foreign file: https://raw.githubusercontent.com/nf-core/test-datasets/atacseq/reference/genome.fa
+Sep-10 11:30:19.986 [Actor Thread 7] INFO  nextflow.file.FilePorter - Staging foreign file: https://raw.githubusercontent.com/nf-core/test-datasets/atacseq/reference/genes.gtf
+Sep-10 11:35:17.173 [Task monitor] DEBUG n.processor.TaskPollingMonitor - No more task to compute -- The following nodes are still active:
+[process] CHECK_DESIGN
+  status=ACTIVE
+  port 0: (value) bound ; channel: design
+  port 1: (cntrl) -     ; channel: $
+
+[process] BWA_INDEX
+  status=ACTIVE
+  port 0: (value) bound ; channel: fasta
+  port 1: (cntrl) -     ; channel: $
+
+[process] MAKE_GENE_BED
+  status=ACTIVE
+  port 0: (value) bound ; channel: gtf
+  port 1: (cntrl) -     ; channel: $
+
+[process] MAKE_GENOME_FILTER
+  status=ACTIVE
+  port 0: (value) bound ; channel: fasta
+  port 1: (queue) closed; channel: blacklist
+  port 2: (cntrl) -     ; channel: $
+
+[process] FASTQC
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] TRIMGALORE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] BWA_MEM
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) OPEN  ; channel: index
+  port 2: (cntrl) -     ; channel: $
+
+[process] SORT_BAM
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] MERGED_BAM
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] MERGED_BAM_FILTER
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) OPEN  ; channel: bed
+  port 2: (value) bound ; channel: bamtools_filter_config
+  port 3: (cntrl) -     ; channel: $
+
+[process] MERGED_BAM_REMOVE_ORPHAN
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] PRESEQ
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] PICARD_METRICS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: fasta
+  port 2: (cntrl) -     ; channel: $
+
+[process] BIGWIG
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) OPEN  ; channel: sizes
+  port 2: (cntrl) -     ; channel: $
+
+[process] PLOTPROFILE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) OPEN  ; channel: bed
+  port 2: (cntrl) -     ; channel: $
+
+[process] PHANTOMPEAKQUALTOOLS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: spp_correlation_header
+  port 2: (value) bound ; channel: spp_nsc_header
+  port 3: (value) bound ; channel: spp_rsc_header
+  port 4: (cntrl) -     ; channel: $
+
+[process] PLOTFINGERPRINT
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] MACS2
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: peak_count_header
+  port 2: (value) bound ; channel: frip_score_header
+  port 3: (cntrl) -     ; channel: $
+
+[process] MACS2_ANNOTATE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: fasta
+  port 2: (value) bound ; channel: gtf
+  port 3: (cntrl) -     ; channel: $
+
+[process] MACS2_QC
+  status=ACTIVE
+  port 0: (value) OPEN  ; channel: peaks
+  port 1: (value) OPEN  ; channel: annos
+  port 2: (value) bound ; channel: peak_annotation_header
+  port 3: (cntrl) -     ; channel: $
+
+[process] CONSENSUS_PEAKS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] CONSENSUS_PEAKS_ANNOTATE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (queue) OPEN  ; channel: bool
+  port 2: (value) bound ; channel: fasta
+  port 3: (value) bound ; channel: gtf
+  port 4: (cntrl) -     ; channel: $
+
+[process] CONSENSUS_PEAKS_COUNTS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] CONSENSUS_PEAKS_DESEQ2
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: deseq2_pca_header
+  port 2: (value) bound ; channel: deseq2_clustering_header
+  port 3: (cntrl) -     ; channel: $
+
+[process] IGV
+  status=ACTIVE
+  port 0: (value) bound ; channel: fasta
+  port 1: (value) OPEN  ; channel: bigwigs
+  port 2: (value) OPEN  ; channel: peaks
+  port 3: (value) OPEN  ; channel: consensus_peaks
+  port 4: (value) OPEN  ; channel: differential_peaks
+  port 5: (cntrl) -     ; channel: $
+
+[process] get_software_versions
+  status=ACTIVE
+  port 0: (cntrl) -     ; channel: $
+
+[process] MULTIQC
+  status=ACTIVE
+  port 0: (value) bound ; channel: multiqc_config
+  port 1: (value) bound ; channel: mqc_custom_config
+  port 2: (value) OPEN  ; channel: software_versions/*
+  port 3: (queue) OPEN  ; channel: workflow_summary
+  port 4: (value) OPEN  ; channel: fastqc/*
+  port 5: (value) OPEN  ; channel: trimgalore/*
+  port 6: (value) OPEN  ; channel: trimgalore/fastqc/*
+  port 7: (value) OPEN  ; channel: alignment/library/*
+  port 8: (value) OPEN  ; channel: alignment/mergedLibrary/*
+  port 9: (value) OPEN  ; channel: alignment/mergedLibrary/*
+  port 10: (value) OPEN  ; channel: alignment/mergedLibrary/*
+  port 11: (value) OPEN  ; channel: alignment/mergedLibrary/picard_metrics/*
+  port 12: (value) OPEN  ; channel: alignment/mergedLibrary/picard_metrics/*
+  port 13: (value) OPEN  ; channel: macs/*
+  port 14: (value) OPEN  ; channel: macs/*
+  port 15: (value) OPEN  ; channel: macs/consensus/*
+  port 16: (value) OPEN  ; channel: macs/consensus/*
+  port 17: (value) OPEN  ; channel: preseq/*
+  port 18: (value) OPEN  ; channel: deeptools/*
+  port 19: (value) OPEN  ; channel: deeptools/*
+  port 20: (value) OPEN  ; channel: phantompeakqualtools/*
+  port 21: (value) OPEN  ; channel: phantompeakqualtools/*
+  port 22: (cntrl) -     ; channel: $
+
+[process] output_documentation
+  status=ACTIVE
+  port 0: (value) bound ; channel: output_docs
+  port 1: (value) bound ; channel: images
+  port 2: (cntrl) -     ; channel: $
+
+Sep-10 11:40:17.175 [Task monitor] DEBUG n.processor.TaskPollingMonitor - No more task to compute -- The following nodes are still active:
+[process] CHECK_DESIGN
+  status=ACTIVE
+  port 0: (value) bound ; channel: design
+  port 1: (cntrl) -     ; channel: $
+
+[process] BWA_INDEX
+  status=ACTIVE
+  port 0: (value) bound ; channel: fasta
+  port 1: (cntrl) -     ; channel: $
+
+[process] MAKE_GENE_BED
+  status=ACTIVE
+  port 0: (value) bound ; channel: gtf
+  port 1: (cntrl) -     ; channel: $
+
+[process] MAKE_GENOME_FILTER
+  status=ACTIVE
+  port 0: (value) bound ; channel: fasta
+  port 1: (queue) closed; channel: blacklist
+  port 2: (cntrl) -     ; channel: $
+
+[process] FASTQC
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] TRIMGALORE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] BWA_MEM
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) OPEN  ; channel: index
+  port 2: (cntrl) -     ; channel: $
+
+[process] SORT_BAM
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] MERGED_BAM
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] MERGED_BAM_FILTER
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) OPEN  ; channel: bed
+  port 2: (value) bound ; channel: bamtools_filter_config
+  port 3: (cntrl) -     ; channel: $
+
+[process] MERGED_BAM_REMOVE_ORPHAN
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] PRESEQ
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] PICARD_METRICS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: fasta
+  port 2: (cntrl) -     ; channel: $
+
+[process] BIGWIG
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) OPEN  ; channel: sizes
+  port 2: (cntrl) -     ; channel: $
+
+[process] PLOTPROFILE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) OPEN  ; channel: bed
+  port 2: (cntrl) -     ; channel: $
+
+[process] PHANTOMPEAKQUALTOOLS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: spp_correlation_header
+  port 2: (value) bound ; channel: spp_nsc_header
+  port 3: (value) bound ; channel: spp_rsc_header
+  port 4: (cntrl) -     ; channel: $
+
+[process] PLOTFINGERPRINT
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] MACS2
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: peak_count_header
+  port 2: (value) bound ; channel: frip_score_header
+  port 3: (cntrl) -     ; channel: $
+
+[process] MACS2_ANNOTATE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: fasta
+  port 2: (value) bound ; channel: gtf
+  port 3: (cntrl) -     ; channel: $
+
+[process] MACS2_QC
+  status=ACTIVE
+  port 0: (value) OPEN  ; channel: peaks
+  port 1: (value) OPEN  ; channel: annos
+  port 2: (value) bound ; channel: peak_annotation_header
+  port 3: (cntrl) -     ; channel: $
+
+[process] CONSENSUS_PEAKS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] CONSENSUS_PEAKS_ANNOTATE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (queue) OPEN  ; channel: bool
+  port 2: (value) bound ; channel: fasta
+  port 3: (value) bound ; channel: gtf
+  port 4: (cntrl) -     ; channel: $
+
+[process] CONSENSUS_PEAKS_COUNTS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] CONSENSUS_PEAKS_DESEQ2
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: deseq2_pca_header
+  port 2: (value) bound ; channel: deseq2_clustering_header
+  port 3: (cntrl) -     ; channel: $
+
+[process] IGV
+  status=ACTIVE
+  port 0: (value) bound ; channel: fasta
+  port 1: (value) OPEN  ; channel: bigwigs
+  port 2: (value) OPEN  ; channel: peaks
+  port 3: (value) OPEN  ; channel: consensus_peaks
+  port 4: (value) OPEN  ; channel: differential_peaks
+  port 5: (cntrl) -     ; channel: $
+
+[process] get_software_versions
+  status=ACTIVE
+  port 0: (cntrl) -     ; channel: $
+
+[process] MULTIQC
+  status=ACTIVE
+  port 0: (value) bound ; channel: multiqc_config
+  port 1: (value) bound ; channel: mqc_custom_config
+  port 2: (value) OPEN  ; channel: software_versions/*
+  port 3: (queue) OPEN  ; channel: workflow_summary
+  port 4: (value) OPEN  ; channel: fastqc/*
+  port 5: (value) OPEN  ; channel: trimgalore/*
+  port 6: (value) OPEN  ; channel: trimgalore/fastqc/*
+  port 7: (value) OPEN  ; channel: alignment/library/*
+  port 8: (value) OPEN  ; channel: alignment/mergedLibrary/*
+  port 9: (value) OPEN  ; channel: alignment/mergedLibrary/*
+  port 10: (value) OPEN  ; channel: alignment/mergedLibrary/*
+  port 11: (value) OPEN  ; channel: alignment/mergedLibrary/picard_metrics/*
+  port 12: (value) OPEN  ; channel: alignment/mergedLibrary/picard_metrics/*
+  port 13: (value) OPEN  ; channel: macs/*
+  port 14: (value) OPEN  ; channel: macs/*
+  port 15: (value) OPEN  ; channel: macs/consensus/*
+  port 16: (value) OPEN  ; channel: macs/consensus/*
+  port 17: (value) OPEN  ; channel: preseq/*
+  port 18: (value) OPEN  ; channel: deeptools/*
+  port 19: (value) OPEN  ; channel: deeptools/*
+  port 20: (value) OPEN  ; channel: phantompeakqualtools/*
+  port 21: (value) OPEN  ; channel: phantompeakqualtools/*
+  port 22: (cntrl) -     ; channel: $
+
+[process] output_documentation
+  status=ACTIVE
+  port 0: (value) bound ; channel: output_docs
+  port 1: (value) bound ; channel: images
+  port 2: (cntrl) -     ; channel: $
+
+Sep-10 11:45:17.255 [Task monitor] DEBUG n.processor.TaskPollingMonitor - No more task to compute -- The following nodes are still active:
+[process] CHECK_DESIGN
+  status=ACTIVE
+  port 0: (value) bound ; channel: design
+  port 1: (cntrl) -     ; channel: $
+
+[process] BWA_INDEX
+  status=ACTIVE
+  port 0: (value) bound ; channel: fasta
+  port 1: (cntrl) -     ; channel: $
+
+[process] MAKE_GENE_BED
+  status=ACTIVE
+  port 0: (value) bound ; channel: gtf
+  port 1: (cntrl) -     ; channel: $
+
+[process] MAKE_GENOME_FILTER
+  status=ACTIVE
+  port 0: (value) bound ; channel: fasta
+  port 1: (queue) closed; channel: blacklist
+  port 2: (cntrl) -     ; channel: $
+
+[process] FASTQC
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] TRIMGALORE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] BWA_MEM
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) OPEN  ; channel: index
+  port 2: (cntrl) -     ; channel: $
+
+[process] SORT_BAM
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] MERGED_BAM
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] MERGED_BAM_FILTER
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) OPEN  ; channel: bed
+  port 2: (value) bound ; channel: bamtools_filter_config
+  port 3: (cntrl) -     ; channel: $
+
+[process] MERGED_BAM_REMOVE_ORPHAN
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] PRESEQ
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] PICARD_METRICS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: fasta
+  port 2: (cntrl) -     ; channel: $
+
+[process] BIGWIG
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) OPEN  ; channel: sizes
+  port 2: (cntrl) -     ; channel: $
+
+[process] PLOTPROFILE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) OPEN  ; channel: bed
+  port 2: (cntrl) -     ; channel: $
+
+[process] PHANTOMPEAKQUALTOOLS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: spp_correlation_header
+  port 2: (value) bound ; channel: spp_nsc_header
+  port 3: (value) bound ; channel: spp_rsc_header
+  port 4: (cntrl) -     ; channel: $
+
+[process] PLOTFINGERPRINT
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] MACS2
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: peak_count_header
+  port 2: (value) bound ; channel: frip_score_header
+  port 3: (cntrl) -     ; channel: $
+
+[process] MACS2_ANNOTATE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: fasta
+  port 2: (value) bound ; channel: gtf
+  port 3: (cntrl) -     ; channel: $
+
+[process] MACS2_QC
+  status=ACTIVE
+  port 0: (value) OPEN  ; channel: peaks
+  port 1: (value) OPEN  ; channel: annos
+  port 2: (value) bound ; channel: peak_annotation_header
+  port 3: (cntrl) -     ; channel: $
+
+[process] CONSENSUS_PEAKS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] CONSENSUS_PEAKS_ANNOTATE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (queue) OPEN  ; channel: bool
+  port 2: (value) bound ; channel: fasta
+  port 3: (value) bound ; channel: gtf
+  port 4: (cntrl) -     ; channel: $
+
+[process] CONSENSUS_PEAKS_COUNTS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] CONSENSUS_PEAKS_DESEQ2
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: deseq2_pca_header
+  port 2: (value) bound ; channel: deseq2_clustering_header
+  port 3: (cntrl) -     ; channel: $
+
+[process] IGV
+  status=ACTIVE
+  port 0: (value) bound ; channel: fasta
+  port 1: (value) OPEN  ; channel: bigwigs
+  port 2: (value) OPEN  ; channel: peaks
+  port 3: (value) OPEN  ; channel: consensus_peaks
+  port 4: (value) OPEN  ; channel: differential_peaks
+  port 5: (cntrl) -     ; channel: $
+
+[process] get_software_versions
+  status=ACTIVE
+  port 0: (cntrl) -     ; channel: $
+
+[process] MULTIQC
+  status=ACTIVE
+  port 0: (value) bound ; channel: multiqc_config
+  port 1: (value) bound ; channel: mqc_custom_config
+  port 2: (value) OPEN  ; channel: software_versions/*
+  port 3: (queue) OPEN  ; channel: workflow_summary
+  port 4: (value) OPEN  ; channel: fastqc/*
+  port 5: (value) OPEN  ; channel: trimgalore/*
+  port 6: (value) OPEN  ; channel: trimgalore/fastqc/*
+  port 7: (value) OPEN  ; channel: alignment/library/*
+  port 8: (value) OPEN  ; channel: alignment/mergedLibrary/*
+  port 9: (value) OPEN  ; channel: alignment/mergedLibrary/*
+  port 10: (value) OPEN  ; channel: alignment/mergedLibrary/*
+  port 11: (value) OPEN  ; channel: alignment/mergedLibrary/picard_metrics/*
+  port 12: (value) OPEN  ; channel: alignment/mergedLibrary/picard_metrics/*
+  port 13: (value) OPEN  ; channel: macs/*
+  port 14: (value) OPEN  ; channel: macs/*
+  port 15: (value) OPEN  ; channel: macs/consensus/*
+  port 16: (value) OPEN  ; channel: macs/consensus/*
+  port 17: (value) OPEN  ; channel: preseq/*
+  port 18: (value) OPEN  ; channel: deeptools/*
+  port 19: (value) OPEN  ; channel: deeptools/*
+  port 20: (value) OPEN  ; channel: phantompeakqualtools/*
+  port 21: (value) OPEN  ; channel: phantompeakqualtools/*
+  port 22: (cntrl) -     ; channel: $
+
+[process] output_documentation
+  status=ACTIVE
+  port 0: (value) bound ; channel: output_docs
+  port 1: (value) bound ; channel: images
+  port 2: (cntrl) -     ; channel: $
+
+Sep-10 11:50:17.321 [Task monitor] DEBUG n.processor.TaskPollingMonitor - No more task to compute -- The following nodes are still active:
+[process] CHECK_DESIGN
+  status=ACTIVE
+  port 0: (value) bound ; channel: design
+  port 1: (cntrl) -     ; channel: $
+
+[process] BWA_INDEX
+  status=ACTIVE
+  port 0: (value) bound ; channel: fasta
+  port 1: (cntrl) -     ; channel: $
+
+[process] MAKE_GENE_BED
+  status=ACTIVE
+  port 0: (value) bound ; channel: gtf
+  port 1: (cntrl) -     ; channel: $
+
+[process] MAKE_GENOME_FILTER
+  status=ACTIVE
+  port 0: (value) bound ; channel: fasta
+  port 1: (queue) closed; channel: blacklist
+  port 2: (cntrl) -     ; channel: $
+
+[process] FASTQC
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] TRIMGALORE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] BWA_MEM
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) OPEN  ; channel: index
+  port 2: (cntrl) -     ; channel: $
+
+[process] SORT_BAM
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] MERGED_BAM
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] MERGED_BAM_FILTER
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) OPEN  ; channel: bed
+  port 2: (value) bound ; channel: bamtools_filter_config
+  port 3: (cntrl) -     ; channel: $
+
+[process] MERGED_BAM_REMOVE_ORPHAN
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] PRESEQ
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] PICARD_METRICS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: fasta
+  port 2: (cntrl) -     ; channel: $
+
+[process] BIGWIG
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) OPEN  ; channel: sizes
+  port 2: (cntrl) -     ; channel: $
+
+[process] PLOTPROFILE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) OPEN  ; channel: bed
+  port 2: (cntrl) -     ; channel: $
+
+[process] PHANTOMPEAKQUALTOOLS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: spp_correlation_header
+  port 2: (value) bound ; channel: spp_nsc_header
+  port 3: (value) bound ; channel: spp_rsc_header
+  port 4: (cntrl) -     ; channel: $
+
+[process] PLOTFINGERPRINT
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] MACS2
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: peak_count_header
+  port 2: (value) bound ; channel: frip_score_header
+  port 3: (cntrl) -     ; channel: $
+
+[process] MACS2_ANNOTATE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: fasta
+  port 2: (value) bound ; channel: gtf
+  port 3: (cntrl) -     ; channel: $
+
+[process] MACS2_QC
+  status=ACTIVE
+  port 0: (value) OPEN  ; channel: peaks
+  port 1: (value) OPEN  ; channel: annos
+  port 2: (value) bound ; channel: peak_annotation_header
+  port 3: (cntrl) -     ; channel: $
+
+[process] CONSENSUS_PEAKS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] CONSENSUS_PEAKS_ANNOTATE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (queue) OPEN  ; channel: bool
+  port 2: (value) bound ; channel: fasta
+  port 3: (value) bound ; channel: gtf
+  port 4: (cntrl) -     ; channel: $
+
+[process] CONSENSUS_PEAKS_COUNTS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] CONSENSUS_PEAKS_DESEQ2
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: deseq2_pca_header
+  port 2: (value) bound ; channel: deseq2_clustering_header
+  port 3: (cntrl) -     ; channel: $
+
+[process] IGV
+  status=ACTIVE
+  port 0: (value) bound ; channel: fasta
+  port 1: (value) OPEN  ; channel: bigwigs
+  port 2: (value) OPEN  ; channel: peaks
+  port 3: (value) OPEN  ; channel: consensus_peaks
+  port 4: (value) OPEN  ; channel: differential_peaks
+  port 5: (cntrl) -     ; channel: $
+
+[process] get_software_versions
+  status=ACTIVE
+  port 0: (cntrl) -     ; channel: $
+
+[process] MULTIQC
+  status=ACTIVE
+  port 0: (value) bound ; channel: multiqc_config
+  port 1: (value) bound ; channel: mqc_custom_config
+  port 2: (value) OPEN  ; channel: software_versions/*
+  port 3: (queue) OPEN  ; channel: workflow_summary
+  port 4: (value) OPEN  ; channel: fastqc/*
+  port 5: (value) OPEN  ; channel: trimgalore/*
+  port 6: (value) OPEN  ; channel: trimgalore/fastqc/*
+  port 7: (value) OPEN  ; channel: alignment/library/*
+  port 8: (value) OPEN  ; channel: alignment/mergedLibrary/*
+  port 9: (value) OPEN  ; channel: alignment/mergedLibrary/*
+  port 10: (value) OPEN  ; channel: alignment/mergedLibrary/*
+  port 11: (value) OPEN  ; channel: alignment/mergedLibrary/picard_metrics/*
+  port 12: (value) OPEN  ; channel: alignment/mergedLibrary/picard_metrics/*
+  port 13: (value) OPEN  ; channel: macs/*
+  port 14: (value) OPEN  ; channel: macs/*
+  port 15: (value) OPEN  ; channel: macs/consensus/*
+  port 16: (value) OPEN  ; channel: macs/consensus/*
+  port 17: (value) OPEN  ; channel: preseq/*
+  port 18: (value) OPEN  ; channel: deeptools/*
+  port 19: (value) OPEN  ; channel: deeptools/*
+  port 20: (value) OPEN  ; channel: phantompeakqualtools/*
+  port 21: (value) OPEN  ; channel: phantompeakqualtools/*
+  port 22: (cntrl) -     ; channel: $
+
+[process] output_documentation
+  status=ACTIVE
+  port 0: (value) bound ; channel: output_docs
+  port 1: (value) bound ; channel: images
+  port 2: (cntrl) -     ; channel: $
+
+Sep-10 11:55:17.402 [Task monitor] DEBUG n.processor.TaskPollingMonitor - No more task to compute -- The following nodes are still active:
+[process] CHECK_DESIGN
+  status=ACTIVE
+  port 0: (value) bound ; channel: design
+  port 1: (cntrl) -     ; channel: $
+
+[process] BWA_INDEX
+  status=ACTIVE
+  port 0: (value) bound ; channel: fasta
+  port 1: (cntrl) -     ; channel: $
+
+[process] MAKE_GENE_BED
+  status=ACTIVE
+  port 0: (value) bound ; channel: gtf
+  port 1: (cntrl) -     ; channel: $
+
+[process] MAKE_GENOME_FILTER
+  status=ACTIVE
+  port 0: (value) bound ; channel: fasta
+  port 1: (queue) closed; channel: blacklist
+  port 2: (cntrl) -     ; channel: $
+
+[process] FASTQC
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] TRIMGALORE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] BWA_MEM
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) OPEN  ; channel: index
+  port 2: (cntrl) -     ; channel: $
+
+[process] SORT_BAM
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] MERGED_BAM
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] MERGED_BAM_FILTER
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) OPEN  ; channel: bed
+  port 2: (value) bound ; channel: bamtools_filter_config
+  port 3: (cntrl) -     ; channel: $
+
+[process] MERGED_BAM_REMOVE_ORPHAN
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] PRESEQ
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] PICARD_METRICS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: fasta
+  port 2: (cntrl) -     ; channel: $
+
+[process] BIGWIG
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) OPEN  ; channel: sizes
+  port 2: (cntrl) -     ; channel: $
+
+[process] PLOTPROFILE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) OPEN  ; channel: bed
+  port 2: (cntrl) -     ; channel: $
+
+[process] PHANTOMPEAKQUALTOOLS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: spp_correlation_header
+  port 2: (value) bound ; channel: spp_nsc_header
+  port 3: (value) bound ; channel: spp_rsc_header
+  port 4: (cntrl) -     ; channel: $
+
+[process] PLOTFINGERPRINT
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] MACS2
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: peak_count_header
+  port 2: (value) bound ; channel: frip_score_header
+  port 3: (cntrl) -     ; channel: $
+
+[process] MACS2_ANNOTATE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: fasta
+  port 2: (value) bound ; channel: gtf
+  port 3: (cntrl) -     ; channel: $
+
+[process] MACS2_QC
+  status=ACTIVE
+  port 0: (value) OPEN  ; channel: peaks
+  port 1: (value) OPEN  ; channel: annos
+  port 2: (value) bound ; channel: peak_annotation_header
+  port 3: (cntrl) -     ; channel: $
+
+[process] CONSENSUS_PEAKS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] CONSENSUS_PEAKS_ANNOTATE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (queue) OPEN  ; channel: bool
+  port 2: (value) bound ; channel: fasta
+  port 3: (value) bound ; channel: gtf
+  port 4: (cntrl) -     ; channel: $
+
+[process] CONSENSUS_PEAKS_COUNTS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] CONSENSUS_PEAKS_DESEQ2
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: deseq2_pca_header
+  port 2: (value) bound ; channel: deseq2_clustering_header
+  port 3: (cntrl) -     ; channel: $
+
+[process] IGV
+  status=ACTIVE
+  port 0: (value) bound ; channel: fasta
+  port 1: (value) OPEN  ; channel: bigwigs
+  port 2: (value) OPEN  ; channel: peaks
+  port 3: (value) OPEN  ; channel: consensus_peaks
+  port 4: (value) OPEN  ; channel: differential_peaks
+  port 5: (cntrl) -     ; channel: $
+
+[process] get_software_versions
+  status=ACTIVE
+  port 0: (cntrl) -     ; channel: $
+
+[process] MULTIQC
+  status=ACTIVE
+  port 0: (value) bound ; channel: multiqc_config
+  port 1: (value) bound ; channel: mqc_custom_config
+  port 2: (value) OPEN  ; channel: software_versions/*
+  port 3: (queue) OPEN  ; channel: workflow_summary
+  port 4: (value) OPEN  ; channel: fastqc/*
+  port 5: (value) OPEN  ; channel: trimgalore/*
+  port 6: (value) OPEN  ; channel: trimgalore/fastqc/*
+  port 7: (value) OPEN  ; channel: alignment/library/*
+  port 8: (value) OPEN  ; channel: alignment/mergedLibrary/*
+  port 9: (value) OPEN  ; channel: alignment/mergedLibrary/*
+  port 10: (value) OPEN  ; channel: alignment/mergedLibrary/*
+  port 11: (value) OPEN  ; channel: alignment/mergedLibrary/picard_metrics/*
+  port 12: (value) OPEN  ; channel: alignment/mergedLibrary/picard_metrics/*
+  port 13: (value) OPEN  ; channel: macs/*
+  port 14: (value) OPEN  ; channel: macs/*
+  port 15: (value) OPEN  ; channel: macs/consensus/*
+  port 16: (value) OPEN  ; channel: macs/consensus/*
+  port 17: (value) OPEN  ; channel: preseq/*
+  port 18: (value) OPEN  ; channel: deeptools/*
+  port 19: (value) OPEN  ; channel: deeptools/*
+  port 20: (value) OPEN  ; channel: phantompeakqualtools/*
+  port 21: (value) OPEN  ; channel: phantompeakqualtools/*
+  port 22: (cntrl) -     ; channel: $
+
+[process] output_documentation
+  status=ACTIVE
+  port 0: (value) bound ; channel: output_docs
+  port 1: (value) bound ; channel: images
+  port 2: (cntrl) -     ; channel: $
+
+Sep-10 12:00:17.468 [Task monitor] DEBUG n.processor.TaskPollingMonitor - No more task to compute -- The following nodes are still active:
+[process] CHECK_DESIGN
+  status=ACTIVE
+  port 0: (value) bound ; channel: design
+  port 1: (cntrl) -     ; channel: $
+
+[process] BWA_INDEX
+  status=ACTIVE
+  port 0: (value) bound ; channel: fasta
+  port 1: (cntrl) -     ; channel: $
+
+[process] MAKE_GENE_BED
+  status=ACTIVE
+  port 0: (value) bound ; channel: gtf
+  port 1: (cntrl) -     ; channel: $
+
+[process] MAKE_GENOME_FILTER
+  status=ACTIVE
+  port 0: (value) bound ; channel: fasta
+  port 1: (queue) closed; channel: blacklist
+  port 2: (cntrl) -     ; channel: $
+
+[process] FASTQC
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] TRIMGALORE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] BWA_MEM
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) OPEN  ; channel: index
+  port 2: (cntrl) -     ; channel: $
+
+[process] SORT_BAM
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] MERGED_BAM
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] MERGED_BAM_FILTER
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) OPEN  ; channel: bed
+  port 2: (value) bound ; channel: bamtools_filter_config
+  port 3: (cntrl) -     ; channel: $
+
+[process] MERGED_BAM_REMOVE_ORPHAN
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] PRESEQ
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] PICARD_METRICS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: fasta
+  port 2: (cntrl) -     ; channel: $
+
+[process] BIGWIG
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) OPEN  ; channel: sizes
+  port 2: (cntrl) -     ; channel: $
+
+[process] PLOTPROFILE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) OPEN  ; channel: bed
+  port 2: (cntrl) -     ; channel: $
+
+[process] PHANTOMPEAKQUALTOOLS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: spp_correlation_header
+  port 2: (value) bound ; channel: spp_nsc_header
+  port 3: (value) bound ; channel: spp_rsc_header
+  port 4: (cntrl) -     ; channel: $
+
+[process] PLOTFINGERPRINT
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] MACS2
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: peak_count_header
+  port 2: (value) bound ; channel: frip_score_header
+  port 3: (cntrl) -     ; channel: $
+
+[process] MACS2_ANNOTATE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: fasta
+  port 2: (value) bound ; channel: gtf
+  port 3: (cntrl) -     ; channel: $
+
+[process] MACS2_QC
+  status=ACTIVE
+  port 0: (value) OPEN  ; channel: peaks
+  port 1: (value) OPEN  ; channel: annos
+  port 2: (value) bound ; channel: peak_annotation_header
+  port 3: (cntrl) -     ; channel: $
+
+[process] CONSENSUS_PEAKS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] CONSENSUS_PEAKS_ANNOTATE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (queue) OPEN  ; channel: bool
+  port 2: (value) bound ; channel: fasta
+  port 3: (value) bound ; channel: gtf
+  port 4: (cntrl) -     ; channel: $
+
+[process] CONSENSUS_PEAKS_COUNTS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] CONSENSUS_PEAKS_DESEQ2
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: deseq2_pca_header
+  port 2: (value) bound ; channel: deseq2_clustering_header
+  port 3: (cntrl) -     ; channel: $
+
+[process] IGV
+  status=ACTIVE
+  port 0: (value) bound ; channel: fasta
+  port 1: (value) OPEN  ; channel: bigwigs
+  port 2: (value) OPEN  ; channel: peaks
+  port 3: (value) OPEN  ; channel: consensus_peaks
+  port 4: (value) OPEN  ; channel: differential_peaks
+  port 5: (cntrl) -     ; channel: $
+
+[process] get_software_versions
+  status=ACTIVE
+  port 0: (cntrl) -     ; channel: $
+
+[process] MULTIQC
+  status=ACTIVE
+  port 0: (value) bound ; channel: multiqc_config
+  port 1: (value) bound ; channel: mqc_custom_config
+  port 2: (value) OPEN  ; channel: software_versions/*
+  port 3: (queue) OPEN  ; channel: workflow_summary
+  port 4: (value) OPEN  ; channel: fastqc/*
+  port 5: (value) OPEN  ; channel: trimgalore/*
+  port 6: (value) OPEN  ; channel: trimgalore/fastqc/*
+  port 7: (value) OPEN  ; channel: alignment/library/*
+  port 8: (value) OPEN  ; channel: alignment/mergedLibrary/*
+  port 9: (value) OPEN  ; channel: alignment/mergedLibrary/*
+  port 10: (value) OPEN  ; channel: alignment/mergedLibrary/*
+  port 11: (value) OPEN  ; channel: alignment/mergedLibrary/picard_metrics/*
+  port 12: (value) OPEN  ; channel: alignment/mergedLibrary/picard_metrics/*
+  port 13: (value) OPEN  ; channel: macs/*
+  port 14: (value) OPEN  ; channel: macs/*
+  port 15: (value) OPEN  ; channel: macs/consensus/*
+  port 16: (value) OPEN  ; channel: macs/consensus/*
+  port 17: (value) OPEN  ; channel: preseq/*
+  port 18: (value) OPEN  ; channel: deeptools/*
+  port 19: (value) OPEN  ; channel: deeptools/*
+  port 20: (value) OPEN  ; channel: phantompeakqualtools/*
+  port 21: (value) OPEN  ; channel: phantompeakqualtools/*
+  port 22: (cntrl) -     ; channel: $
+
+[process] output_documentation
+  status=ACTIVE
+  port 0: (value) bound ; channel: output_docs
+  port 1: (value) bound ; channel: images
+  port 2: (cntrl) -     ; channel: $
+
+Sep-10 12:05:17.531 [Task monitor] DEBUG n.processor.TaskPollingMonitor - No more task to compute -- The following nodes are still active:
+[process] CHECK_DESIGN
+  status=ACTIVE
+  port 0: (value) bound ; channel: design
+  port 1: (cntrl) -     ; channel: $
+
+[process] BWA_INDEX
+  status=ACTIVE
+  port 0: (value) bound ; channel: fasta
+  port 1: (cntrl) -     ; channel: $
+
+[process] MAKE_GENE_BED
+  status=ACTIVE
+  port 0: (value) bound ; channel: gtf
+  port 1: (cntrl) -     ; channel: $
+
+[process] MAKE_GENOME_FILTER
+  status=ACTIVE
+  port 0: (value) bound ; channel: fasta
+  port 1: (queue) closed; channel: blacklist
+  port 2: (cntrl) -     ; channel: $
+
+[process] FASTQC
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] TRIMGALORE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] BWA_MEM
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) OPEN  ; channel: index
+  port 2: (cntrl) -     ; channel: $
+
+[process] SORT_BAM
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] MERGED_BAM
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] MERGED_BAM_FILTER
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) OPEN  ; channel: bed
+  port 2: (value) bound ; channel: bamtools_filter_config
+  port 3: (cntrl) -     ; channel: $
+
+[process] MERGED_BAM_REMOVE_ORPHAN
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] PRESEQ
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] PICARD_METRICS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: fasta
+  port 2: (cntrl) -     ; channel: $
+
+[process] BIGWIG
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) OPEN  ; channel: sizes
+  port 2: (cntrl) -     ; channel: $
+
+[process] PLOTPROFILE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) OPEN  ; channel: bed
+  port 2: (cntrl) -     ; channel: $
+
+[process] PHANTOMPEAKQUALTOOLS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: spp_correlation_header
+  port 2: (value) bound ; channel: spp_nsc_header
+  port 3: (value) bound ; channel: spp_rsc_header
+  port 4: (cntrl) -     ; channel: $
+
+[process] PLOTFINGERPRINT
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] MACS2
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: peak_count_header
+  port 2: (value) bound ; channel: frip_score_header
+  port 3: (cntrl) -     ; channel: $
+
+[process] MACS2_ANNOTATE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: fasta
+  port 2: (value) bound ; channel: gtf
+  port 3: (cntrl) -     ; channel: $
+
+[process] MACS2_QC
+  status=ACTIVE
+  port 0: (value) OPEN  ; channel: peaks
+  port 1: (value) OPEN  ; channel: annos
+  port 2: (value) bound ; channel: peak_annotation_header
+  port 3: (cntrl) -     ; channel: $
+
+[process] CONSENSUS_PEAKS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] CONSENSUS_PEAKS_ANNOTATE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (queue) OPEN  ; channel: bool
+  port 2: (value) bound ; channel: fasta
+  port 3: (value) bound ; channel: gtf
+  port 4: (cntrl) -     ; channel: $
+
+[process] CONSENSUS_PEAKS_COUNTS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] CONSENSUS_PEAKS_DESEQ2
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: deseq2_pca_header
+  port 2: (value) bound ; channel: deseq2_clustering_header
+  port 3: (cntrl) -     ; channel: $
+
+[process] IGV
+  status=ACTIVE
+  port 0: (value) bound ; channel: fasta
+  port 1: (value) OPEN  ; channel: bigwigs
+  port 2: (value) OPEN  ; channel: peaks
+  port 3: (value) OPEN  ; channel: consensus_peaks
+  port 4: (value) OPEN  ; channel: differential_peaks
+  port 5: (cntrl) -     ; channel: $
+
+[process] get_software_versions
+  status=ACTIVE
+  port 0: (cntrl) -     ; channel: $
+
+[process] MULTIQC
+  status=ACTIVE
+  port 0: (value) bound ; channel: multiqc_config
+  port 1: (value) bound ; channel: mqc_custom_config
+  port 2: (value) OPEN  ; channel: software_versions/*
+  port 3: (queue) OPEN  ; channel: workflow_summary
+  port 4: (value) OPEN  ; channel: fastqc/*
+  port 5: (value) OPEN  ; channel: trimgalore/*
+  port 6: (value) OPEN  ; channel: trimgalore/fastqc/*
+  port 7: (value) OPEN  ; channel: alignment/library/*
+  port 8: (value) OPEN  ; channel: alignment/mergedLibrary/*
+  port 9: (value) OPEN  ; channel: alignment/mergedLibrary/*
+  port 10: (value) OPEN  ; channel: alignment/mergedLibrary/*
+  port 11: (value) OPEN  ; channel: alignment/mergedLibrary/picard_metrics/*
+  port 12: (value) OPEN  ; channel: alignment/mergedLibrary/picard_metrics/*
+  port 13: (value) OPEN  ; channel: macs/*
+  port 14: (value) OPEN  ; channel: macs/*
+  port 15: (value) OPEN  ; channel: macs/consensus/*
+  port 16: (value) OPEN  ; channel: macs/consensus/*
+  port 17: (value) OPEN  ; channel: preseq/*
+  port 18: (value) OPEN  ; channel: deeptools/*
+  port 19: (value) OPEN  ; channel: deeptools/*
+  port 20: (value) OPEN  ; channel: phantompeakqualtools/*
+  port 21: (value) OPEN  ; channel: phantompeakqualtools/*
+  port 22: (cntrl) -     ; channel: $
+
+[process] output_documentation
+  status=ACTIVE
+  port 0: (value) bound ; channel: output_docs
+  port 1: (value) bound ; channel: images
+  port 2: (cntrl) -     ; channel: $
+
+Sep-10 12:10:17.592 [Task monitor] DEBUG n.processor.TaskPollingMonitor - No more task to compute -- The following nodes are still active:
+[process] CHECK_DESIGN
+  status=ACTIVE
+  port 0: (value) bound ; channel: design
+  port 1: (cntrl) -     ; channel: $
+
+[process] BWA_INDEX
+  status=ACTIVE
+  port 0: (value) bound ; channel: fasta
+  port 1: (cntrl) -     ; channel: $
+
+[process] MAKE_GENE_BED
+  status=ACTIVE
+  port 0: (value) bound ; channel: gtf
+  port 1: (cntrl) -     ; channel: $
+
+[process] MAKE_GENOME_FILTER
+  status=ACTIVE
+  port 0: (value) bound ; channel: fasta
+  port 1: (queue) closed; channel: blacklist
+  port 2: (cntrl) -     ; channel: $
+
+[process] FASTQC
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] TRIMGALORE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] BWA_MEM
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) OPEN  ; channel: index
+  port 2: (cntrl) -     ; channel: $
+
+[process] SORT_BAM
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] MERGED_BAM
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] MERGED_BAM_FILTER
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) OPEN  ; channel: bed
+  port 2: (value) bound ; channel: bamtools_filter_config
+  port 3: (cntrl) -     ; channel: $
+
+[process] MERGED_BAM_REMOVE_ORPHAN
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] PRESEQ
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] PICARD_METRICS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: fasta
+  port 2: (cntrl) -     ; channel: $
+
+[process] BIGWIG
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) OPEN  ; channel: sizes
+  port 2: (cntrl) -     ; channel: $
+
+[process] PLOTPROFILE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) OPEN  ; channel: bed
+  port 2: (cntrl) -     ; channel: $
+
+[process] PHANTOMPEAKQUALTOOLS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: spp_correlation_header
+  port 2: (value) bound ; channel: spp_nsc_header
+  port 3: (value) bound ; channel: spp_rsc_header
+  port 4: (cntrl) -     ; channel: $
+
+[process] PLOTFINGERPRINT
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] MACS2
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: peak_count_header
+  port 2: (value) bound ; channel: frip_score_header
+  port 3: (cntrl) -     ; channel: $
+
+[process] MACS2_ANNOTATE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: fasta
+  port 2: (value) bound ; channel: gtf
+  port 3: (cntrl) -     ; channel: $
+
+[process] MACS2_QC
+  status=ACTIVE
+  port 0: (value) OPEN  ; channel: peaks
+  port 1: (value) OPEN  ; channel: annos
+  port 2: (value) bound ; channel: peak_annotation_header
+  port 3: (cntrl) -     ; channel: $
+
+[process] CONSENSUS_PEAKS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] CONSENSUS_PEAKS_ANNOTATE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (queue) OPEN  ; channel: bool
+  port 2: (value) bound ; channel: fasta
+  port 3: (value) bound ; channel: gtf
+  port 4: (cntrl) -     ; channel: $
+
+[process] CONSENSUS_PEAKS_COUNTS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] CONSENSUS_PEAKS_DESEQ2
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: deseq2_pca_header
+  port 2: (value) bound ; channel: deseq2_clustering_header
+  port 3: (cntrl) -     ; channel: $
+
+[process] IGV
+  status=ACTIVE
+  port 0: (value) bound ; channel: fasta
+  port 1: (value) OPEN  ; channel: bigwigs
+  port 2: (value) OPEN  ; channel: peaks
+  port 3: (value) OPEN  ; channel: consensus_peaks
+  port 4: (value) OPEN  ; channel: differential_peaks
+  port 5: (cntrl) -     ; channel: $
+
+[process] get_software_versions
+  status=ACTIVE
+  port 0: (cntrl) -     ; channel: $
+
+[process] MULTIQC
+  status=ACTIVE
+  port 0: (value) bound ; channel: multiqc_config
+  port 1: (value) bound ; channel: mqc_custom_config
+  port 2: (value) OPEN  ; channel: software_versions/*
+  port 3: (queue) OPEN  ; channel: workflow_summary
+  port 4: (value) OPEN  ; channel: fastqc/*
+  port 5: (value) OPEN  ; channel: trimgalore/*
+  port 6: (value) OPEN  ; channel: trimgalore/fastqc/*
+  port 7: (value) OPEN  ; channel: alignment/library/*
+  port 8: (value) OPEN  ; channel: alignment/mergedLibrary/*
+  port 9: (value) OPEN  ; channel: alignment/mergedLibrary/*
+  port 10: (value) OPEN  ; channel: alignment/mergedLibrary/*
+  port 11: (value) OPEN  ; channel: alignment/mergedLibrary/picard_metrics/*
+  port 12: (value) OPEN  ; channel: alignment/mergedLibrary/picard_metrics/*
+  port 13: (value) OPEN  ; channel: macs/*
+  port 14: (value) OPEN  ; channel: macs/*
+  port 15: (value) OPEN  ; channel: macs/consensus/*
+  port 16: (value) OPEN  ; channel: macs/consensus/*
+  port 17: (value) OPEN  ; channel: preseq/*
+  port 18: (value) OPEN  ; channel: deeptools/*
+  port 19: (value) OPEN  ; channel: deeptools/*
+  port 20: (value) OPEN  ; channel: phantompeakqualtools/*
+  port 21: (value) OPEN  ; channel: phantompeakqualtools/*
+  port 22: (cntrl) -     ; channel: $
+
+[process] output_documentation
+  status=ACTIVE
+  port 0: (value) bound ; channel: output_docs
+  port 1: (value) bound ; channel: images
+  port 2: (cntrl) -     ; channel: $
+
+Sep-10 12:14:19.203 [SIGINT handler] DEBUG nextflow.Session - Session aborted -- Cause: SIGINT
+Sep-10 12:14:19.212 [SIGINT handler] DEBUG nextflow.Session - The following nodes are still active:
+[process] CHECK_DESIGN
+  status=ACTIVE
+  port 0: (value) bound ; channel: design
+  port 1: (cntrl) -     ; channel: $
+
+[process] BWA_INDEX
+  status=ACTIVE
+  port 0: (value) bound ; channel: fasta
+  port 1: (cntrl) -     ; channel: $
+
+[process] MAKE_GENE_BED
+  status=ACTIVE
+  port 0: (value) bound ; channel: gtf
+  port 1: (cntrl) -     ; channel: $
+
+[process] MAKE_GENOME_FILTER
+  status=ACTIVE
+  port 0: (value) bound ; channel: fasta
+  port 1: (queue) closed; channel: blacklist
+  port 2: (cntrl) -     ; channel: $
+
+[process] FASTQC
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] TRIMGALORE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] BWA_MEM
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) OPEN  ; channel: index
+  port 2: (cntrl) -     ; channel: $
+
+[process] SORT_BAM
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] MERGED_BAM
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] MERGED_BAM_FILTER
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) OPEN  ; channel: bed
+  port 2: (value) bound ; channel: bamtools_filter_config
+  port 3: (cntrl) -     ; channel: $
+
+[process] MERGED_BAM_REMOVE_ORPHAN
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] PRESEQ
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] PICARD_METRICS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: fasta
+  port 2: (cntrl) -     ; channel: $
+
+[process] BIGWIG
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) OPEN  ; channel: sizes
+  port 2: (cntrl) -     ; channel: $
+
+[process] PLOTPROFILE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) OPEN  ; channel: bed
+  port 2: (cntrl) -     ; channel: $
+
+[process] PHANTOMPEAKQUALTOOLS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: spp_correlation_header
+  port 2: (value) bound ; channel: spp_nsc_header
+  port 3: (value) bound ; channel: spp_rsc_header
+  port 4: (cntrl) -     ; channel: $
+
+[process] PLOTFINGERPRINT
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] MACS2
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: peak_count_header
+  port 2: (value) bound ; channel: frip_score_header
+  port 3: (cntrl) -     ; channel: $
+
+[process] MACS2_ANNOTATE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: fasta
+  port 2: (value) bound ; channel: gtf
+  port 3: (cntrl) -     ; channel: $
+
+[process] MACS2_QC
+  status=ACTIVE
+  port 0: (value) OPEN  ; channel: peaks
+  port 1: (value) OPEN  ; channel: annos
+  port 2: (value) bound ; channel: peak_annotation_header
+  port 3: (cntrl) -     ; channel: $
+
+[process] CONSENSUS_PEAKS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] CONSENSUS_PEAKS_ANNOTATE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (queue) OPEN  ; channel: bool
+  port 2: (value) bound ; channel: fasta
+  port 3: (value) bound ; channel: gtf
+  port 4: (cntrl) -     ; channel: $
+
+[process] CONSENSUS_PEAKS_COUNTS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] CONSENSUS_PEAKS_DESEQ2
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: deseq2_pca_header
+  port 2: (value) bound ; channel: deseq2_clustering_header
+  port 3: (cntrl) -     ; channel: $
+
+[process] IGV
+  status=ACTIVE
+  port 0: (value) bound ; channel: fasta
+  port 1: (value) OPEN  ; channel: bigwigs
+  port 2: (value) OPEN  ; channel: peaks
+  port 3: (value) OPEN  ; channel: consensus_peaks
+  port 4: (value) OPEN  ; channel: differential_peaks
+  port 5: (cntrl) -     ; channel: $
+
+[process] get_software_versions
+  status=ACTIVE
+  port 0: (cntrl) -     ; channel: $
+
+[process] MULTIQC
+  status=ACTIVE
+  port 0: (value) bound ; channel: multiqc_config
+  port 1: (value) bound ; channel: mqc_custom_config
+  port 2: (value) OPEN  ; channel: software_versions/*
+  port 3: (queue) OPEN  ; channel: workflow_summary
+  port 4: (value) OPEN  ; channel: fastqc/*
+  port 5: (value) OPEN  ; channel: trimgalore/*
+  port 6: (value) OPEN  ; channel: trimgalore/fastqc/*
+  port 7: (value) OPEN  ; channel: alignment/library/*
+  port 8: (value) OPEN  ; channel: alignment/mergedLibrary/*
+  port 9: (value) OPEN  ; channel: alignment/mergedLibrary/*
+  port 10: (value) OPEN  ; channel: alignment/mergedLibrary/*
+  port 11: (value) OPEN  ; channel: alignment/mergedLibrary/picard_metrics/*
+  port 12: (value) OPEN  ; channel: alignment/mergedLibrary/picard_metrics/*
+  port 13: (value) OPEN  ; channel: macs/*
+  port 14: (value) OPEN  ; channel: macs/*
+  port 15: (value) OPEN  ; channel: macs/consensus/*
+  port 16: (value) OPEN  ; channel: macs/consensus/*
+  port 17: (value) OPEN  ; channel: preseq/*
+  port 18: (value) OPEN  ; channel: deeptools/*
+  port 19: (value) OPEN  ; channel: deeptools/*
+  port 20: (value) OPEN  ; channel: phantompeakqualtools/*
+  port 21: (value) OPEN  ; channel: phantompeakqualtools/*
+  port 22: (cntrl) -     ; channel: $
+
+[process] output_documentation
+  status=ACTIVE
+  port 0: (value) bound ; channel: output_docs
+  port 1: (value) bound ; channel: images
+  port 2: (cntrl) -     ; channel: $
+
+Sep-10 12:14:19.215 [main] DEBUG nextflow.Session - Session await > all process finished
+Sep-10 12:14:19.215 [main] DEBUG nextflow.Session - Session await > all barriers passed
+Sep-10 12:14:19.397 [main] INFO  nextflow.Nextflow - -[0;35m[nf-core/chipseq][0;31m Pipeline completed with errors[0m-
+Sep-10 12:14:19.403 [main] DEBUG nextflow.trace.StatsObserver - Workflow completed > WorkflowStats[succeedCount=0; failedCount=0; ignoredCount=0; cachedCount=0; succeedDuration=0ms; failedDuration=0ms; cachedDuration=0ms]
+Sep-10 12:14:19.403 [main] DEBUG nextflow.trace.TraceFileObserver - Flow completing -- flushing trace file
+Sep-10 12:14:19.408 [main] DEBUG nextflow.trace.ReportObserver - Flow completing -- rendering html report
+Sep-10 12:14:19.413 [main] DEBUG nextflow.trace.ReportObserver - Execution report summary data:
+  []
+Sep-10 12:14:20.230 [main] DEBUG nextflow.trace.TimelineObserver - Flow completing -- rendering html timeline
+Sep-10 12:14:20.301 [main] WARN  nextflow.dag.GraphvizRenderer - To render the execution DAG in the required format it is required to install Graphviz -- See http://www.graphviz.org for more info.
+Sep-10 12:14:20.328 [main] DEBUG nextflow.CacheDB - Closing CacheDB done
+Sep-10 12:14:20.336 [main] DEBUG nextflow.Session - AWS S3 uploader shutdown
+Sep-10 12:14:20.370 [main] DEBUG nextflow.script.ScriptRunner - > Execution complete -- Goodbye
