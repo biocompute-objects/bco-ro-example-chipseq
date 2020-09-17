@@ -25,18 +25,23 @@ dependencies: pre-dependencies .lib/ieee-2791-schema-version-${IEEE2791_VERSION}
 	mkdir -p .lib/
 	curl -L https://opensource.ieee.org/2791-object/ieee-2791-schema/-/archive/version-${IEEE2791_VERSION}/ieee-2791-schema-version-${IEEE2791_VERSION}.tar.gz | tar xzv --directory=.lib/
 
-test-bagit:
-	# Checking bagit manifests
-	# NOTE: This may give warnings about data/work/ files not in manifest
-	mkdir -p .tmp
-	bagit.py --log .tmp/bagit.log --quiet --validate .
-	rm -rf .tmp
+bagit: manifest-sha512.txt tagmanifest-sha512.txt
 
-test-bco: dependencies
+manifest-sha512.txt: data
+	find data -type f -print0 | xargs -0 sha512sum > manifest-sha512.txt
+
+tagmanifest-sha512.txt: bag-info.txt environment.yml LICENSE Makefile README.md run.sh
+	sha512sum bag-info.txt environment.yml LICENSE Makefile README.md run.sh > tagmanifest-sha512.txt
+
+test-bagit: bagit
+	# Checking bagit manifests
+	bagit.py --quiet --validate .
+
+test-bco: dependencies ${BCO}
 	# Check if BCO is valid according to IEEE 2791 JSON Schemas
 	jsonschema .lib/ieee-2791-schema-version-1.4/2791object.json -i ${BCO}
 
-test-ro:
+test-ro: data/ro-crate-metadata.json 
 	# Check if RO-Crate Metadata File is valid JSON-LD
 	rdfpipe -i json-ld --no-out data/ro-crate-metadata.json 
 	# Check some of the triples in RO-Crate Metadata
