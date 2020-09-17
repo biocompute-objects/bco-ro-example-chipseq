@@ -1,0 +1,16 @@
+name: bco-ro
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - make=4.3
+  - coreutils=8
+  - tar=1
+  - curl=7
+  - nextflow=20.07
+  - python=3.8
+  - jsonschema=3.2
+  - bagit=1.7
+  - rdflib-jsonld=0.5
+
