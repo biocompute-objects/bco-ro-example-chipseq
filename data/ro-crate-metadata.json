@@ -361,6 +361,7 @@
           }
         ]
       },
+      "conformsTo": {"@id": "https://w3id.org/ieee/ieee-2791-schema/"},
       "@id": "chipseq_20200910.json"
     },
     {
