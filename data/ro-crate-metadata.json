@@ -1,39 +1,36 @@
 {
-  "@context": [
-    "https://w3id.org/ro/crate/1.0/context",
-    {
-      "@vocab": "https://schema.org/"
-    }
-  ],
+  "@context": "https://w3id.org/ro/crate/1.1-DRAFT/context",
   "@graph": [
     {
       "@id": "ro-crate-metadata.json",
       "@type": "CreativeWork",
-      "about": {
-        "@id": "./"
-      },
-      "identifier": "ro-crate-metadata.json",
       "conformsTo": {
         "@id": "https://w3id.org/ro/crate/1.0"
       },
+      "about": {
+        "@id": "./"
+      },
       "license": {
         "@id": "https://creativecommons.org/licenses/by-sa/3.0"
-      },
-      "description": "Made with Describo: https://uts-eresearch.github.io/describo/"
+      }
     },
     {
+      "@id": "./",
       "@type": "Dataset",
-      "name": "Workflow run of nf-core/chipseq",
-      "description": "Workflow run of a ChIP-seq peak-calling, QC and differential analysis pipeline",
-      "license": {
-        "@id": "#3a28339e-5be3-4674-9623-51a7ccd40183"
+      "author": {
+        "@id": "https://orcid.org/0000-0001-9842-9718"
+      },
+      "citation": {
+        "@id": "https://doi.org/10.5281/zenodo.3966161"
+      },
+      "contactPoint": {
+        "@id": "https://github.com/stain/bco-ro-example-chipseq/issues"
       },
       "datePublished": "2020-09-09T23:00:00.000Z",
-      "author": [
-        {
-          "@id": "#97c3bb40-1d9b-402c-87ec-f012a8e56800"
-        }
-      ],
+      "description": "Workflow run of a ChIP-seq peak-calling, QC and differential analysis pipeline",
+      "distribution": {
+        "@id": "https://github.com/stain/bco-ro-example-chipseq/archive/master.zip"
+      },
       "hasPart": [
         {
           "@id": "https://raw.githubusercontent.com/nf-core/chipseq/1.2.1/main.nf"
@@ -48,96 +45,87 @@
           "@id": "nextflow.log"
         },
         {
-          "@id": "work/"
-        },
-        {
           "@id": ".nextflow.log"
         }
       ],
-      "citation": [
-        {
-          "@id": "https://doi.org/10.5281/zenodo.3966161"
-        }
-      ],
-      "contactPoint": {
-        "@id": "https://github.com/stain/bco-ro-example-chipseq/issues"
+      "license": {
+        "@id": "#3a28339e-5be3-4674-9623-51a7ccd40183"
       },
-      "publisher": [
-        {
-          "@id": "https://biocomputeobject.org/"
-        }
-      ],
-      "distribution": {
-        "@id": "https://github.com/stain/bco-ro-example-chipseq/archive/master.zip"
-      },
-      "@id": "./"
+      "name": "Workflow run of nf-core/chipseq",
+      "publisher": {
+        "@id": "https://biocomputeobject.org/"
+      }
     },
     {
+      "@id": ".nextflow.log",
+      "@type": "File",
+      "dateModified": "2020-09-10T13:10:50.246Z",
+      "name": ".nextflow.log"
+    },
+    {
+      "@id": "chipseq_20200910.json",
+      "@type": "File",
+      "conformsTo": {
+        "@id": "https://w3id.org/ieee/ieee-2791-schema/"
+      },
+      "dateModified": "2020-09-10T13:50:02.378Z",
+      "identifier": {
+        "@id": "urn:uuid:dc308d7c-7949-446a-9c39-511b8ab40caf"
+      },
+      "license": {
+        "@id": "#3a28339e-5be3-4674-9623-51a7ccd40183"
+      },
+      "name": "chipseq_20200910.json"
+    },
+    {
+      "@id": "https://biocomputeobject.org/",
+      "@type": "Organization",
+      "description": " Two non-overlapping entities work in parallel to help drive BioCompute, the IEEE 2791-2020 Standard, and a Public Private Partnership. Leadership for the Public Private Partnership consists of an Executive Steering Committee and a Technical Steering Committee. The schema that is referenced by the current draft of the IEEE standard is maintained by an IEEE GitLab repository. ",
+      "name": "BioCompute Objects"
+    },
+    {
+      "@id": "https://doi.org/10.5281/zenodo.3966161",
+      "@type": "ScholarlyArticle",
+      "name": "nf-core/chipseq: nf-core/chipseq v1.2.1 - Platinum Mole"
+    },
+    {
+      "@id": "https://github.com/nf-core/chipseq/blob/1.2.1/LICENSE",
       "@type": "CreativeWork",
-      "identifier": [
-        "https://spdx.org/licenses/CC0-1.0"
-      ],
-      "name": "Creative Commons Zero v1.0 Universal",
-      "@reverse": {
-        "license": [
-          {
-            "@id": "./"
-          },
-          {
-            "@id": "chipseq_20200910.json"
-          },
-          {
-            "@id": "https://github.com/stain/bco-ro-example-chipseq/archive/master.zip"
-          }
-        ]
-      },
-      "@id": "#3a28339e-5be3-4674-9623-51a7ccd40183"
+      "identifier": "https://spdx.org/licenses/MIT",
+      "name": "MIT License"
     },
     {
+      "@id": "https://github.com/nf-core/test-datasets/blob/atacseq/LICENSE",
+      "@type": "CreativeWork",
+      "description": "\nMIT License\n\nCopyright (c) 2018 nf-core\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.",
+      "name": "MIT License"
+    },
+    {
+      "@id": "https://github.com/stain/bco-ro-example-chipseq/archive/master.zip",
+      "@type": "DataDownload",
+      "path": "https://github.com/stain/bco-ro-example-chipseq/archive/master.zip",
+      "license": {
+        "@id": "#3a28339e-5be3-4674-9623-51a7ccd40183"
+      },
+      "name": "GitHub download of stain/bco-ro-example-chipseq"
+    },
+    {
+      "@id": "https://github.com/stain/bco-ro-example-chipseq/issues",
+      "@type": "ContactPoint",
+      "name": " bco-ro-example-chipseq GitHub issue tracker",
+      "url": "https://github.com/stain/bco-ro-example-chipseq/issues"
+    },
+    {
+      "@id": "https://orcid.org/0000-0001-9842-9718",
       "@type": "Person",
-      "name": "Stian Soiland-Reyes",
-      "@reverse": {
-        "author": [
-          {
-            "@id": "./"
-          },
-          {
-            "@id": "results/"
-          },
-          {
-            "@id": "work/"
-          },
-          {
-            "@id": "nextflow.log"
-          }
-        ],
-        "creator": [
-          {
-            "@id": "chipseq_20200910.json"
-          }
-        ]
-      },
-      "@id": "#97c3bb40-1d9b-402c-87ec-f012a8e56800"
+      "name": "Stian Soiland-Reyes"
     },
     {
-      "@type": "Workflow",
-      "name": "chipseq",
-      "description": "nfcore/chipseq is a bioinformatics analysis pipeline used for Chromatin ImmunopreciPitation sequencing (ChIP-seq) data",
-      "@reverse": {
-        "hasPart": [
-          {
-            "@id": "./"
-          }
-        ],
-        "about": [
-          {
-            "@id": "#fcb32545-04bd-474d-9b6e-0fb7321c38b4"
-          },
-          {
-            "@id": "results/pipeline_info/pipeline_dag.svg"
-          }
-        ]
-      },
+      "@id": "https://raw.githubusercontent.com/nf-core/chipseq/1.2.1/main.nf",
+      "@type": [
+        "ComputationalWorkflow",
+        "File"
+      ],
       "author": [
         {
           "@id": "#714de175-aa77-47f1-9f99-6a4fba65530a"
@@ -173,208 +161,35 @@
           "@id": "#64bd387d-60ad-4df8-804e-1f6b9ea72de5"
         }
       ],
-      "license": [
-        {
-          "@id": "https://github.com/nf-core/chipseq/blob/1.2.1/LICENSE"
-        }
-      ],
-      "@id": "https://raw.githubusercontent.com/nf-core/chipseq/1.2.1/main.nf"
-    },
-    {
-      "@type": "Person",
-      "name": "Harshil Patel",
-      "@reverse": {
-        "author": [
-          {
-            "@id": "https://raw.githubusercontent.com/nf-core/chipseq/1.2.1/main.nf"
-          }
-        ]
+      "citation": {
+        "@id": "https://doi.org/10.5281/zenodo.3966161"
       },
-      "@id": "#714de175-aa77-47f1-9f99-6a4fba65530a"
-    },
-    {
-      "@type": "Person",
-      "name": "Chuan Wang",
-      "@reverse": {
-        "author": [
-          {
-            "@id": "https://raw.githubusercontent.com/nf-core/chipseq/1.2.1/main.nf"
-          }
-        ]
+      "description": "nfcore/chipseq is a bioinformatics analysis pipeline used for Chromatin ImmunopreciPitation sequencing (ChIP-seq) data",
+      "license": {
+        "@id": "https://github.com/nf-core/chipseq/blob/1.2.1/LICENSE"
       },
-      "@id": "#bfb876e7-e767-4209-ad66-e1e1379c249f"
+      "name": "nf-core/chipseq"
     },
     {
-      "@type": "Person",
-      "name": "Phil Ewels",
-      "@reverse": {
-        "author": [
-          {
-            "@id": "https://raw.githubusercontent.com/nf-core/chipseq/1.2.1/main.nf"
-          }
-        ]
-      },
-      "@id": "#0164006f-bd58-4ebc-9a50-b8bd4ac3025c"
-    },
-    {
-      "@type": "Person",
-      "name": "Alexander Peltzer",
-      "@reverse": {
-        "author": [
-          {
-            "@id": "https://raw.githubusercontent.com/nf-core/chipseq/1.2.1/main.nf"
-          }
-        ]
-      },
-      "@id": "#556c747c-376a-4a85-82a1-9b99520d24fd"
-    },
-    {
-      "@type": "Person",
-      "@reverse": {
-        "author": [
-          {
-            "@id": "https://raw.githubusercontent.com/nf-core/chipseq/1.2.1/main.nf"
-          }
-        ]
-      },
-      "name": "Tiago Chedraoui Silva",
-      "@id": "#93c23523-03b5-41dc-be4c-6a9a2e0e221d"
-    },
-    {
-      "@type": "Person",
-      "name": "Drew Behrens",
-      "@reverse": {
-        "author": [
-          {
-            "@id": "https://raw.githubusercontent.com/nf-core/chipseq/1.2.1/main.nf"
-          }
-        ]
-      },
-      "@id": "#781b9b5a-dc06-4709-8f14-65ee08b8c543"
-    },
-    {
-      "@type": "Person",
-      "name": "Maxime Garcia",
-      "@reverse": {
-        "author": [
-          {
-            "@id": "https://raw.githubusercontent.com/nf-core/chipseq/1.2.1/main.nf"
-          }
-        ]
-      },
-      "@id": "#f652b13e-0ba2-4394-a990-7304f54c7b9a"
-    },
-    {
-      "@type": "Person",
-      "@reverse": {
-        "author": [
-          {
-            "@id": "https://raw.githubusercontent.com/nf-core/chipseq/1.2.1/main.nf"
-          }
-        ]
-      },
-      "name": "mashehu",
-      "@id": "#a58abf42-751d-49bd-a477-1d5065ac70c6"
-    },
-    {
-      "@type": "Person",
-      "name": "Rotholandus",
-      "@reverse": {
-        "author": [
-          {
-            "@id": "https://raw.githubusercontent.com/nf-core/chipseq/1.2.1/main.nf"
-          }
-        ]
-      },
-      "@id": "#e11af59b-8e24-4cc8-8f5e-cef411ab0823"
-    },
-    {
-      "@type": "Person",
-      "@reverse": {
-        "author": [
-          {
-            "@id": "https://raw.githubusercontent.com/nf-core/chipseq/1.2.1/main.nf"
-          }
-        ]
-      },
-      "name": "Sofia Haglund",
-      "@id": "#f262954b-a218-480d-8a01-0e0b1ca20ffc"
-    },
-    {
-      "@type": "Person",
-      "@reverse": {
-        "author": [
-          {
-            "@id": "https://raw.githubusercontent.com/nf-core/chipseq/1.2.1/main.nf"
-          }
-        ]
-      },
-      "name": "Winni Kretzschmar",
-      "@id": "#64bd387d-60ad-4df8-804e-1f6b9ea72de5"
-    },
-    {
-      "@type": "CreativeWork",
-      "@id": "https://github.com/nf-core/chipseq/blob/1.2.1/LICENSE",
-      "name": "MIT License",
-      "identifier": [
-        "https://spdx.org/licenses/MIT"
-      ],
-      "@reverse": {
-        "license": [
-          {
-            "@id": "https://raw.githubusercontent.com/nf-core/chipseq/1.2.1/main.nf"
-          }
-        ]
-      }
-    },
-    {
-      "@type": "ScholarlyArticle",
-      "@id": "https://doi.org/10.5281/zenodo.3966161",
-      "name": "nf-core/chipseq: nf-core/chipseq v1.2.1 - Platinum Mole",
-      "@reverse": {
-        "citation": [
-          {
-            "@id": "./"
-          }
-        ]
-      }
-    },
-    {
-      "@type": "WorkflowSketch",
-      "@id": "results/pipeline_info/pipeline_dag.svg",
-      "name": "pipeline_dag.svg",
-      "about": [
-        {
-          "@id": "https://raw.githubusercontent.com/nf-core/chipseq/1.2.1/main.nf"
-        }
-      ],
-      "encodingFormat": "image/svg+xml"
-    },
-    {
-      "name": "chipseq_20200910.json",
+      "@id": "nextflow.log",
       "@type": "File",
-      "dateModified": "2020-09-10T13:50:02.378Z",
-      "@reverse": {
-        "hasPart": [
-          {
-            "@id": "./"
-          }
-        ]
+      "creator": {
+        "@id": "#db65dfb7-4867-400e-a12f-a1652d46a333"
       },
-      "conformsTo": {"@id": "https://w3id.org/ieee/ieee-2791-schema/"},
-      "@id": "chipseq_20200910.json"
+      "dateModified": "2020-09-10T13:10:50.250Z",
+      "name": "nextflow.log"
     },
     {
-      "name": "results",
+      "@id": "results/",
       "@type": "Dataset",
-      "dateModified": "2020-09-10T13:20:49.143Z",
-      "@reverse": {
-        "hasPart": [
-          {
-            "@id": "./"
-          }
-        ]
+      "author": {
+        "@id": "https://orcid.org/0000-0001-9842-9718"
       },
+      "creator": {
+        "@id": "#db65dfb7-4867-400e-a12f-a1652d46a333"
+      },
+      "dateModified": "2020-09-10T13:20:49.143Z",
+      "description": "Nextflow outputs from examplar run of nf-core/ pipeline workflow.",
       "hasPart": [
         {
           "@id": "results/bwa/"
@@ -398,471 +213,24 @@
           "@id": "results/trim_galore/"
         }
       ],
-      "author": [
-        {
-          "@id": "#97c3bb40-1d9b-402c-87ec-f012a8e56800"
-        }
-      ],
-      "creator": [
-        {
-          "@id": "#db65dfb7-4867-400e-a12f-a1652d46a333"
-        }
-      ],
-      "description": "Nextflow outputs from examplar run of nf-core/ pipeline workflow.",
-      "@id": "results/"
-    },
-    {
-      "name": "nextflow.log",
-      "@type": "File",
-      "dateModified": "2020-09-10T13:10:50.250Z",
-      "@reverse": {
-        "hasPart": [
-          {
-            "@id": "./"
-          }
-        ]
-      },
-      "@id": "nextflow.log"
-    },
-    {
-      "name": "work",
-      "@type": "Dataset",
-      "dateModified": "2020-09-10T13:18:38.146Z",
-      "@reverse": {
-        "hasPart": [
-          {
-            "@id": "./"
-          }
-        ]
-      },
-      "hasPart": [
-        {
-          "@id": "work/conda/"
-        }
-      ],
-      "description": "Nextflow's working directory during pipeline execution. Log output from results/ may refer to paths inside here. Note that all results/ output files will naturally also exist as intermediate files in work/",
-      "@id": "work/"
-    },
-    {
-      "name": ".nextflow.log",
-      "@type": "File",
-      "dateModified": "2020-09-10T13:10:50.246Z",
-      "@reverse": {
-        "hasPart": [
-          {
-            "@id": "./"
-          }
-        ]
-      },
-      "@id": ".nextflow.log"
-    },
-    {
-      "@type": "ContactPoint",
-      "url": "https://github.com/stain/bco-ro-example-chipseq/issues",
-      "name": " bco-ro-example-chipseq GitHub issue tracker",
-      "@id": "https://github.com/stain/bco-ro-example-chipseq/issues",
-      "@reverse": {
-        "contactPoint": [
-          {
-            "@id": "./"
-          }
-        ]
-      }
-    },
-    {
-      "@type": "Organization",
-      "name": "BioCompute Objects",
-      "@id": "https://biocomputeobject.org/",
-      "description": " Two non-overlapping entities work in parallel to help drive BioCompute, the IEEE 2791-2020 Standard, and a Public Private Partnership. Leadership for the Public Private Partnership consists of an Executive Steering Committee and a Technical Steering Committee. The schema that is referenced by the current draft of the IEEE standard is maintained by an IEEE GitLab repository. ",
-      "@reverse": {
-        "publisher": [
-          {
-            "@id": "./"
-          }
-        ]
-      }
-    },
-    {
-      "@type": "Person",
-      "name": "Nextflow 19.10.0",
-      "@reverse": {
-        "creator": [
-          {
-            "@id": "results/pipeline_info/"
-          },
-          {
-            "@id": "results/"
-          },
-          {
-            "@id": "work/"
-          },
-          {
-            "@id": "nextflow.log"
-          }
-        ]
-      },
-      "@id": "#db65dfb7-4867-400e-a12f-a1652d46a333"
-    },
-    {
-      "@type": "CreativeWork",
-      "name": "MIT License",
-      "@id": "https://github.com/nf-core/test-datasets/blob/atacseq/LICENSE",
-      "description": "\nMIT License\n\nCopyright (c) 2018 nf-core\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.",
-      "@reverse": {
-        "license": [
-          {
-            "@id": "results/"
-          },
-          {
-            "@id": "work/"
-          }
-        ]
-      }
-    },
-    {
-      "@type": "PropertyValue",
-      "value": "dc308d7c-7949-446a-9c39-511b8ab40caf",
-      "name": "object_id",
-      "@id": "urn:uuid:dc308d7c-7949-446a-9c39-511b8ab40caf",
-      "@reverse": {
-        "identifier": [
-          {
-            "@id": "chipseq_20200910.json"
-          }
-        ]
-      }
-    },
-    {
-      "@type": "DataDownload",
-      "contentUrl": "https://github.com/stain/bco-ro-example-chipseq/archive/master.zip",
-      "@id": "https://github.com/stain/bco-ro-example-chipseq/archive/master.zip",
-      "name": "GitHub download of stain/bco-ro-example-chipseq",
       "license": {
-        "@id": "#3a28339e-5be3-4674-9623-51a7ccd40183"
+        "@id": "https://github.com/nf-core/test-datasets/blob/atacseq/LICENSE"
       },
-      "@reverse": {
-        "distribution": [
-          {
-            "@id": "./"
-          }
-        ]
-      }
+      "name": "results"
     },
     {
-      "name": "conda",
-      "@type": "Dataset",
-      "dateModified": "2020-09-10T11:56:25.372Z",
-      "@reverse": {
-        "hasPart": [
-          {
-            "@id": "work/"
-          }
-        ]
-      },
-      "description": "Conda environment used during workflow execution including the executed tools and their dependencies. \n\nThe content of this folder is not included, but can be recreated using:\n    conda-env create --prefix `pwd`/work/conda/nf-core-chipseq-1.2.1-124f0f8d69d9dfbfcea852493605e617 --file `pwd`/environment.yml\n\nNOTE: Installed software will have various licenses.",
-      "@id": "work/conda/"
-    },
-    {
-      "name": "bwa",
+      "@id": "results/bwa/",
       "@type": "Dataset",
       "dateModified": "2020-09-10T12:00:09.238Z",
-      "@reverse": {
-        "hasPart": [
-          {
-            "@id": "results/"
-          }
-        ]
+      "hasPart": {
+        "@id": "results/bwa/mergedLibrary/"
       },
-      "hasPart": [
-        {
-          "@id": "results/bwa/mergedLibrary/"
-        }
-      ],
-      "@id": "results/bwa/"
+      "name": "bwa"
     },
     {
-      "name": "fastqc",
-      "@type": "Dataset",
-      "dateModified": "2020-09-10T11:58:56.905Z",
-      "@reverse": {
-        "hasPart": [
-          {
-            "@id": "results/"
-          }
-        ]
-      },
-      "hasPart": [
-        {
-          "@id": "results/fastqc/zips/"
-        }
-      ],
-      "@id": "results/fastqc/"
-    },
-    {
-      "name": "genome",
-      "@type": "Dataset",
-      "dateModified": "2020-09-10T11:56:45.292Z",
-      "@reverse": {
-        "hasPart": [
-          {
-            "@id": "results/"
-          }
-        ]
-      },
-      "hasPart": [
-        {
-          "@id": "results/genome/genome.fa"
-        }
-      ],
-      "@id": "results/genome/"
-    },
-    {
-      "name": "igv",
-      "@type": "Dataset",
-      "dateModified": "2020-09-10T12:26:50.263Z",
-      "@reverse": {
-        "hasPart": [
-          {
-            "@id": "results/"
-          }
-        ]
-      },
-      "hasPart": [
-        {
-          "@id": "results/igv/broadPeak/"
-        }
-      ],
-      "@id": "results/igv/"
-    },
-    {
-      "name": "multiqc",
-      "@type": "Dataset",
-      "dateModified": "2020-09-10T12:26:59.183Z",
-      "@reverse": {
-        "hasPart": [
-          {
-            "@id": "results/"
-          }
-        ]
-      },
-      "hasPart": [
-        {
-          "@id": "results/multiqc/broadPeak/"
-        }
-      ],
-      "@id": "results/multiqc/"
-    },
-    {
-      "name": "pipeline_info",
-      "@type": "Dataset",
-      "dateModified": "2020-09-10T12:27:01.599Z",
-      "@reverse": {
-        "hasPart": [
-          {
-            "@id": "results/"
-          }
-        ]
-      },
-      "hasPart": [
-        {
-          "@id": "results/pipeline_info/pipeline_dag.svg"
-        }
-      ],
-      "@id": "results/pipeline_info/"
-    },
-    {
-      "name": "trim_galore",
-      "@type": "Dataset",
-      "dateModified": "2020-09-10T11:57:13.996Z",
-      "@reverse": {
-        "hasPart": [
-          {
-            "@id": "results/"
-          }
-        ]
-      },
-      "hasPart": [
-        {
-          "@id": "results/trim_galore/fastqc/"
-        },
-        {
-          "@id": "results/trim_galore/logs/"
-        }
-      ],
-      "@id": "results/trim_galore/"
-    },
-    {
-      "name": "fastqc",
-      "@type": "Dataset",
-      "dateModified": "2020-09-10T11:58:55.705Z",
-      "@reverse": {
-        "hasPart": [
-          {
-            "@id": "results/trim_galore/"
-          }
-        ]
-      },
-      "hasPart": [
-        {
-          "@id": "results/trim_galore/fastqc/zips/"
-        }
-      ],
-      "@id": "results/trim_galore/fastqc/"
-    },
-    {
-      "name": "zips",
-      "@type": "Dataset",
-      "dateModified": "2020-09-10T11:58:55.705Z",
-      "@reverse": {
-        "hasPart": [
-          {
-            "@id": "results/trim_galore/fastqc/"
-          }
-        ]
-      },
-      "@id": "results/trim_galore/fastqc/zips/"
-    },
-    {
-      "name": "logs",
-      "@type": "Dataset",
-      "dateModified": "2020-09-10T11:58:55.705Z",
-      "@reverse": {
-        "hasPart": [
-          {
-            "@id": "results/trim_galore/"
-          }
-        ]
-      },
-      "@id": "results/trim_galore/logs/"
-    },
-    {
-      "name": "pipeline_dag.svg",
-      "@type": "File",
-      "dateModified": "2020-09-10T12:27:01.755Z",
-      "@reverse": {
-        "hasPart": [
-          {
-            "@id": "results/pipeline_info/"
-          }
-        ]
-      },
-      "@id": "results/pipeline_info/pipeline_dag.svg"
-    },
-    {
-      "name": "broadPeak",
-      "@type": "Dataset",
-      "dateModified": "2020-09-10T12:26:59.183Z",
-      "@reverse": {
-        "hasPart": [
-          {
-            "@id": "results/multiqc/"
-          }
-        ]
-      },
-      "hasPart": [
-        {
-          "@id": "results/multiqc/broadPeak/multiqc_data/"
-        },
-        {
-          "@id": "results/multiqc/broadPeak/multiqc_report.html"
-        }
-      ],
-      "@id": "results/multiqc/broadPeak/"
-    },
-    {
-      "name": "multiqc_data",
-      "@type": "Dataset",
-      "dateModified": "2020-09-10T12:26:59.207Z",
-      "@reverse": {
-        "hasPart": [
-          {
-            "@id": "results/multiqc/broadPeak/"
-          }
-        ]
-      },
-      "@id": "results/multiqc/broadPeak/multiqc_data/"
-    },
-    {
-      "name": "multiqc_report.html",
-      "@type": "File",
-      "dateModified": "2020-09-10T12:26:59.191Z",
-      "@reverse": {
-        "hasPart": [
-          {
-            "@id": "results/multiqc/broadPeak/"
-          }
-        ]
-      },
-      "@id": "results/multiqc/broadPeak/multiqc_report.html"
-    },
-    {
-      "name": "broadPeak",
-      "@type": "Dataset",
-      "dateModified": "2020-09-10T12:26:50.267Z",
-      "@reverse": {
-        "hasPart": [
-          {
-            "@id": "results/igv/"
-          }
-        ]
-      },
-      "hasPart": [
-        {
-          "@id": "results/igv/broadPeak/igv_session.xml"
-        }
-      ],
-      "@id": "results/igv/broadPeak/"
-    },
-    {
-      "name": "igv_session.xml",
-      "@type": "File",
-      "dateModified": "2020-09-10T12:26:50.267Z",
-      "@reverse": {
-        "hasPart": [
-          {
-            "@id": "results/igv/broadPeak/"
-          }
-        ]
-      },
-      "@id": "results/igv/broadPeak/igv_session.xml"
-    },
-    {
-      "name": "genome.fa",
-      "@type": "File",
-      "dateModified": "2020-09-10T11:56:45.324Z",
-      "@reverse": {
-        "hasPart": [
-          {
-            "@id": "results/genome/"
-          }
-        ]
-      },
-      "@id": "results/genome/genome.fa"
-    },
-    {
-      "name": "zips",
-      "@type": "Dataset",
-      "dateModified": "2020-09-10T11:58:56.909Z",
-      "@reverse": {
-        "hasPart": [
-          {
-            "@id": "results/fastqc/"
-          }
-        ]
-      },
-      "@id": "results/fastqc/zips/"
-    },
-    {
-      "name": "mergedLibrary",
+      "@id": "results/bwa/mergedLibrary/",
       "@type": "Dataset",
       "dateModified": "2020-09-10T12:02:59.495Z",
-      "@reverse": {
-        "hasPart": [
-          {
-            "@id": "results/bwa/"
-          }
-        ]
-      },
       "hasPart": [
         {
           "@id": "results/bwa/mergedLibrary/bigwig/"
@@ -880,58 +248,27 @@
           "@id": "results/bwa/mergedLibrary/picard_metrics/"
         }
       ],
-      "@id": "results/bwa/mergedLibrary/"
+      "name": "mergedLibrary"
     },
     {
-      "name": "picard_metrics",
+      "@id": "results/bwa/mergedLibrary/bigwig/",
       "@type": "Dataset",
-      "dateModified": "2020-09-10T12:04:45.952Z",
-      "@reverse": {
-        "hasPart": [
-          {
-            "@id": "results/bwa/mergedLibrary/"
-          }
-        ]
+      "dateModified": "2020-09-10T12:04:31.692Z",
+      "hasPart": {
+        "@id": "results/bwa/mergedLibrary/bigwig/scale/"
       },
-      "@id": "results/bwa/mergedLibrary/picard_metrics/"
+      "name": "bigwig"
     },
     {
-      "name": "phantompeakqualtools",
+      "@id": "results/bwa/mergedLibrary/bigwig/scale/",
       "@type": "Dataset",
-      "dateModified": "2020-09-10T12:04:26.336Z",
-      "@reverse": {
-        "hasPart": [
-          {
-            "@id": "results/bwa/mergedLibrary/"
-          }
-        ]
-      },
-      "@id": "results/bwa/mergedLibrary/phantompeakqualtools/"
+      "dateModified": "2020-09-10T12:04:31.696Z",
+      "name": "scale"
     },
     {
-      "name": "macs",
-      "@type": "Dataset",
-      "dateModified": "2020-09-10T12:02:33.471Z",
-      "@reverse": {
-        "hasPart": [
-          {
-            "@id": "results/bwa/mergedLibrary/"
-          }
-        ]
-      },
-      "@id": "results/bwa/mergedLibrary/macs/"
-    },
-    {
-      "name": "deepTools",
+      "@id": "results/bwa/mergedLibrary/deepTools/",
       "@type": "Dataset",
       "dateModified": "2020-09-10T12:11:43.943Z",
-      "@reverse": {
-        "hasPart": [
-          {
-            "@id": "results/bwa/mergedLibrary/"
-          }
-        ]
-      },
       "hasPart": [
         {
           "@id": "results/bwa/mergedLibrary/deepTools/plotFingerprint/"
@@ -940,69 +277,264 @@
           "@id": "results/bwa/mergedLibrary/deepTools/plotProfile/"
         }
       ],
-      "@id": "results/bwa/mergedLibrary/deepTools/"
+      "name": "deepTools"
     },
     {
-      "name": "plotFingerprint",
+      "@id": "results/bwa/mergedLibrary/deepTools/plotFingerprint/",
       "@type": "Dataset",
       "dateModified": "2020-09-10T12:05:17.700Z",
-      "@reverse": {
-        "hasPart": [
-          {
-            "@id": "results/bwa/mergedLibrary/deepTools/"
-          }
-        ]
-      },
-      "@id": "results/bwa/mergedLibrary/deepTools/plotFingerprint/"
+      "name": "plotFingerprint"
     },
     {
-      "name": "plotProfile",
+      "@id": "results/bwa/mergedLibrary/deepTools/plotProfile/",
       "@type": "Dataset",
       "dateModified": "2020-09-10T12:26:12.375Z",
-      "@reverse": {
-        "hasPart": [
-          {
-            "@id": "results/bwa/mergedLibrary/deepTools/"
-          }
-        ]
-      },
-      "@id": "results/bwa/mergedLibrary/deepTools/plotProfile/"
+      "name": "plotProfile"
     },
     {
-      "name": "bigwig",
+      "@id": "results/bwa/mergedLibrary/macs/",
       "@type": "Dataset",
-      "dateModified": "2020-09-10T12:04:31.692Z",
-      "@reverse": {
-        "hasPart": [
-          {
-            "@id": "results/bwa/mergedLibrary/"
-          }
-        ]
+      "dateModified": "2020-09-10T12:02:33.471Z",
+      "name": "macs"
+    },
+    {
+      "@id": "results/bwa/mergedLibrary/phantompeakqualtools/",
+      "@type": "Dataset",
+      "dateModified": "2020-09-10T12:04:26.336Z",
+      "name": "phantompeakqualtools"
+    },
+    {
+      "@id": "results/bwa/mergedLibrary/picard_metrics/",
+      "@type": "Dataset",
+      "dateModified": "2020-09-10T12:04:45.952Z",
+      "name": "picard_metrics"
+    },
+    {
+      "@id": "results/fastqc/",
+      "@type": "Dataset",
+      "dateModified": "2020-09-10T11:58:56.905Z",
+      "hasPart": {
+        "@id": "results/fastqc/zips/"
       },
+      "name": "fastqc"
+    },
+    {
+      "@id": "results/fastqc/zips/",
+      "@type": "Dataset",
+      "dateModified": "2020-09-10T11:58:56.909Z",
+      "name": "zips"
+    },
+    {
+      "@id": "results/genome/",
+      "@type": "Dataset",
+      "dateModified": "2020-09-10T11:56:45.292Z",
+      "hasPart": {
+        "@id": "results/genome/genome.fa"
+      },
+      "name": "genome"
+    },
+    {
+      "@id": "results/genome/genome.fa",
+      "@type": "File",
+      "dateModified": "2020-09-10T11:56:45.324Z",
+      "name": "genome.fa"
+    },
+    {
+      "@id": "results/igv/",
+      "@type": "Dataset",
+      "dateModified": "2020-09-10T12:26:50.263Z",
+      "hasPart": {
+        "@id": "results/igv/broadPeak/"
+      },
+      "name": "igv"
+    },
+    {
+      "@id": "results/igv/broadPeak/",
+      "@type": "Dataset",
+      "dateModified": "2020-09-10T12:26:50.267Z",
+      "hasPart": {
+        "@id": "results/igv/broadPeak/igv_session.xml"
+      },
+      "name": "broadPeak"
+    },
+    {
+      "@id": "results/igv/broadPeak/igv_session.xml",
+      "@type": "File",
+      "dateModified": "2020-09-10T12:26:50.267Z",
+      "name": "igv_session.xml"
+    },
+    {
+      "@id": "results/multiqc/",
+      "@type": "Dataset",
+      "dateModified": "2020-09-10T12:26:59.183Z",
+      "hasPart": {
+        "@id": "results/multiqc/broadPeak/"
+      },
+      "name": "multiqc"
+    },
+    {
+      "@id": "results/multiqc/broadPeak/",
+      "@type": "Dataset",
+      "dateModified": "2020-09-10T12:26:59.183Z",
       "hasPart": [
         {
-          "@id": "results/bwa/mergedLibrary/bigwig/scale/"
+          "@id": "results/multiqc/broadPeak/multiqc_data/"
+        },
+        {
+          "@id": "results/multiqc/broadPeak/multiqc_report.html"
         }
       ],
-      "@id": "results/bwa/mergedLibrary/bigwig/"
+      "name": "broadPeak"
     },
     {
-      "name": "scale",
+      "@id": "results/multiqc/broadPeak/multiqc_data/",
       "@type": "Dataset",
-      "dateModified": "2020-09-10T12:04:31.696Z",
-      "@reverse": {
-        "hasPart": [
-          {
-            "@id": "results/bwa/mergedLibrary/bigwig/"
-          }
-        ]
-      },
-      "@id": "results/bwa/mergedLibrary/bigwig/scale/"
+      "dateModified": "2020-09-10T12:26:59.207Z",
+      "name": "multiqc_data"
     },
     {
+      "@id": "results/multiqc/broadPeak/multiqc_report.html",
+      "@type": "File",
+      "dateModified": "2020-09-10T12:26:59.191Z",
+      "name": "multiqc_report.html"
+    },
+    {
+      "@id": "results/pipeline_info/",
+      "@type": "Dataset",
+      "creator": {
+        "@id": "#db65dfb7-4867-400e-a12f-a1652d46a333"
+      },
+      "dateModified": "2020-09-10T12:27:01.599Z",
+      "hasPart": {
+        "@id": "results/pipeline_info/pipeline_dag.svg"
+      },
+      "name": "pipeline_info"
+    },
+    {
+      "@id": "results/pipeline_info/pipeline_dag.svg",
+      "@type": [
+        "WorkflowSketch",
+        "File"
+      ],
+      "about": {
+        "@id": "https://raw.githubusercontent.com/nf-core/chipseq/1.2.1/main.nf"
+      },
+      "dateModified": "2020-09-10T12:27:01.755Z",
+      "encodingFormat": "image/svg+xml",
+      "name": "pipeline_dag.svg"
+    },
+    {
+      "@id": "results/trim_galore/",
+      "@type": "Dataset",
+      "dateModified": "2020-09-10T11:57:13.996Z",
+      "hasPart": [
+        {
+          "@id": "results/trim_galore/fastqc/"
+        },
+        {
+          "@id": "results/trim_galore/logs/"
+        }
+      ],
+      "name": "trim_galore"
+    },
+    {
+      "@id": "results/trim_galore/fastqc/",
+      "@type": "Dataset",
+      "dateModified": "2020-09-10T11:58:55.705Z",
+      "hasPart": {
+        "@id": "results/trim_galore/fastqc/zips/"
+      },
+      "name": "fastqc"
+    },
+    {
+      "@id": "results/trim_galore/fastqc/zips/",
+      "@type": "Dataset",
+      "dateModified": "2020-09-10T11:58:55.705Z",
+      "name": "zips"
+    },
+    {
+      "@id": "results/trim_galore/logs/",
+      "@type": "Dataset",
+      "dateModified": "2020-09-10T11:58:55.705Z",
+      "name": "logs"
+    },
+    {
+      "@id": "#0164006f-bd58-4ebc-9a50-b8bd4ac3025c",
+      "@type": "Person",
+      "name": "Phil Ewels"
+    },
+    {
+      "@id": "#3a28339e-5be3-4674-9623-51a7ccd40183",
       "@type": "CreativeWork",
-      "@id": "https://raw.githubusercontent.com/nf-core/chipseq/1.2.1/main.nf",
-      "name": "nf-core/chipseq"
-    }
+      "identifier": "https://spdx.org/licenses/CC0-1.0",
+      "name": "Creative Commons Zero v1.0 Universal"
+    },
+    {
+      "@id": "#556c747c-376a-4a85-82a1-9b99520d24fd",
+      "@type": "Person",
+      "name": "Alexander Peltzer"
+    },
+    {
+      "@id": "#64bd387d-60ad-4df8-804e-1f6b9ea72de5",
+      "@type": "Person",
+      "name": "Winni Kretzschmar"
+    },
+    {
+      "@id": "#714de175-aa77-47f1-9f99-6a4fba65530a",
+      "@type": "Person",
+      "name": "Harshil Patel"
+    },
+    {
+      "@id": "#781b9b5a-dc06-4709-8f14-65ee08b8c543",
+      "@type": "Person",
+      "name": "Drew Behrens"
+    },
+    {
+      "@id": "#93c23523-03b5-41dc-be4c-6a9a2e0e221d",
+      "@type": "Person",
+      "name": "Tiago Chedraoui Silva"
+    },
+    {
+      "@id": "#a58abf42-751d-49bd-a477-1d5065ac70c6",
+      "@type": "Person",
+      "name": "mashehu"
+    },
+    {
+      "@id": "#bfb876e7-e767-4209-ad66-e1e1379c249f",
+      "@type": "Person",
+      "name": "Chuan Wang"
+    },
+    {
+      "@id": "#db65dfb7-4867-400e-a12f-a1652d46a333",
+      "@type": "Person",
+      "name": "Nextflow 19.10.0"
+    },
+    {
+      "@id": "#e11af59b-8e24-4cc8-8f5e-cef411ab0823",
+      "@type": "Person",
+      "name": "Rotholandus"
+    },
+    {
+      "@id": "#f262954b-a218-480d-8a01-0e0b1ca20ffc",
+      "@type": "Person",
+      "name": "Sofia Haglund"
+    },
+    {
+      "@id": "#f652b13e-0ba2-4394-a990-7304f54c7b9a",
+      "@type": "Person",
+      "name": "Maxime Garcia"
+    },
+    {
+      "@id": "#fcb32545-04bd-474d-9b6e-0fb7321c38b4",
+      "about": {
+        "@id": "https://raw.githubusercontent.com/nf-core/chipseq/1.2.1/main.nf"
+      }
+    },
+    {
+      "@id": "urn:uuid:dc308d7c-7949-446a-9c39-511b8ab40caf",
+      "@type": "PropertyValue",
+      "name": "object_id",
+      "value": "dc308d7c-7949-446a-9c39-511b8ab40caf"
+    }    
   ]
 }
