@@ -11,7 +11,7 @@
         "@id": "./"
       },
       "license": {
-        "@id": "https://creativecommons.org/licenses/by-sa/3.0"
+        "@id": "https://spdx.org/licenses/CC0-1.0"
       }
     },
     {
@@ -49,7 +49,7 @@
         }
       ],
       "license": {
-        "@id": "#3a28339e-5be3-4674-9623-51a7ccd40183"
+        "@id": "https://spdx.org/licenses/CC0-1.0"
       },
       "name": "Workflow run of nf-core/chipseq",
       "publisher": {
@@ -73,7 +73,7 @@
         "@id": "urn:uuid:dc308d7c-7949-446a-9c39-511b8ab40caf"
       },
       "license": {
-        "@id": "#3a28339e-5be3-4674-9623-51a7ccd40183"
+        "@id": "https://spdx.org/licenses/CC0-1.0"
       },
       "name": "chipseq_20200910.json"
     },
@@ -105,7 +105,7 @@
       "@type": "DataDownload",
       "path": "https://github.com/stain/bco-ro-example-chipseq/archive/master.zip",
       "license": {
-        "@id": "#3a28339e-5be3-4674-9623-51a7ccd40183"
+        "@id": "https://spdx.org/licenses/CC0-1.0"
       },
       "name": "GitHub download of stain/bco-ro-example-chipseq"
     },
@@ -464,7 +464,7 @@
       "name": "Phil Ewels"
     },
     {
-      "@id": "#3a28339e-5be3-4674-9623-51a7ccd40183",
+      "@id": "https://spdx.org/licenses/CC0-1.0",
       "@type": "CreativeWork",
       "identifier": "https://spdx.org/licenses/CC0-1.0",
       "name": "Creative Commons Zero v1.0 Universal"
