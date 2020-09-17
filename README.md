@@ -36,7 +36,20 @@ This workflow retrives reference data sets from <https://github.com/nf-core/test
 
 ## BioCompute Object (IEEE 2791)
 
+[data/chipseq_20200910.json](data/chipseq_20200910.json) is a [JSON]() file conforming to [IEEE 2791](10.1109/IEEESTD.2020.9094416)'s JSON Schemas <https://w3id.org/ieee/ieee-2791-schema/> 
+
+Here the role of the BCO is to explain the workflow, particularly for a domain expert not familiar with Nextflow.
+
 ## RO-Crate
 
+[data/ro-crate-metadata.json](data/ro-crate-metadata.json) is a JSON-LD file conforming to [RO-Crate Metadata specification 1.1-DRAFT](https://www.researchobject.org/ro-crate/1.1-DRAFT/)
+
+Here the role of the RO-Crate is to type, relate and describe the individual files in this package. This includes external references, licenses and attributions to authors. This may seem like overlap from the BCO, but as it is here per file it can distinguish more complicated situations such as the reference datasets.
+
 ## BagIt
+
+[bagit.txt](bagit.txt), [bag-info.txt](bag-info.txt), [manifest-sha512.txt](manifest-sha512.txt) and [tagmanifest-sha512.txt](tagmanifest-sha512.txt) conform to [BagIt (RFC8493)](https://www.rfc-editor.org/rfc/rfc8493.html)
+
+The role of the BagIt is mainly ensure all files are present and not modified.
+
 
