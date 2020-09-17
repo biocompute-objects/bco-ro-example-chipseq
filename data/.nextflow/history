@@ -1,3 +1,0 @@
-2020-09-10 11:30:13	44m 7s	agitated_franklin	ERR	0f487ed76dc947793ab48527d8d3025f5f3060a5	57a11426-87fc-4322-8adb-d8ef85fd2370	nextflow run nf-core/chipseq -profile test,conda
-2020-09-10 12:14:32	30m 36s	furious_wescoff	OK	0f487ed76dc947793ab48527d8d3025f5f3060a5	ac2576b7-3a28-4c3b-a9ed-ab175fa02397	nextflow run nf-core/chipseq -profile test,conda
-2020-09-10 12:53:06	33m 56s	pensive_dubinsky	OK	0f487ed76dc947793ab48527d8d3025f5f3060a5	05f2add8-5039-4497-8924-62458a2bd0a6	nextflow run nf-core/chipseq -profile test,conda
