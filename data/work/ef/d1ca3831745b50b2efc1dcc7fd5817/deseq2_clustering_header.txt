@@ -1,1 +1,0 @@
-/home/stain/.nextflow/assets/nf-core/chipseq/assets/multiqc/deseq2_clustering_header.txt

@@ -1,1 +1,0 @@
-bwa/mergedLibrary/bigwig/SPT5_T0_R1.bigWig	0,0,178

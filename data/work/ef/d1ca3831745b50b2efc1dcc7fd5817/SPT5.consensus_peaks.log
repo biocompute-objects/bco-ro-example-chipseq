@@ -1,8 +1,0 @@
-Dimensions of count matrix = 1472 4 
-
-
-SPT5_T0vsSPT5_T15 genes with FDR <= 0.01: 29 (up=24, down=5)
-SPT5_T0vsSPT5_T15 genes with FDR <= 0.01 & FC > 2: 29 (up=24, down=5)
-SPT5_T0vsSPT5_T15 genes with FDR <= 0.05: 54 (up=37, down=17)
-SPT5_T0vsSPT5_T15 genes with FDR <= 0.05 & FC > 2: 53 (up=36, down=17)
-

@@ -1,1 +1,0 @@
-/home/stain/.nextflow/assets/nf-core/chipseq/docs/output.md

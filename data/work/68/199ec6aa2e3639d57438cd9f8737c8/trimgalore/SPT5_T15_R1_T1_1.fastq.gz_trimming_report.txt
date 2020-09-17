@@ -1,1 +1,0 @@
-/home/stain/src/92/work/a1/70bf366821f68b8b95378153889db5/SPT5_T15_R1_T1_1.fastq.gz_trimming_report.txt

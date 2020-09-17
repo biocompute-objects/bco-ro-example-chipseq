@@ -1,1 +1,0 @@
-bamtools 2.5.1 Part of BamTools API and toolkit Primary authors: Derek Barnett, Erik Garrison, Michael Stromberg (c) 2009-2012 Marth Lab, Biology Dept., Boston College
