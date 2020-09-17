@@ -2,9 +2,12 @@
 IEEE2791_VERSION=1.4
 BCO=data/chipseq_20200910.json
 
-all: test
+all: bagit test
 
 test: test-bagit test-ro test-bco
+
+clean:
+	rm -rf tagmanifest-*txt manifest-*txt .tmp
 
 pre-dependencies:
 	# Pre-flight check for dependencies needed by make

@@ -1,7 +1,7 @@
 {
     "object_id": "dc308d7c-7949-446a-9c39-511b8ab40caf",
     "spec_version": "https://w3id.org/ieee/ieee-2791-schema/",
-    "etag": "W/f4cdfea48179c71533d2412c623a5963d85d8f29",
+    "etag": "f4cdfea48179c71533d2412c623a5963d85d8f29",
     "provenance_domain": {
         "name": "nf-core/chipseq: ChIP-seq peak-calling, QC and differential analysis pipeline",
         "version": "1.2.1-124f0f8d69d9dfbfcea852493605e617",
@@ -70,8 +70,17 @@
             {"step_number": 32, "name": "ran", "description": "", "input_list": [], "output_list": []}            ,
         ]
     },
-    "execution_domain": {},
-    "io_domain": {}
+    "execution_domain": {
+		"script": ["https://raw.githubusercontent.com/nf-core/chipseq/1.2.1/main.nf"],
+        "script_driver": "nextflow",
+        "software_prerequisites": [],
+        "external_data_endpoints": [],
+        "environment_variables": {}
+    },
+    "io_domain": {
+      "input_subdomain": [],
+      "output_subdomain": []     
+    }
 }
 
 
