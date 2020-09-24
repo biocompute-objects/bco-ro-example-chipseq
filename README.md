@@ -67,22 +67,22 @@ This is a bit of a challenge in this example as we have not bundled the `*.nf` f
 
 Taking into consideration the `-revision 1.2.1` we then navigate from <https://nf-co.re/chipseq> to <https://github.com/nf-core/chipseq>, select the [tag 1.2.1](https://github.com/nf-core/chipseq/tree/1.2.1) and find <https://github.com/nf-core/chipseq/blob/1.2.1/main.nf> - but again this is HTML, so we use the **Raw** button to find <https://raw.githubusercontent.com/nf-core/chipseq/1.2.1/main.nf>.
 
-This can then be described in the BCO in the `script` array, for `script_driver` we use `nextflow` as it matches the command line.
+This can then be described in the BCO in the `script` array, for `script_driver` we use `nextflow` as it matches the command line (Note: there is currently no registry of known `script_driver` values).
 
 ```json
     "execution_domain": {
-		"script": ["https://raw.githubusercontent.com/nf-core/chipseq/1.2.1/main.nf"],
+        "script": ["https://raw.githubusercontent.com/nf-core/chipseq/1.2.1/main.nf"],
         "script_driver": "nextflow"
     }
 ```
 
 We can annotate the other URIs like <https://nf-co.re/chipseq> in the RO-Crate, as they give additional information for the user.
 
-A challenge here is that we have not indicated how the workflow engine itself should be invoked on the command line. Should we instead have listed our [run.sh](run.sh) that invokes Nextflow?
+A challenge here is that we have not indicated how the workflow engine itself should be invoked on the command line. Should we instead have listed our [run.sh](run.sh) that invokes Nextflow? (We would need to move `run.sh` into `data/` to make it part of the RO-Crate)
 
 ```json
     "execution_domain": {
-		"script": ["run.sh"],
+        "script": ["run.sh"],
         "script_driver": "shell"
     }
 ```
