@@ -75,7 +75,8 @@
       "license": {
         "@id": "https://spdx.org/licenses/CC0-1.0"
       },
-      "name": "chipseq_20200910.json"
+      "name": "chipseq_20200910.json",
+      "description": "IEEE 2791 description"
     },
     {
       "@id": "https://biocomputeobject.org/",

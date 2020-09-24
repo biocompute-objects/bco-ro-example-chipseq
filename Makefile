@@ -33,8 +33,8 @@ bagit: manifest-sha512.txt tagmanifest-sha512.txt
 manifest-sha512.txt: data
 	find data -type f -print0 | xargs -0 sha512sum > manifest-sha512.txt
 
-tagmanifest-sha512.txt: bag-info.txt environment.yml LICENSE Makefile README.md run.sh
-	sha512sum bag-info.txt environment.yml LICENSE Makefile README.md run.sh > tagmanifest-sha512.txt
+tagmanifest-sha512.txt: bagit.txt bag-info.txt environment.yml LICENSE Makefile README.md run.sh manifest-sha512.txt
+	sha512sum bagit.txt bag-info.txt environment.yml LICENSE Makefile README.md run.sh manifest-sha512.txt > tagmanifest-sha512.txt
 
 test-bagit: bagit
 	# Checking bagit manifests
