@@ -1,10 +1,10 @@
 {
-    "object_id": "dc308d7c-7949-446a-9c39-511b8ab40caf",
+    "object_id": "urn:uuid:dc308d7c-7949-446a-9c39-511b8ab40caf",
     "spec_version": "https://w3id.org/ieee/ieee-2791-schema/",
-    "etag": "f4cdfea48179c71533d2412c623a5963d85d8f29",
+    "etag": "f8b213e62dfc7d05934ffdb7a36e4661f13b9cd04ad2de3ff3da6e933c4aebc8",
     "provenance_domain": {
         "name": "nf-core/chipseq: ChIP-seq peak-calling, QC and differential analysis pipeline",
-        "version": "1.2.1-124f0f8d69d9dfbfcea852493605e617",
+        "version": "1.2.1",
         "created": "2020-07-29T17:33:46+01:00",
         "modified": "2020-09-10T13:11:58+01:00",
         "contributors": [
