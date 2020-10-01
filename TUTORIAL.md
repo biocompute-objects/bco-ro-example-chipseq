@@ -413,18 +413,26 @@ We notice already nf-core reporting inputs of reference datasets. We'll record t
 
 ## Listing steps
 
+
+### Identifying input/output files
+
+The  `input_list` and `output_list`
+
 This form is valid, and use a HTTP _raw_ URI at GitHub. Note that the use of large files on GitHub might require the use of [Git LFS](https://git-lfs.github.com/) which could cause billable charges. The use of S3 bucket is **discouraged** as they are subject to change. Note that the below uses commit `ae950188ef874a9527f2c466354aa19a23ca0043` instead of `master` which again could be subject to change.
  
 ```json
-    {"step_number": 3, "name": "MAKE_GENE_BED", "description": "", "input_list": [], "output_list": [
-              {"uri": "https://raw.githubusercontent.com/stain/bco-ro-example-chipseq/ae950188ef874a9527f2c466354aa19a23ca0043/data/results/genome/genes.bed"}
-            ]},
+{"step_number": 3, "name": "MAKE_GENE_BED", "description": "", "input_list": [], "output_list": [
+    {"uri": "https://raw.githubusercontent.com/stain/bco-ro-example-chipseq/ae950188ef874a9527f2c466354aa19a23ca0043/data/results/genome/genes.bed",
+     "filename": "data/results/genome/genes.bed"
+    }
+]},
 ```
 
-This form uses relative path, which currently is not valid according to the IEEE 2791 JSON Schema:
+We include the relative path under `filename`. It would not be valid to use that path as `uri`; 
+the form below uses relative path, which currently is not valid according to the IEEE 2791 JSON Schema:
 
 ```json
-    {"uri": "data/results/genome/genes.bed"},
+{"uri": "data/results/genome/genes.bed"},
 ```
 
 This form uses a `file:///` path which is valid and provides provenance of where the file was made locally, is not portable to other machines:
@@ -436,5 +444,5 @@ This form uses a `file:///` path which is valid and provides provenance of where
 This form uses [ARCP URIs inside the RO-Crate](https://www.researchobject.org/ro-crate/1.1-DRAFT/appendix/relative-uris.html#establishing-a-base-uri-inside-a-zip-file) based on the uuid in `bag-info.txt`, but is not valid because `,` wrongly is not permitted in the `uri` JSON Schema format for `authority` (it expects a hostname).
 
 ```json
-              {"uri": "arcp://uuid,9b309ebd-6dfb-4c6d-983b-56b91fca6e06home/data/results/genome/genome.fa.include_regions.bed"},
+{"uri": "arcp://uuid,9b309ebd-6dfb-4c6d-983b-56b91fca6e06home/data/results/genome/genome.fa.include_regions.bed"},
 ```
