@@ -21,7 +21,7 @@
             {"contribution": ["authoredBy"], "name": "Winni Kretzschmar" },
             {"contribution": ["createdBy"],
               "name": "Stian Soiland-Reyes",
-              "orcid": "https://orcid.org/0000-0001-9842-9718",
+              "orcid": "https://orcid.org/0000-0001-9842-9718"
             }   
         ],
         "license": "https://github.com/nf-core/chipseq/blob/1.2.1/LICENSE"
@@ -67,7 +67,7 @@
             {"step_number": 29, "name": "IGV", "description": "", "input_list": [], "output_list": []},
             {"step_number": 30, "name": "but", "description": "", "input_list": [], "output_list": []},
             {"step_number": 31, "name": "errored", "description": "", "input_list": [], "output_list": []},
-            {"step_number": 32, "name": "ran", "description": "", "input_list": [], "output_list": []}            ,
+            {"step_number": 32, "name": "ran", "description": "", "input_list": [], "output_list": []}
         ]
     },
     "execution_domain": {

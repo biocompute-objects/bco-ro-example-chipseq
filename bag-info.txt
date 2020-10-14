@@ -1,6 +1,5 @@
 ROCrate_Specification_Identifier: https://w3id.org/ro/crate/1.0/
 External-Description: Workflow run of a ChIP-seq peak-calling, QC and differential analysis pipeline
 Bagging-Date: 2020-09-10T19:27:45Z
-Payload-Oxum: 414900509.372
 Bag-Size: 396MB
 External-Identifier: urn:uuid:9b309ebd-6dfb-4c6d-983b-56b91fca6e06

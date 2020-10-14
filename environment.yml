@@ -13,4 +13,4 @@ dependencies:
   - jsonschema=3.2
   - bagit=1.7
   - rdflib-jsonld=0.5
-
+  - isodate=0.6

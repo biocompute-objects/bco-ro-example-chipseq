@@ -44,7 +44,7 @@ test-bco: dependencies ${BCO}
 	# Check if BCO is valid according to IEEE 2791 JSON Schemas
 	jsonschema .lib/ieee-2791-schema-version-1.4/2791object.json -i ${BCO}
 
-test-ro: data/ro-crate-metadata.json 
+test-ro: data/ro-crate-metadata.json
 	# Check if RO-Crate Metadata File is valid JSON-LD
 	rdfpipe -i json-ld --no-out data/ro-crate-metadata.json 
 	# Check some of the triples in RO-Crate Metadata
