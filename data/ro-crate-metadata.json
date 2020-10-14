@@ -35,7 +35,7 @@
       "datePublished": "2020-09-09T23:00:00.000Z",
       "description": "Workflow run of a ChIP-seq peak-calling, QC and differential analysis pipeline",
       "distribution": {
-        "@id": "https://github.com/biocompute-objects/bco-ro-example-chipseq/archive/master.zip"
+        "@id": "https://github.com/biocompute-objects/bco-ro-example-chipseq/archive/main.zip"
       },
       "hasPart": [
         {
@@ -155,7 +155,7 @@
     },
     {
       "@type": "DataDownload",
-      "path": "https://github.com/biocompute-objects/bco-ro-example-chipseq/archive/master.zip",
+      "path": "https://github.com/biocompute-objects/bco-ro-example-chipseq/archive/main.zip",
       "license": {
         "@id": "https://spdx.org/licenses/CC0-1.0"
       },
@@ -167,7 +167,7 @@
           }
         ]
       },
-      "@id": "https://github.com/biocompute-objects/bco-ro-example-chipseq/archive/master.zip"
+      "@id": "https://github.com/biocompute-objects/bco-ro-example-chipseq/archive/main.zip"
     },
     {
       "@type": "ContactPoint",
@@ -778,7 +778,7 @@
             "@id": "chipseq_20200910.json"
           },
           {
-            "@id": "https://github.com/biocompute-objects/bco-ro-example-chipseq/archive/master.zip"
+            "@id": "https://github.com/biocompute-objects/bco-ro-example-chipseq/archive/main.zip"
           }
         ]
       },
