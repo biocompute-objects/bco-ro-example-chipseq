@@ -46,7 +46,7 @@ This workflow retrives reference data sets from <https://github.com/nf-core/test
 
 The folder [data/results](deta/results) contain the outputs as produced by the Nextflow workflow. 
 
-Note that some of these files are large and are stored using [Git LFS](https://git-lfs.github.com/) - if you need all the files, follow the git-lfs install instructions, then try `git lfs fetch` in a Git checkout of [this repository](https://github.com/biocomputeobject/bco-ro-example-chipseq)
+Note that some of these files are large and are stored using [Git LFS](https://git-lfs.github.com/) - if you need all the files, follow the git-lfs install instructions, then try `git lfs fetch` in a Git checkout of [this repository](https://github.com/biocompute-objects/bco-ro-example-chipseq)
 
 ## BioCompute Object (IEEE 2791)
 
