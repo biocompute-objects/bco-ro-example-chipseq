@@ -9,6 +9,7 @@ dependencies:
   - tar=1
   - curl=7
   - sed=4
+  - grep=2
   - nextflow=20.07
   - python=3.8
   - jsonschema=3.2
